@@ -24,6 +24,8 @@ exports = module.exports = function(options) {
 
 
   this.add('role:chat,cmd:createFriends',function(msg,respond){
+    console.log("=====Inside Chatroom Plugin, data to create friends collection is===== ",msg)
+    ;
     return Friend.create(msg, function(err, createdFriend) {
       if(err) { return respond(err); }
       return respond(null, {response: 'success',frienddata:createdFriend});
