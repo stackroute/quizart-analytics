@@ -3,8 +3,15 @@ import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
-
+import {Link} from 'react-router';
 import restUrl from '../../restUrl';
+import base64 from 'base-64';
+
+
+const styles = {
+  width:'100%',
+  marginTop : 50
+}
 
 export default class LoginForm extends React.Component {
   constructor() {
@@ -57,6 +64,8 @@ export default class LoginForm extends React.Component {
       });
       request.done(function(data) {
         localStorage.token = data.token;
+        var username = (JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub);
+        console.log("==========Inside Loginform checking token====,",username);
         this.context.router.push('/');
       }.bind(this));
       request.fail(function() {
@@ -79,6 +88,7 @@ export default class LoginForm extends React.Component {
     ];
 
     return (
+
       <div>
         <h1>Login</h1>
         <form onSubmit={this.handleLogin.bind(this)}>
@@ -101,14 +111,20 @@ export default class LoginForm extends React.Component {
             label="Login"
             primary={true}
             style={{width: '100%', marginTop: '25px'}} />
+          <Link to ='/SignUP'>
+            <RaisedButton label = "Sign Up" secondary = {true} style = {styles}/><br/><br/>
+          </Link>
         </form>
+
+
+
         <Dialog
           open={this.state.openFailDialog}
           actions={actions}
           onRequestClose={this.closeFailDialog.bind(this)}>
           The Username and Password entered do not match with any of our records. Please try again.
         </Dialog>
-      </div>
+        </div>
     );
   }
 }
