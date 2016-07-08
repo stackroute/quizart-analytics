@@ -5,6 +5,7 @@ router.use('/authenticate', require('./api/authenticate/authenticate.router'));
 router.use('/signup', require('./api/signup/signup.router'));
 router.use('/friendslist', require('./api/friendslist/friendslist.router'));
 router.use('/groupslist', require('./api/groupslist/groupslist.router'));
+router.use('/leaderboard', require('./api/leaderboard/leaderboard.router'));
 
 
 exports = module.exports = router;

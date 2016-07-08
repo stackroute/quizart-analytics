@@ -41,19 +41,7 @@ app.use(require('body-parser').json());
 app.use('/api/v1', require('./router'));
 
 var chat = io.of('/chat');
-// var chat1 = io.of('/chat1');
 
-// chat1.on('connection',function(socket){
-//     console.log("====Inside socket.io of chat 1======");
-//
-//     socket.on('call_socket2',function(text){
-//       console.log("====Inside Express from Socket 2 msg is:",text);
-//     })
-// });
-// chat1.on('disconnect',function(socket){
-//   console.log("=====Inside Express when socket 1 closes====");
-//   socket.close();
-// });
 
 chat.on('connection', function(socket) {
   console.log("Inside socket.io");
@@ -177,5 +165,47 @@ app.post('/api/check',function(req,res){
 app.use(function(req, res) {
   return res.status(404).send();
 });
+
+//---------------------------------------
+var middleWareCount =0;
+
+
+
+io.on('connection',function(socket){
+  middleWareCount++;
+  console.log('\n =====Middleware count is: '+middleWareCount+'\n');
+  var playerMiddleWareService =  require('seneca')();
+   socket.on('playGame',function(msg){
+     console.log(' \n\n Received play game message  \n\n');
+     playerMiddleWareService.use('redis-transport');
+    // console.log('\n Setting up middleware for user \n');
+    console.log('\n======Initializing plugin for  : '+(msg.username)+'\n');
+    playerMiddleWareService.use('./gameplayMiddlewarePlugin', {
+      username:msg.username,
+      tournamentId:msg.tournamentId,
+      socket:socket
+    });
+  });
+
+  socket.on('disconnect',function(){
+    console.log('\n======Closing service=====\n');
+    playerMiddleWareService.close();
+  })
+
+ // var serverMessages = ["North of the wall","Casterly Rock","Westeros","Pentos","Bravos","Winterfell","Mereen"]
+ // var randomSelection = Math.floor(Math.random()*7)
+
+
+  socket.emit('serverId',"This question is coming from "+name);
+
+  socket.on('myAnswer',function(socketObj){
+    console.log('\n==========Answer received by server is: '+socketObj.answer+'\n');
+     playerMiddleWareService.act('role:user,action:answer',{answer:socketObj.answer},function(err,response){
+
+     })
+  });
+})
+
+//----------------------------
 
 exports = module.exports = server;

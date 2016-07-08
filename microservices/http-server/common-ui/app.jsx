@@ -17,6 +17,7 @@ import Tournaments from './views/allTournaments/alltournaments';
 import EachTopicsPage from './views/EachTopicsPage';
 import Quiz from './views/QuizPlay';
 import SignUP from './views/SignUP';
+import ContextComponent from './context';
 
 const verifyLogin = function(nextState, replace) {
   if(!localStorage.token) {
@@ -50,6 +51,7 @@ const clearLogin = function(nextState, replace) {
 };
 
 ReactDOM.render(
+  <ContextComponent>
   <MuiThemeProvider muiTheme={getMuiTheme()}>
     <Router history={hashHistory}>
       <Route path="/login" component={LoginView} onEnter={handleLoginEnter} />
@@ -59,7 +61,9 @@ ReactDOM.render(
       <Route path="/tournaments" component={Tournaments} onEnter={verifyLogin} />
       <Route path="/eachTopic" component={EachTopicsPage} onEnter={verifyLogin} />
       <Route path="/quiz" component={Quiz} />
+      <Route name="leaderboard" path="/board/:id" component={LeaderBoard} />
       <Route path="my-account/change-password" component={ChangePasswordView} onEnter={verifyLogin} />
     </Router>
   </MuiThemeProvider>
+  </ContextComponent>
 , document.getElementById('root'));
