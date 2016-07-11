@@ -17,6 +17,7 @@ import Tournaments from './views/allTournaments/alltournaments';
 import EachTopicsPage from './views/EachTopicsPage';
 import Quiz from './views/QuizPlay';
 import SignUP from './views/SignUP';
+import LeaderBoard from './views/LeaderBoard';
 import ContextComponent from './context';
 
 const verifyLogin = function(nextState, replace) {

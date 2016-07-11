@@ -4,6 +4,7 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 
+var name = process.env.NAME || "default";
 
 var mesh = seneca();
 mesh.use('mesh',{auto:true});
