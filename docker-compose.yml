@@ -37,6 +37,36 @@ services:
       - microservice-mesh-base
     environment:
       MONGO_URL: 'mongodb://localhost:27017/boilerplate-production'
+  microservice-profile:
+      container_name: microservice-profile
+      build: microservices/microservice-profile
+      image: boilerplate/profile
+      network_mode: host
+      restart: always
+      depends_on:
+        - microservice-mesh-base
+      environment:
+        MONGO_URL: 'mongodb://localhost:27017/boilerplate-production'
+  microservice-friend:
+      container_name: microservice-friend
+      build: microservices/microservice-friend
+      image: boilerplate/friend
+      network_mode: host
+      restart: always
+      depends_on:
+        - microservice-mesh-base
+      environment:
+        MONGO_URL: 'mongodb://localhost:27017/boilerplate-production'
+  microservice-topic:
+      container_name: microservice-topic
+      build: microservices/microservice-topic
+      image: boilerplate/topic
+      network_mode: host
+      restart: always
+      depends_on:
+        - microservice-mesh-base
+      environment:
+        MONGO_URL: 'mongodb://localhost:27017/quizRT4'
   microservice-tournament-section:
     container_name: microservice-tournament-section
     build: microservices/tournamentSection
@@ -110,15 +140,15 @@ services:
     restart: always
     depends_on:
       - microservice-mesh-base
-  microservice-favourite-topic:
-    container_name: microservice-favourite-topic
-    build: microservices/myFavTopics
-    image: boilerplate/microservice-favourite-topic
-    network_mode: host
-    restart: always
-    depends_on:
-      - db
-      - microservice-mesh-base
+  # microservice-favourite-topic:
+  #   container_name: microservice-favourite-topic
+  #   build: microservices/myFavTopics
+  #   image: boilerplate/microservice-favourite-topic
+  #   network_mode: host
+  #   restart: always
+  #   depends_on:
+  #     - db
+  #     - microservice-mesh-base
   microservice-alltopics:
     container_name: microservice-alltopics
     build: microservices/allTopics
@@ -132,24 +162,24 @@ services:
           MONGO_HOST: localhost
           MONGO_PORT: 27017
           MONGO_DB_NAME: quizRT4
-  microservice-like-topic:
-    container_name: microservice-like-topic
-    build: microservices/likesTopic
-    image: boilerplate/microservice-like-topic:0.1.0
-    network_mode: host
-    restart: always
-    depends_on:
-      - db
-      - microservice-mesh-base
-  microservice-delete-liked-topic:
-    container_name: microservice-delete-liked-topic
-    build: microservices/delLikedTopic
-    image: boilerplate/microservice-delete-liked-topic:0.1.0
-    network_mode: host
-    restart: always
-    depends_on:
-      - db
-      - microservice-mesh-base
+  # microservice-like-topic:
+  #   container_name: microservice-like-topic
+  #   build: microservices/likesTopic
+  #   image: boilerplate/microservice-like-topic:0.1.0
+  #   network_mode: host
+  #   restart: always
+  #   depends_on:
+  #     - db
+  #     - microservice-mesh-base
+  # microservice-delete-liked-topic:
+  #   container_name: microservice-delete-liked-topic
+  #   build: microservices/delLikedTopic
+  #   image: boilerplate/microservice-delete-liked-topic:0.1.0
+  #   network_mode: host
+  #   restart: always
+  #   depends_on:
+  #     - db
+  #     - microservice-mesh-base
   microservice-chatrooms:
     container_name: microservice-chatrooms
     build: microservices/microservice-chatrooms

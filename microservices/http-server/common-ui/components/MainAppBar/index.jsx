@@ -20,6 +20,8 @@ import Drawer from 'material-ui/Drawer';
 import Avatar from 'material-ui/Avatar';
 import Badge from 'material-ui/Badge';
 import {List, ListItem} from 'material-ui/List';
+import RaisedButton from 'material-ui/RaisedButton';
+import base64 from 'base-64';
 
 import ActionAccountbox from 'material-ui/svg-icons/action/account-box';
 import ActionTurnedin from 'material-ui/svg-icons/action/turned-in';
@@ -35,8 +37,12 @@ export default class MainAppBar extends React.Component {
     this.state = {dropDown: false, open: false,appbarContainer: {
     	position: 'fixed',
     	width: '100%',
-    	zIndex: 1
-    }};
+    	zIndex: 1,
+    },
+      Profile: {
+        username: { value: JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub},
+      }
+    };
   }
 
   static get contextTypes() {
@@ -69,6 +75,13 @@ export default class MainAppBar extends React.Component {
     this.context.router.push('/topics');
   }
 
+  handleProfile(e){
+    e.preventDefault();
+    this.context.router.push(
+      '/profilePage/'+this.state.Profile.username.value
+    );
+  }
+
   goToDashBoard(e){
     e.preventDefault();
     this.context.router.push('/');
@@ -78,18 +91,17 @@ export default class MainAppBar extends React.Component {
     this.setState({open: true});
   }
 
+  handleClick(){
+    this.context.router.push(
+      '/profilePage/'+"deepak1@gmail.com"
+    );
+  }
+
   render() {
     const style = {
       margin: 12,
       color: "white"
     };
-    // var AppMenu = (<Menu>
-    //     <MenuItem primaryText="Home" leftIcon={<RemoveRedEye />} onTouchTap={this.goToDashBoard.bind(this)}/>
-    //     <MenuItem primaryText="Topics" leftIcon={<PersonAdd />} onTouchTap={this.handleTopics.bind(this)}/>
-    //     <MenuItem primaryText="Multiplayer" leftIcon={<ContentLink />} />
-    //     <Divider />
-    //     <MenuItem primaryText="Logout" leftIcon={<ContentCopy />} />
-    //   </Menu>);
 
     return (
       <div className="row">
@@ -122,7 +134,8 @@ export default class MainAppBar extends React.Component {
             <ListItem primaryText="Home" leftIcon={<ActionHome />}
               onTouchTap={this.goToDashBoard.bind(this)}/>
             <ListItem primaryText="View Profile" leftIcon={<ActionAccountbox />}
-              />
+            onTouchTap={this.handleProfile.bind(this)}
+            />
             <ListItem primaryText="Topics" leftIcon={<ActionViewmodule />}
               onTouchTap={this.handleTopics.bind(this)}/>
             <ListItem primaryText="Tournaments" leftIcon={<ActionViewquilt />}
@@ -135,15 +148,3 @@ export default class MainAppBar extends React.Component {
     );
   }
 }
-//
-// <FlatButton label="Home" style={style} onTouchTap={this.goToDashBoard.bind(this)}/>
-// <FlatButton label="Topics" style={style} onTouchTap={this.handleTopics.bind(this)} />
-
-// <MediaQuery query='(max-device-width: 800px)'>
-//   <MediaQuery query='(max-width: 800px)'>
-//     <FontIcon className="muidocs-icon-action-list" style={{color:'white',margin:19}} onTouchTap={this.showMenu.bind(this)}/>
-//   </MediaQuery>
-// </MediaQuery>
-// <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-//   { this.state.dropDown ? AppMenu : <div/> }
-// </div>

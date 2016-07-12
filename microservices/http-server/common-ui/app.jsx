@@ -19,6 +19,7 @@ import Quiz from './views/QuizPlay';
 import SignUP from './views/SignUP';
 import LeaderBoard from './views/LeaderBoard';
 import ContextComponent from './context';
+import ProfilePage from './views/ProfilePage';
 
 const verifyLogin = function(nextState, replace) {
   if(!localStorage.token) {
@@ -60,8 +61,9 @@ ReactDOM.render(
       <Route path="/SignUP" component={SignUP}/>
       <Route path="/topics" component={Topics} onEnter={verifyLogin} />
       <Route path="/tournaments" component={Tournaments} onEnter={verifyLogin} />
-      <Route path="/eachTopic" component={EachTopicsPage} onEnter={verifyLogin} />
       <Route path="/quiz" component={Quiz} />
+      <Route path="/ProfilePage/:username" component={ProfilePage}/>
+      <Route path="/eachTopic/:id" component={EachTopicsPage} onEnter={verifyLogin} />
       <Route name="leaderboard" path="/board/:id" component={LeaderBoard} />
       <Route path="my-account/change-password" component={ChangePasswordView} onEnter={verifyLogin} />
     </Router>
