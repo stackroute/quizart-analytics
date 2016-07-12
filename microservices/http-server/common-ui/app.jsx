@@ -17,8 +17,14 @@ import Tournaments from './views/allTournaments/alltournaments';
 import EachTopicsPage from './views/EachTopicsPage';
 import Quiz from './views/QuizPlay';
 import SignUP from './views/SignUP';
+<<<<<<< HEAD
 import AuthSuccess from './views/AuthSuccess';
 import cookie from 'react-cookie';
+=======
+import LeaderBoard from './views/LeaderBoard';
+import ContextComponent from './context';
+import ProfilePage from './views/ProfilePage';
+>>>>>>> 6bbe532b5a5efaf5a8198dc84db831b95b4fe3d0
 
 const verifyLogin = function(nextState, replace) {
   // var token = cookie.load('auth_cookie');
@@ -55,6 +61,7 @@ const clearLogin = function(nextState, replace) {
 };
 
 ReactDOM.render(
+  <ContextComponent>
   <MuiThemeProvider muiTheme={getMuiTheme()}>
     <Router history={hashHistory}>
       <Route path="/login" component={LoginView} onEnter={handleLoginEnter} />
@@ -62,10 +69,13 @@ ReactDOM.render(
       <Route path="/SignUP" component={SignUP}/>
       <Route path="/topics" component={Topics} onEnter={verifyLogin} />
       <Route path="/tournaments" component={Tournaments} onEnter={verifyLogin} />
-      <Route path="/eachTopic" component={EachTopicsPage} onEnter={verifyLogin} />
       <Route path="/quiz" component={Quiz} />
       <Route path="/authsuccess/:token" component={AuthSuccess} />
+      <Route path="/ProfilePage/:username" component={ProfilePage}/>
+      <Route path="/eachTopic/:id" component={EachTopicsPage} onEnter={verifyLogin} />
+      <Route name="leaderboard" path="/board/:id" component={LeaderBoard} />
       <Route path="my-account/change-password" component={ChangePasswordView} onEnter={verifyLogin} />
     </Router>
   </MuiThemeProvider>
+  </ContextComponent>
 , document.getElementById('root'));

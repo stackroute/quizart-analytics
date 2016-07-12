@@ -17,10 +17,6 @@ module.exports = function(options){
   var readyCount=0;
   var requestProvisioner=0;
 
-
-
-
-
   // console.log('\n Initialized count to 0 for socket id'+options.socket.id+'\n')
   var count =0;
   var gameId ;
@@ -31,7 +27,7 @@ module.exports = function(options){
     var pin = 'role:'+self.username+',action:gameInitiated';
     console.log('\nListening on Pin : '+pin+' at '+Date.now()+'\n')
     console.log('\nInside game initiated instance with game id:'+msg.gameId+'\n')
-     gameId = msg.gameId;
+    gameId = msg.gameId;
 
     // // console.log('\n=====RECEIVED GAME ID: '+gameId+'====\n');
 
@@ -53,7 +49,7 @@ module.exports = function(options){
       done(null,{answer:'QuestionReceived'})
     })
     .add('gameId:'+gameId+',role:broadcast,action:leaderboard',function(msg,leaderboardCallback){
-      self.socket.emit('leaderboard',msg.leaderboard);
+      self.socket.emit('leaderboard',msg.id);
       leaderboardCallback(null,{answer:'received leaderboard'});
     })
     .use('entity')
@@ -67,14 +63,8 @@ module.exports = function(options){
            responseClient.act('role:'+self.username+',gameId:'+gameId+',action:ping',function(err,response){
              if(err) return console.log(err);
              // console.log('\n Received '+response.answer+' from game manager.\n');
-
            })
          });
-
-
-
-
-
      });
 
   })
@@ -91,9 +81,6 @@ module.exports = function(options){
       })
 
     },2000)
-
-
-
   });
 
   self.add('role:user,action:answer',function(msg,callbackToSocket){
@@ -103,15 +90,10 @@ module.exports = function(options){
       self.socket.emit('yourAnswer',{answer:response.respondToQuestion})
       if(err) return console.log(err);
       callbackToSocket(null,{answer:response.respondToQuestion});
-       console.log('\n Sending answer to socket\n')
-      console.log('\n Your answer is : '+msg.answer+'\n')
-      console.log('\n Game manager responded : '+response.respondToQuestion+'\n')
-
-
+       console.log('\n Sending answer to socket\n');
+      console.log('\n Your answer is : '+msg.answer+'\n');
+      console.log('\n Game manager responded : '+response.respondToQuestion+'\n');
     })
   })
 
-
-
 }
-

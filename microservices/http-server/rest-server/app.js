@@ -7,12 +7,16 @@ var google = require('googleapis');
 var OAuth2 = google.auth.OAuth2;
 var request = require('request');
 
+
 var secret = process.env.AUTH_SECRET || "the matrix";
 var googlecredentials = require('./secrets/googlecredentials');
 var oauth2Client = new OAuth2(googlecredentials.CLIENT_ID, googlecredentials.CLIENT_SECRET, googlecredentials.REDIRECT_URL);
 var redirectHost = process.env.REDIRECT_HOST || "localhost";
 var port = process.env.PORT || '8001';
 var redirectPort = process.env.REDIRECT_PORT || port;
+
+var name = process.env.NAME || "default";
+
 
 var mesh = seneca();
 mesh.use('mesh',{auto:true});
@@ -50,6 +54,7 @@ app.set('secret',secret);
 app.use('/api/v1', require('./router'));
 
 var chat = io.of('/chat');
+
 
 
 app.post('/api/authenticate/google',function(req,res,next){
@@ -133,6 +138,7 @@ app.get('/api/auth/success/google',function(req,res){
   });
 
 });
+
 
 chat.on('connection', function(socket) {
   console.log("Inside socket.io");
@@ -256,5 +262,47 @@ app.post('/api/check',function(req,res){
 app.use(function(req, res) {
   return res.status(404).send();
 });
+
+//---------------------------------------
+var middleWareCount =0;
+
+
+
+io.on('connection',function(socket){
+  middleWareCount++;
+  console.log('\n =====Middleware count is: '+middleWareCount+'\n');
+  var playerMiddleWareService =  require('seneca')();
+   socket.on('playGame',function(msg){
+     console.log(' \n\n Received play game message  \n\n');
+     playerMiddleWareService.use('redis-transport');
+    // console.log('\n Setting up middleware for user \n');
+    console.log('\n======Initializing plugin for  : '+(msg.username)+'\n');
+    playerMiddleWareService.use('./gameplayMiddlewarePlugin', {
+      username:msg.username,
+      tournamentId:msg.tournamentId,
+      socket:socket
+    });
+  });
+
+  socket.on('disconnect',function(){
+    console.log('\n======Closing service=====\n');
+    playerMiddleWareService.close();
+  })
+
+ // var serverMessages = ["North of the wall","Casterly Rock","Westeros","Pentos","Bravos","Winterfell","Mereen"]
+ // var randomSelection = Math.floor(Math.random()*7)
+
+
+  socket.emit('serverId',"This question is coming from "+name);
+
+  socket.on('myAnswer',function(socketObj){
+    console.log('\n==========Answer received by server is: '+socketObj.answer+'\n');
+     playerMiddleWareService.act('role:user,action:answer',{answer:socketObj.answer},function(err,response){
+
+     })
+  });
+})
+
+//----------------------------
 
 exports = module.exports = server;

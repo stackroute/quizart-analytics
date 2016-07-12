@@ -103,7 +103,7 @@ var SubtopicCard = React.createClass({
   router: React.PropTypes.object
 } ,
 componentDidMount:function(){
-
+  console.log("topic Id in SubtopicCard",this.props.topic._id);
 },
   handleClike:function(tId){
     Cookie.save("topicId",tId);
@@ -115,9 +115,9 @@ componentDidMount:function(){
 
   handleDetails:function(tId){
     Cookie.save("topicId",tId);
-    console.log('');
+    console.log('Topic id for each topic',tId);
     this.context.router.push({
-      pathname:'/eachTopic'
+      pathname:'/eachTopic/'+this.props.topic._id
     })
   },
 
@@ -163,11 +163,11 @@ componentDidMount:function(){
       <img src={this.props.topic.topicIcon} />
     </CardMedia>
     <CardActions className="row">
-      <div className="col-md-3 col-xs-3 col-lg-3 col-sm-3">
+      <div className="col-md-5 col-xs-5 col-lg-5 col-sm-5">
         <RaisedButton label="Play" secondary={true} style={BtnStyle} onClick={this.handleClike.bind(this,this.props.topic._id)} />
       </div>
-      <div className="col-md-8 col-xs-8 col-lg-8 col-sm-8">
-        
+      <div className="col-md-5 col-xs-5 col-lg-5 col-sm-5">
+        <RaisedButton label="Details" secondary={true} style={BtnStyle} onClick={this.handleDetails.bind(this,this.props.topic._id)} />
       </div>
      </CardActions>
 

@@ -1,4 +1,3 @@
-
 var React = require('react');
 var Slider = require('react-slick');
 import Paper from 'material-ui/Paper';
@@ -12,6 +11,8 @@ import ProgressBar from './progressBar';
 import Timer from './timer';
 import CircularProgress from 'material-ui/CircularProgress';
 import cookie from 'react-cookie';
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import base64 from 'base-64';
 
 const optionStyle = {
   margin:12,
@@ -46,9 +47,14 @@ const Style1= {
 const style = {
   height: 100,
   width: 100,
-  margin: 20,
   textAlign: 'center',
   display: 'inline-block',
+  backgroundColor: 'red',
+  background: 'white',
+  marginTop: 0,
+  marginBottom: 0,
+  marginRight: 'auto',
+  marginTopLeft: 'auto'
 };
 
 
@@ -68,7 +74,7 @@ var user1,user2,user3,username1,username2,username3;
 //   }
 // }
 
-export default class Rank extends React.Component{
+export default class QuizPlay extends React.Component{
   constructor(props){
     super(props);
     this.state = {
@@ -79,6 +85,8 @@ export default class Rank extends React.Component{
       leaderboard:{
 
       },
+      score:[],
+      names:[],
       seconds:0,
       progress: 10,
       option0Color: grey100,
@@ -90,8 +98,8 @@ export default class Rank extends React.Component{
   }
   static get contextTypes(){
     return {
-      socket: PropTypes.object,
-      router: PropTypes.object
+      router: PropTypes.object.isRequired,
+      socket: PropTypes.object.isRequired
     }
   }
  toTitleCase(str)
@@ -100,16 +108,13 @@ export default class Rank extends React.Component{
     }
 
   componentDidMount(){
-
-      console.log('\n\n===========Cookie says username as: '+cookie.load('username'));
-
-        this.context.socket = io();
-        var that = this;
+      var username = JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub;
+      console.log('\n\n===========Cookie says username as: '+username+" "+this.context.socket+":socket");
+      console.log('context: '+this.context.socket);
+      var that = this;
         this.context.socket.on('newQuestion',function(data){
 
-          console.log('\n User name from cookie is: '+cookie.load('username'));
-
-
+          console.log('\n User name is: '+username);
            console.log((data.msg));
            that.setState({seconds:10});
            var seconds = 10;
@@ -131,7 +136,9 @@ export default class Rank extends React.Component{
         })
         // console.log('Mounting the component: ', (++countMount));
 
-        this.context.socket.emit('playGame',{username:cookie.load('username'),tournamentId:'1234'});
+        console.log('Before playGame emit');
+        this.context.socket.emit('playGame',{username:username,tournamentId:'1234'});
+
         this.context.socket.on('queued',function(msg){
 
         })
@@ -149,9 +156,10 @@ export default class Rank extends React.Component{
              that.setState({leaderboard:obj.answer.leaderboard});
              console.log('state leaderboard is: '+ JSON.stringify(that.state.leaderboard));
              var keys = Object.keys(that.state.leaderboard) ;
-             user1 = keys[1];
-             user2 = keys[2];
-             user3 = keys[3];
+             user1 = keys[0];
+             user2 = keys[1];
+             user3 = keys[2];
+             that.setState({names:keys});
              username1 = user1.match(/^([^@]*)@/)[1];
              username2 = user2.match(/^([^@]*)@/)[1];
              username3 = user3.match(/^([^@]*)@/)[1];
@@ -165,12 +173,12 @@ export default class Rank extends React.Component{
 
 
         })
-        this.context.socket.on('leaderboard',function(leaderboard){
-           alert(' Your game has ended ');
+        this.context.socket.on('leaderboard',function(id){
+           alert(' Your game has ended: '+id);
 
+             // cookie.save('leaderboard',leaderboard);
 
-            // cookie.save('leaderboard',leaderboard);
-            that.context.router.push('/dashboard');
+            that.context.router.push('/board/'+id);
         })
 
         this.context.socket.on('serverId',function(msg){
@@ -203,7 +211,7 @@ export default class Rank extends React.Component{
     }
 
   render(){
-
+    var username = JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub;
     var settings = {
           dots: false,
           // nextArrow:<SampleNextArrow />,
@@ -255,81 +263,108 @@ export default class Rank extends React.Component{
             </div>
           ):(
             <div className="container-fluid">
-              <div >
-                <h6>{this.state.serverId}</h6>
-              </div>
               <div>
-             <Slider {...settings}>
-
-              <div><Paper style={style} zDepth={2} >
-                        <div>{username1} </div>
-                         <div> {this.state.leaderboard[user1]}</div>
-              </Paper></div>
-
-              <div><Paper style={style} zDepth={2} >
-                        <div>{username2} </div>
-                         <div> {this.state.leaderboard[user2]}</div>
-              </Paper></div>
-
-              <div><Paper style={style} zDepth={2} >
-                        <div>{username3} </div>
-                         <div> {this.state.leaderboard[user3]}</div>
-              </Paper></div>
-
-              </Slider>
-              </div>
-              <hr/>
-
-              <div className='row'  >
-                <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
-
-                </div>
-                <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
-                  <div className='row center-xs'> <h4>{this.state.seconds}</h4> </div>
-                </div>
-                <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
-                  <div className='row end-xs'>
-                  </div>
-                </div>
-              </div>
-
-              <div class="ques">
-                <div >
-                  <div className='row' >
-                    <div className='col-xs-12'>
-                      <div className='row center-xs'>
-                        <div><img src={this.state.ques.image} /></div>
-
-                      </div>
+                <div className='row'>
+                  <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
+                    <div style={{
+                      height: 'auto',
+                      margin: '0 auto',
+                      padding: 10,
+                      position: 'relative',
+                      width: 100
+                    }}>
+                      <Paper style={style} zDepth={2} >
+                        <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
+                        <div>{this.state.names[0]} </div>
+                        <div> {this.state.leaderboard[user1]}</div>
+                      </Paper>
                     </div>
                   </div>
-                  <div className='row' >
-                    <div className='col-xs-12'>
-                      <div className='row center-xs'>
-
-                        <div><p>{this.state.ques.question}</p></div>
-                      </div>
+                  <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
+                    <div style={{
+                      height: 'auto',
+                      margin: '0 auto',
+                      padding: 10,
+                      position: 'relative',
+                      width: 100
+                    }}>
+                      <Paper style={style} zDepth={2} >
+                        <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
+                        <div>{this.state.names[1]} </div>
+                        <div> {this.state.leaderboard[user2]}</div>
+                      </Paper>
+                    </div>
+                  </div>
+                  <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
+                    <div style={{
+                      height: 'auto',
+                      margin: '0 auto',
+                      padding: 10,
+                      position: 'relative',
+                      width: 100
+                    }}>
+                      <Paper style={style} zDepth={2} >
+                        <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
+                        <div>{this.state.names[2]} </div>
+                        <div> {this.state.leaderboard[user3]}</div>
+                      </Paper>
                     </div>
                   </div>
                 </div>
-                <div className='row' >
-                  <div className='col-xs-6 col-sm-6 col-lg-6 col-md-6' >
-                    <RaisedButton disabled={this.state.answered || !this.state.enabled}  label={this.state.ques.options[0]} onClick={this.onClick.bind(this,this.state.ques.options[0])} disabledBackgroundColor={this.state.option0Color} backgroundColor={cyan500}  style={optionStyle}/>
+                <div>
+                  <div className='row'>
+                    <h6>{this.state.serverId}</h6>
                   </div>
-                  <div className='col-xs-6 col-sm-6 col-lg-6 col-md-6'>
-                    <RaisedButton disabled={this.state.answered || !this.state.enabled} label={this.state.ques.options[1]} onClick={this.onClick.bind(this,this.state.ques.options[1])}  disabledBackgroundColor={this.state.option1Color} backgroundColor={cyan500} style={optionStyle} />
-                  </div>
-                  <div className='col-xs-6 col-sm-6 col-lg-6 col-md-6'>
-                    <RaisedButton disabled={this.state.answered || !this.state.enabled} label={this.state.ques.options[2]} onClick={this.onClick.bind(this,this.state.ques.options[2])}  disabledBackgroundColor={this.state.option2Color} backgroundColor={cyan500} style={optionStyle} />
-                  </div>
-                  <div className='col-xs-6 col-sm-6 col-lg-6 col-md-6'>
-                    <RaisedButton disabled={this.state.answered || !this.state.enabled} label={this.state.ques.options[3]} onClick={this.onClick.bind(this,this.state.ques.options[3])}  disabledBackgroundColor={this.state.option3Color} backgroundColor={cyan500} style={optionStyle}/>
-                  </div>
+                  <div className='row'>
+                    <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
 
+                    </div>
+                    <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
+                      <div className='row center-xs'> <h4>{this.state.seconds}</h4> </div>
+                    </div>
+                    <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
+                      <div className='row end-xs'>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="ques">
+                    <div >
+                      <div className='row' >
+                        <div className='col-xs-12'>
+                          <div className='row center-xs'>
+                            <div><img src={this.state.ques.image} /></div>
+
+                          </div>
+                        </div>
+                      </div>
+                      <div className='row' >
+                        <div className='col-xs-12'>
+                          <div className='row center-xs'>
+
+                            <div><p>{this.state.ques.question}</p></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className='row' >
+                      <div className='col-xs-6 col-sm-6 col-lg-6 col-md-6' >
+                        <RaisedButton disabled={this.state.answered || !this.state.enabled}  label={this.state.ques.options[0]} onClick={this.onClick.bind(this,this.state.ques.options[0])} disabledBackgroundColor={this.state.option0Color} backgroundColor={cyan500}  style={optionStyle}/>
+                      </div>
+                      <div className='col-xs-6 col-sm-6 col-lg-6 col-md-6'>
+                        <RaisedButton disabled={this.state.answered || !this.state.enabled} label={this.state.ques.options[1]} onClick={this.onClick.bind(this,this.state.ques.options[1])}  disabledBackgroundColor={this.state.option1Color} backgroundColor={cyan500} style={optionStyle} />
+                      </div>
+                      <div className='col-xs-6 col-sm-6 col-lg-6 col-md-6'>
+                        <RaisedButton disabled={this.state.answered || !this.state.enabled} label={this.state.ques.options[2]} onClick={this.onClick.bind(this,this.state.ques.options[2])}  disabledBackgroundColor={this.state.option2Color} backgroundColor={cyan500} style={optionStyle} />
+                      </div>
+                      <div className='col-xs-6 col-sm-6 col-lg-6 col-md-6'>
+                        <RaisedButton disabled={this.state.answered || !this.state.enabled} label={this.state.ques.options[3]} onClick={this.onClick.bind(this,this.state.ques.options[3])}  disabledBackgroundColor={this.state.option3Color} backgroundColor={cyan500} style={optionStyle}/>
+                      </div>
+
+                    </div>
+
+                  </div>
                 </div>
-
               </div>
-
             </div>
           )}
 

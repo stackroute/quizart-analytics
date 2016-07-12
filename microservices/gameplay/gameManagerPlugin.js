@@ -1,13 +1,14 @@
 module.exports = function(options){
+     var seneca = require('seneca');
      var currentQuestion;
-     var questionFetcherClient = require('seneca')();
+     var meshConsumerMicroservice = require('seneca')();
      var leaderboardClient = require('seneca')();
      leaderboardClient.use('entity')
-                       .use('redis-store',{
-                         // uri:'redis://localhost:6379'
-                         uri:'redis://'+process.env.REDIS_URL+':'+process.env.REDIS_PORT
-                       })
-     questionFetcherClient.use('mesh',{auto:true,pin:'role:question,action:fetch'})
+     .use('redis-store',{
+       // uri:'redis://localhost:6379'
+       uri:'redis://'+process.env.REDIS_URL+':'+process.env.REDIS_PORT
+     })
+     meshConsumerMicroservice.use('mesh',{auto:true})
 
      // console.log('\n======================= Users are: '+options.users+'\n')
 
@@ -18,7 +19,7 @@ module.exports = function(options){
      var leaderboardId = Math.random()*300;
 
      var leaderboard = {}//leaderboardClient.make('leaderboard'+leaderboardId);
-     leaderboard["gameId"] = self.gameId;
+     //leaderboard["gameId"] = self.gameId;
      self.broadcast = require('seneca')()
      .use('redis-transport');
      self.broadcast.client({type:'redis',pin:'gameId:'+self.gameId+',role:broadcast,action:*'})
@@ -37,7 +38,7 @@ module.exports = function(options){
              pingCount--;
              respond(null,{answer:'pong'});
              if(pingCount===0) {
-               startGame();
+               startGame(seneca);
              }
            })
            .add('role:'+user+',gameId:'+self.gameId+',action:answer',function(msg,respond){
@@ -103,8 +104,8 @@ module.exports = function(options){
      //  return changedLeaderboard;
      // }
 
-     function startGame() {
-       questionFetcherClient.act('role:question,action:random',{topicId:'T1',noOfQuestions:5},function(err,response){
+     function startGame(seneca) {
+       meshConsumerMicroservice.act('role:question,action:random',{topicId:'T1',noOfQuestions:5},function(err,response){
          if(err) return console.log(err);
          var questionCount = response.questions.length-1;
          var questions = response.questions
@@ -129,14 +130,29 @@ module.exports = function(options){
              // var loadedLeaderboard = leaderboard.list$({},function(err,response){
              //   console.log('\n========Loaded the leaderboard, sending it to users=====\n')
              // })
-                console.log('\n==============Sending final leaderboard as: '+JSON.stringify(leaderboard)+'===================\n');
-                 self.broadcast.act('gameId:'+self.gameId+',role:broadcast,action:leaderboard',{leaderboard:leaderboard},function(err,response){
-               if(err) return console.log(err);
-               console.log('\n Received response for leaderboard \n');
+             var arr = Object.keys(leaderboard);
+             var input = {
+               leaderboard: []
+             };
+             for(var i=0;i<arr.length;i++) {
+               input.leaderboard.push({
+                 name:arr[i],
+                 score:leaderboard[arr[i]]
+               });
+             }
+             console.log('\n\ninput: '+JSON.stringify(input)+'\n\n');
+             console.log('\n==============Sending final leaderboard as: '+JSON.stringify(leaderboard)+'===================\n');
+             meshConsumerMicroservice.act('role:leaderboards,cmd:create',input, function(err, response) {
+               if(err) { console.error('===== ERR: ', err, ' ====='); return res.status(500).send(); }
+               if(response.response !== 'success') { return res.status(404).send(); }
+               self.broadcast.act('gameId:'+self.gameId+',role:broadcast,action:leaderboard',{id:response.entity._id},function(err,response){
+                 if(err) return console.log(err);
+                 console.log('\n Received response for leaderboard \n');
+              })
+              self.close();
+               //return res.status(201).json(response.entity);
+             });
 
-             })
-
-             self.close();
 
 
            }
@@ -160,13 +176,13 @@ module.exports = function(options){
            });
          }
 
-              if(gameStarted){
-                 self.broadcast.act('gameId:'+self.gameId+',role:broadcast,action:newQuestion',{question:questionObject},function(err,response){
-                  console.log('\n======================== Question sent =======\n')
-                  questionCount--;
-                 if(err) return console.log(err);
-                });
-             }
+          if(gameStarted){
+             self.broadcast.act('gameId:'+self.gameId+',role:broadcast,action:newQuestion',{question:questionObject},function(err,response){
+              console.log('\n======================== Question sent =======\n')
+              questionCount--;
+             if(err) return console.log(err);
+            });
+         }
 
 
          }
