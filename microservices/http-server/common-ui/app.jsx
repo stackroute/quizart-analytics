@@ -17,14 +17,11 @@ import Tournaments from './views/allTournaments/alltournaments';
 import EachTopicsPage from './views/EachTopicsPage';
 import Quiz from './views/QuizPlay';
 import SignUP from './views/SignUP';
-<<<<<<< HEAD
 import AuthSuccess from './views/AuthSuccess';
 import cookie from 'react-cookie';
-=======
 import LeaderBoard from './views/LeaderBoard';
 import ContextComponent from './context';
 import ProfilePage from './views/ProfilePage';
->>>>>>> 6bbe532b5a5efaf5a8198dc84db831b95b4fe3d0
 
 const verifyLogin = function(nextState, replace) {
   // var token = cookie.load('auth_cookie');
