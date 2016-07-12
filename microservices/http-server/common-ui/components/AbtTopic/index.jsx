@@ -136,11 +136,14 @@ const style_players={
     };
 
     render(){
+      if(this.state.arr === [] || this.state.arr == null || this.state.arr[0] == undefined)
+      { return (<div><p>Loading...........</p></div>) }
+      else{
       return(
         <div>
         <Card>
 
-          <p style={style_followers}>{this.state.arr.topicFollowers} </p>
+          <p style={style_followers}>{this.state.arr[0].topicFollowers} </p>
 
           <Checkbox
             checkedIcon={<FontIcon className="muidocs-icon-social-people" style={{color:'black'}}/>}
@@ -157,19 +160,19 @@ const style_players={
             />
 
             <CardHeader
-                title={this.state.arr.topicName}
-                subtitle={this.state.arr.topicDescription}
+                title={this.state.arr[0].topicName}
+                subtitle={this.state.arr[0].topicDescription}
               />
 
               <CardMedia
               overlay={
                 <div>
-                <p style={style_players}>{this.state.arr.playersPerMatch} players Per Match</p>
-                <CardTitle subtitle={this.state.arr.topicCategory} subtitleColor="white" />
+                <p style={style_players}>{this.state.arr[0].playersPerMatch} players Per Match</p>
+                <CardTitle subtitle={this.state.arr[0].topicCategory} subtitleColor="white" />
                 </div>
                }
               >
-                <img src={this.state.arr.topicIcon} />
+                <img src={this.state.arr[0].topicIcon} />
               </CardMedia>
               <CardActions className="row">
                   <RaisedButton label="Play" secondary={true} style={BtnStyle} onClick={this.handleClike.bind(this,this.props.id)} />
@@ -177,6 +180,7 @@ const style_players={
         </Card>
         </div>
       );
+    }
     }
 
   }

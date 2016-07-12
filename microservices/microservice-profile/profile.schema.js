@@ -10,7 +10,7 @@ var UserProfileSchema  = new Schema({
   liketopics: { type: [String]},
   following: {type : Number},
   followers: {type: Number},
-  catagory: {type: String}
+  category: {type: String}
 });
 
 exports = module.exports = mongoose.model('UserProfile', UserProfileSchema );

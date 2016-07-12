@@ -166,7 +166,9 @@ export default class Profile extends React.Component{
     contentType: 'application/json',
     });
     request.done(function(data) {
-    console.log(JSON.stringify(data));
+    console.log("Inside Success of Ajx in User profile===entire data is ",JSON.stringify(data));
+    console.log("Inside Success of Ajx in User profile===entire data is ",data);
+    console.log("Inside Success of Ajx in User profile===arr[0] is ",data[0]);
     this.setState({arr: data});
     }.bind(this));
     request.fail(function() {
@@ -189,167 +191,172 @@ export default class Profile extends React.Component{
         onTouchTap={this.handleSubmit.bind(this)}
       />,
     ];
-    // console.log("arr[0]",this.state.arr[0]);
+    console.log("arr[0]",this.state.arr);
     // this.state.Profile.username.value.split("@")[0]
     // var profile = this.state.arr[0];
     // console.log(profile);
+    if(this.state.arr === [] || this.state.arr == null || this.state.arr[0] == undefined)
+    { return (<div><p>Loading...........</p></div>) }
+    else{
+      return(
+        <div>
+        <Card>
+            <div className="row">
+              <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <div style={{textAlign: 'center'}}>
+                  <Avatar size={70} style={{margin: '30px 0 30px'}}
+                   src={this.state.arr[0].useravatar}
+                 />
+                </div>
+              </div>
+              <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4" >
+                <h2>{this.state.arr[0].name}</h2>
+                <h5>{this.state.arr[0].category}</h5>
+                <h5>{this.state.arr[0].age},{this.state.arr[0].country}</h5>
+              </div>
+              <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4" >
+                {
+                  localStorage.token ? (
+                    <div>
+                    <RaisedButton
+                    label="Edit Profile"
+                    primary={true}
+                    style={{marginTop: 50}}
+                    icon={<FontIcon style={{cursor:'pointer'}} className="muidocs-icon-image-edit"/>}
+                    onTouchTap={this.handleOpen}
+                    />
+                    <Dialog
+                      title="Edit Profile"
+                      actions={actions}
+                      modal={true}
+                      autoDetectWindowHeight={true}
+                      autoScrollBodyContent={true}
+                      open={this.state.open}
+                      onRequestClose={this.handleClose}
+                    >
+                    <div >
+                    <TextField
+                      hintText="userName"
+                      floatingLabelText="UserName"
+                      fullWidth={true}
+                      value={this.state.username}
+                      onChange={this.handleUserName.bind(this)}
+                    /><br />
+                    <TextField
+                      hintText="Name"
+                      floatingLabelText="Name"
+                      fullWidth={true}
+                      value={this.state.name}
+                      onChange={this.handleName.bind(this)}
+                    /><br />
+                      <TextField
+                        hintText="Avatar Image"
+                        floatingLabelText="Avatar Image"
+                        fullWidth={true}
+                        value={this.state.useravatar}
+                        onChange={this.handleImg.bind(this)}
+                      /><br />
+                      <TextField
+                        hintText="Age"
+                        floatingLabelText="Age"
+                        fullWidth={true}
+                        value={this.state.age}
+                        onChange={this.handleAge.bind(this)}
+                      /><br />
+                      <TextField
+                        hintText="Country"
+                        floatingLabelText="Country"
+                        fullWidth={true}
+                        value={this.state.country}
+                        onChange={this.handleCounry.bind(this)}
+                      /><br />
+                      </div>
+                    </Dialog>
+                    </div>
+                  ): (
+                    <RaisedButton
+                        label="Add Friend"
+                        primary={true}
+                        style={{marginTop: 50}}
+                        icon={<FontIcon style={{cursor:'pointer'}} className="muidocs-icon-social-person_add"/>}
+                        onTouchTap={this.addFriend.bind(this)}
+                    />
+                  )
 
-    return(
-      <div>
-      <Card>
-          <div className="row">
-            <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-              <div style={{textAlign: 'center'}}>
-                <Avatar size={70} style={{margin: '30px 0 30px'}}
-                 src={this.state.arr.useravatar}
-               />
+                }
               </div>
             </div>
-            <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4" >
-              <h2>{this.state.arr.name}</h2>
-              <h5>{this.state.arr.category}</h5>
-              <h5>{this.state.arr.age},{this.state.arr.country}</h5>
-            </div>
-            <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4" >
-              {
-                localStorage.token ? (
-                  <div>
-                  <RaisedButton
-                  label="Edit Profile"
-                  primary={true}
-                  style={{marginTop: 50}}
-                  icon={<FontIcon style={{cursor:'pointer'}} className="muidocs-icon-image-edit"/>}
-                  onTouchTap={this.handleOpen}
-                  />
-                  <Dialog
-                    title="Edit Profile"
-                    actions={actions}
-                    modal={true}
-                    autoDetectWindowHeight={true}
-                    autoScrollBodyContent={true}
-                    open={this.state.open}
-                    onRequestClose={this.handleClose}
-                  >
-                  <div >
-                  <TextField
-                    hintText="userName"
-                    floatingLabelText="UserName"
-                    fullWidth={true}
-                    value={this.state.username}
-                    onChange={this.handleUserName.bind(this)}
-                  /><br />
-                  <TextField
-                    hintText="Name"
-                    floatingLabelText="Name"
-                    fullWidth={true}
-                    value={this.state.name}
-                    onChange={this.handleName.bind(this)}
-                  /><br />
-                    <TextField
-                      hintText="Avatar Image"
-                      floatingLabelText="Avatar Image"
-                      fullWidth={true}
-                      value={this.state.imageLink}
-                      onChange={this.handleImg.bind(this)}
-                    /><br />
-                    <TextField
-                      hintText="Age"
-                      floatingLabelText="Age"
-                      fullWidth={true}
-                      value={this.state.age}
-                      onChange={this.handleAge.bind(this)}
-                    /><br />
-                    <TextField
-                      hintText="Country"
-                      floatingLabelText="Country"
-                      fullWidth={true}
-                      value={this.state.country}
-                      onChange={this.handleCounry.bind(this)}
-                    /><br />
-                    </div>
-                  </Dialog>
-                  </div>
-                ): (
-                  <RaisedButton
-                      label="Add Friend"
-                      primary={true}
-                      style={{marginTop: 50}}
-                      icon={<FontIcon style={{cursor:'pointer'}} className="muidocs-icon-social-person_add"/>}
-                      onTouchTap={this.addFriend.bind(this)}
-                  />
-                )
-
-              }
-            </div>
-          </div>
+            <br/>
+          <Divider />
           <br/>
-        <Divider />
-        <br/>
-        <CardMedia>
-          <div className="row">
-            <div className="col-xs-5 col-sm-5 col-md-5 col-lg-7" style={styles} >
-              <h2>Create your Own Tournament</h2>
-              <RaisedButton label="Start Here" secondary={true}/>
+          <CardMedia>
+            <div className="row">
+              <div className="col-xs-5 col-sm-5 col-md-5 col-lg-7" style={styles} >
+                <h2>Create your Own Tournament</h2>
+                <RaisedButton label="Start Here" secondary={true}/>
+              </div>
+              <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2" style={styles}>
+                  <img style={styles} src="http://lorempixel.com/100/100/technics" />
+              </div>
             </div>
-            <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2" style={styles}>
-                <img style={styles} src="http://lorempixel.com/100/100/technics" />
-            </div>
-          </div>
-        </CardMedia>
-        <br/>
-        <Divider />
-        <br/>
-        <div className="row">
-          <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={style1}>
-          <h3>Followed Topics</h3>
-          </div>
-          <div className="row">
-          <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3" style={styles}>
-            <CardMedia >
-              <img style={styleCard} src="http://lorempixel.com/100/100/animals/"/>
-              <h4>Animals</h4>
-            </CardMedia>
-          </div>
-          <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3" style={styles}>
-            <CardMedia>
-              <img style={styleCard} src="http://lorempixel.com/100/100/food/" />
-              <h4>Food</h4>
-            </CardMedia>
-          </div>
-          <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3" style={styles}>
-            <CardMedia>
-              <img style={styleCard} src="http://lorempixel.com/100/100/city/" />
-              <h4>City</h4>
-            </CardMedia>
-         </div>
-          </div>
+          </CardMedia>
           <br/>
           <Divider />
-        </div>
+          <br/>
+          <div className="row">
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={style1}>
+            <h3>Followed Topics</h3>
+            </div>
+            <div className="row">
+            <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3" style={styles}>
+              <CardMedia >
+                <img style={styleCard} src="http://lorempixel.com/100/100/animals/"/>
+                <h4>Animals</h4>
+              </CardMedia>
+            </div>
+            <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3" style={styles}>
+              <CardMedia>
+                <img style={styleCard} src="http://lorempixel.com/100/100/food/" />
+                <h4>Food</h4>
+              </CardMedia>
+            </div>
+            <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3" style={styles}>
+              <CardMedia>
+                <img style={styleCard} src="http://lorempixel.com/100/100/city/" />
+                <h4>City</h4>
+              </CardMedia>
+           </div>
+            </div>
+            <br/>
+            <Divider />
+          </div>
 
-        <br/>
-        <Divider/>
+          <br/>
+          <Divider/>
 
-        <div className="row">
+          <div className="row">
 
-        <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-lg-offset-1" style={styles}>
-        <h4>Games</h4>
-        <h2>{this.state.arr.totalGames}</h2>
-        </div>
-        <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4" style={style}>
-        <h4>Followers</h4>
-        <h2>{this.state.arr.followers}</h2>
-        </div>
-        <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3" style={styles}>
-        <h4>Following</h4>
-        <h2>{this.state.arr.following}</h2>
-        </div>
-        <Divider />
-        </div>
+          <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-lg-offset-1" style={styles}>
+          <h4>Games</h4>
+          <h2>{this.state.arr[0].totalGames}</h2>
+          </div>
+          <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4" style={style}>
+          <h4>Followers</h4>
+          <h2>{this.state.arr[0].followers}</h2>
+          </div>
+          <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3" style={styles}>
+          <h4>Following</h4>
+          <h2>{this.state.arr[0].following}</h2>
+          </div>
+          <Divider />
+          </div>
 
-        <Divider/>
-      </Card>
-      </div>
-    );
+          <Divider/>
+        </Card>
+        </div>
+      );
+
+    }
+
   }
 }
