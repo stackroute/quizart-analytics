@@ -17,8 +17,13 @@ import Tournaments from './views/allTournaments/alltournaments';
 import EachTopicsPage from './views/EachTopicsPage';
 import Quiz from './views/QuizPlay';
 import SignUP from './views/SignUP';
+import AuthSuccess from './views/AuthSuccess';
+import cookie from 'react-cookie';
 
 const verifyLogin = function(nextState, replace) {
+  // var token = cookie.load('auth_cookie');
+  // console.log("===inside app.jsx, cookie token is ====",token);
+  // console.log( response.getHeader("token"));
   if(!localStorage.token) {
     replace({
       pathname: '/login',
@@ -59,6 +64,7 @@ ReactDOM.render(
       <Route path="/tournaments" component={Tournaments} onEnter={verifyLogin} />
       <Route path="/eachTopic" component={EachTopicsPage} onEnter={verifyLogin} />
       <Route path="/quiz" component={Quiz} />
+      <Route path="/authsuccess/:token" component={AuthSuccess} />
       <Route path="my-account/change-password" component={ChangePasswordView} onEnter={verifyLogin} />
     </Router>
   </MuiThemeProvider>

@@ -5,7 +5,8 @@ var controller = {};
 
 controller.signup = function(req, res) {
   var data = {
-    username : req.body.name,
+    username : req.body.username,
+    name : req.body.name,
     password : req.body.password
   }
   mesh.act('role:authentication,cmd:create', data, function(err, response) {
@@ -21,7 +22,7 @@ controller.signup = function(req, res) {
         success : false
       })
     }
-    
+
   });
 };
 
