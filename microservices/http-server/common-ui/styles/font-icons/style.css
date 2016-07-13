@@ -79,6 +79,9 @@
 .muidocs-icon-social-person:after {
     content: "person";
 }
+.muidocs-icon-social-person_add:after {
+    content: "person_add";
+}
 .muidocs-icon-social-notifications:after {
     content: "notifications";
 }

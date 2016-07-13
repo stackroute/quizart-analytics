@@ -5,13 +5,10 @@
   "main": "profile-plugin.js",
   "scripts": {
     "start": "node profile-microservice.js",
-    "test": "grunt test"
+    "test": "./node_modules/grunt/bin/grunt test"
   },
   "keywords": [
-    "authentication",
-    "account",
     "profile",
-    "friend",
     "entity",
     "mongodb"
   ],

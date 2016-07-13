@@ -9,10 +9,14 @@ const consumerMicroservice = seneca();
 const profile = {
   username:"SomeName",
   name:"SomeName",
-  imageLink:"http://lorempixel.com/600/337/nature/",
-  age:"25",
+  useravatar:"http://lorempixel.com/600/337/nature/",
+  age:25,
   country:"SomeCountry",
-  totalGames:"5",
+  totalgames:5,
+  liketopics: [],
+  following: 10,
+  followers: 10,
+  category: "Beginner"
   }
 
 describe('Setup', function() {
@@ -40,7 +44,7 @@ describe('Setup', function() {
 
 describe('Before', function() {
   it('Clear profile collection', function(done) {
-    consumerMicroservice.act('role:profile,cmd:dangerouslyDeleteAllProfiles', function(err, response) {
+    consumerMicroservice.act('role:profile,cmd:dangerouslyDeleteAllProfile', function(err, response) {
       if(err) { return done(err); }
       response.should.have.property('response');
       response.response.should.be.exactly('success');
@@ -53,7 +57,7 @@ var createdProfileId;
 describe('Profile Microservice API', function() {
   this.timeout(5000)
   it('Retrieve profile by username', function(done) {
-    consumerMicroservice.act('role:tournaments,cmd:getProfile',{username:"SomeName"},function(err, response) {
+    consumerMicroservice.act('role:profile,cmd:getProfile',{username:"SomeName"},function(err, response) {
       if(err) {return done(err);}
       response.should.have.property('response');
       response.response.should.be.exactly('success');
@@ -70,44 +74,29 @@ describe('Profile Microservice API', function() {
       response.entity.age.should.be.exactly(profile.age);
       response.entity.should.have.property('country');
       response.entity.country.should.be.exactly(profile.country);
-      response.entity.should.have.property('totalGames');
-      response.entity.totalGames.should.be.exactly(profile.totalGames);
+      response.entity.should.have.property('totalgames');
+      response.entity.totalGames.should.be.exactly(profile.totalgames);
       done();
     })
   });
 
-
-
-
 });
 
-// describe('Edit Profile', function() {
-//   it('Edit Profile', function(done) {
-//     const editProfileRequest = {
-//       username: profile.username,
-//       }
-//
-//     consumerMicroservice.act('role:profile,cmd:editProfile', editProfileRequest, function(err, response) {
-//       if(err) { return done(err); }
-//       response.should.have.property('response');
-//       response.response.should.be.exactly('success');
-//       done();
-//     });
-//   });
-//
-//   it('Edit profile of different user', function(done) {
-//     const editProfileRequest = {
-//       username: 'username',
-//     }
-//
-//     consumerMicroservice.act('role:profile,cmd:editProfile', editProfileRequest, function(err, response) {
-//       if(err) { return done(err); }
-//       response.should.have.property('response');
-//       response.response.should.be.exactly('fail');
-//       done();
-//     });
-//   });
-// });
+describe('Edit Profile', function() {
+  it('Edit Profile', function(done) {
+    const editProfile = {
+      age: profile.age,
+      }
+
+    consumerMicroservice.act('role:profile,cmd:editProfile', editProfile, function(err, response) {
+      if(err) { return done(err); }
+      response.should.have.property('response');
+      response.response.should.be.exactly('success');
+      done();
+    });
+  });
+
+});
 //
 // describe('Delete Profile', function() {
 //   it('Delete profile', function(done) {

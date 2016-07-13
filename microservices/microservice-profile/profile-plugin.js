@@ -19,13 +19,13 @@ exports = module.exports = function(options) {
     });
   });
 
-  function hashPassword(password, callback) {
-    return bcrypt.hash(password, 10, callback);
-  }
-
-  function verifyPassword(password, hash, callback) {
-    return bcrypt.compare(password, hash, callback);
-  }
+  // function hashPassword(password, callback) {
+  //   return bcrypt.hash(password, 10, callback);
+  // }
+  //
+  // function verifyPassword(password, hash, callback) {
+  //   return bcrypt.compare(password, hash, callback);
+  // }
 
   const UserProfile = connection.model('UserProfile', require('./profile.schema'));
 
@@ -38,12 +38,12 @@ exports = module.exports = function(options) {
     });
   });
 
-  this.add('role:profile,cmd:retrieveById', function(msg, respond) {
-    return UserProfile.findById(msg.id, function (err, retrievedProfile) {
-      if(err) { return respond(err); }
-      return respond(null, {response: 'success', entity: retrievedProfile});
-    });
-  });
+  // this.add('role:profile,cmd:retrieveById', function(msg, respond) {
+  //   return UserProfile.findById(msg.id, function (err, retrievedProfile) {
+  //     if(err) { return respond(err); }
+  //     return respond(null, {response: 'success', entity: retrievedProfile});
+  //   });
+  // });
 
   this.add('role:profile,cmd:getProfile', function(msg, respond) {
     console.log("=============Inside plugin getProfile list msg==== ",msg);
@@ -53,21 +53,16 @@ exports = module.exports = function(options) {
     });
   });
 
+
   this.add('role:profile,cmd:editProfile', function(msg, respond) {
-    return UserProfile.find({username:msg.username}, function (err, retrievedProfile) {
-      if(err) { return respond(err); }
-      else{
-        retrievedProfile[0].name= msg.name;
-        retrievedProfile[0].imageLink= msg.imageLink;
-        retrievedProfile[0].age= msg.age;
-        retrievedProfile[0].country= msg.country;
-        retrievedProfile[0].save(function(err, updatedProfile) {
-          if(err) { return respond(err); }
-          return respond(null, {response: 'success',entity: updatedProfile});
+
+      return UserProfile.update({username: msg.username},{$set:{name:msg.name,age: msg.age,useravatar:msg.useravatar,country:msg.country}},function(err,updatedProfile){
+          if(err) { console.error("Error"); }
+          return respond(null, {response: 'success', entity: updatedProfile});
         });
-      }
-      });
-  });
+
+    });
+
 
   this.add('role:profile,cmd:dangerouslyDeleteAllProfile', function(msg, respond) {
     return UserProfile.remove({}, function(err) {

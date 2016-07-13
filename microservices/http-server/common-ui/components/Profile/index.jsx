@@ -51,23 +51,26 @@ export default class Profile extends React.Component{
     console.log("Inside Constructor of Profile Page===",this.props.username);
     this.state = {
       name: "",
-      imageLink: "http://lorempixel.com/100/100/nature/",
+      useravatar: "http://lorempixel.com/100/100/nature/",
       age: "",
       country: "",
       open: false,
       arr:[],
-      uid:this.props.username
+      uid:this.props.username,
+      Profile: {
+        username: JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub,
+      }
     }
   };
 
-  handleUserName(event) {
-    if(event.target.value != this.state.Profile.username.value){
-    return{
-      username: 'UserName cannot be changed'
-    }
-  }
-  this.setState({username: event.target.value});
-  };
+  // handleUserName(event) {
+  //   if(event.target.value != this.state.Profile.username){
+  //   return{
+  //     username: 'UserName cannot be changed'
+  //   }
+  // }
+  // this.setState({username: event.target.value});
+  // };
 
   handleName(event) {
     this.setState({name: event.target.value});
@@ -96,63 +99,62 @@ export default class Profile extends React.Component{
   handleSubmit(){
 
         var profileData = {
-          username: this.state.username,
+          username: this.state.Profile.username,
           name: this.state.name,
-          imageLink: this.state.useravatar,
+          useravatar: this.state.useravatar,
           age: this.state.age,
           country: this.state.country
         };
 
         var request = $.ajax({
-          url: restUrl + '/api/v1/profile',
-          type: 'PUT',
-          data: JSON.stringify(profileData),
-          contentType: 'application/json',
-          headers: {JWT: localStorage.token}
+        url: restUrl + '/api/v1/profile',
+        type: 'PUT',
+        data: JSON.stringify(profileData),
+        contentType: 'application/json',
         });
+
         request.done(function(data) {
           console.log(JSON.stringify(data));
         }.bind(this));
         request.fail(function() {
-          this.setState({
-            error: true
-            });
+            console.log("Cannot Edit");
           }.bind(this));
 
           this.setState({
             open:false
-          })
+          });
+        console.log("Submitted");
 
         }
 
         addFriend(){
 
-              var friendsData = {
-                subject: this.state.Profile.username.value,
-                relation: "sent friend request",
-                object: "preethi1@gmail.com",
-                };
-
-              var request = $.ajax({
-                url: restUrl + '/api/v1/friend',
-                type: 'POST',
-                data: JSON.stringify(friendsData),
-                contentType: 'application/json',
-                headers: {JWT: localStorage.token}
-              });
-              request.done(function(data) {
-                console.log(JSON.stringify(data));
-              }.bind(this));
-              request.fail(function() {
-                this.setState({
-                  error: true
-                  });
-                }.bind(this));
-
-                this.setState({
-                  open:false
-                })
-
+              // var friendsData = {
+              //   subject: this.state.Profile.username,
+              //   relation: "sent friend request",
+              //   object: "preethi1@gmail.com",
+              //   };
+              //
+              // var request = $.ajax({
+              //   url: restUrl + '/api/v1/friend',
+              //   type: 'POST',
+              //   data: JSON.stringify(friendsData),
+              //   contentType: 'application/json',
+              //   headers: {JWT: localStorage.token}
+              // });
+              // request.done(function(data) {
+              //   console.log(JSON.stringify(data));
+              // }.bind(this));
+              // request.fail(function() {
+              //   this.setState({
+              //     error: true
+              //     });
+              //   }.bind(this));
+              //
+              //   this.setState({
+              //     open:false
+              //   })
+                console.log("Added As Friend");
               }
 
   componentDidMount(){
@@ -216,7 +218,7 @@ export default class Profile extends React.Component{
               </div>
               <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4" >
                 {
-                  localStorage.token ? (
+                  ((this.state.Profile.username)===(this.state.uid)) ? (
                     <div>
                     <RaisedButton
                     label="Edit Profile"
@@ -239,8 +241,7 @@ export default class Profile extends React.Component{
                       hintText="userName"
                       floatingLabelText="UserName"
                       fullWidth={true}
-                      value={this.state.username}
-                      onChange={this.handleUserName.bind(this)}
+                      value={this.state.Profile.username}
                     /><br />
                     <TextField
                       hintText="Name"
@@ -338,7 +339,7 @@ export default class Profile extends React.Component{
 
           <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-lg-offset-1" style={styles}>
           <h4>Games</h4>
-          <h2>{this.state.arr[0].totalGames}</h2>
+          <h2>{this.state.arr[0].totalgames}</h2>
           </div>
           <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4" style={style}>
           <h4>Followers</h4>
