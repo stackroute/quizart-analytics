@@ -59,7 +59,7 @@ module.exports = function(options){
                // console.log('\n User Response Channel for ' + user + ' ready. '+Date.now()+'\n');
                // console.log('\n======PIN is: role:'+user+',gameId:'+self.gameId+'\n');
 
-               options.callback();
+               options.callback(options.users,options.gameId);
              }
 
            });
@@ -140,8 +140,21 @@ module.exports = function(options){
                  score:leaderboard[arr[i]]
                });
              }
+
+             input.leaderboard.sort(
+               function(a, b) {
+                   return b.score - a.score;
+               }
+             )
              console.log('\n\ninput: '+JSON.stringify(input)+'\n\n');
              console.log('\n==============Sending final leaderboard as: '+JSON.stringify(leaderboard)+'===================\n');
+             if(options.isTournament) {
+               meshConsumerMicroservice.act('role:tournaments,cmd:updateWinners',{id:options.knockoutId, winners:input.leaderboard}, function(err, response) {
+                 if(err) { console.error('===== ERR: ', err, ' ====='); return res.status(500).send(); }
+                 if(response.response !== 'success') { return res.status(404).send(); }
+                 //return res.status(201).json(response.entity);
+               });
+             }
              meshConsumerMicroservice.act('role:leaderboards,cmd:create',input, function(err, response) {
                if(err) { console.error('===== ERR: ', err, ' ====='); return res.status(500).send(); }
                if(response.response !== 'success') { return res.status(404).send(); }

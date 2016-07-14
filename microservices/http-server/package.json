@@ -61,6 +61,7 @@
     "react-tap-event-plugin": "^1.0.0",
     "should": "^9.0.2",
     "supertest": "^1.2.0",
+    "tournament-microservice": "file:../microservice-tournaments",
     "webpack": "^1.12.2",
     "webpack-dev-server": "^1.12.1"
   },

@@ -19,6 +19,8 @@ import Quiz from './views/QuizPlay';
 import SignUP from './views/SignUP';
 import LeaderBoard from './views/LeaderBoard';
 import ContextComponent from './context';
+import CreateTournament from './views/CreateTournament';
+import TournamentsContainer from './views/TournamentsContainer';
 
 const verifyLogin = function(nextState, replace) {
   if(!localStorage.token) {
@@ -61,9 +63,11 @@ ReactDOM.render(
       <Route path="/topics" component={Topics} onEnter={verifyLogin} />
       <Route path="/tournaments" component={Tournaments} onEnter={verifyLogin} />
       <Route path="/eachTopic" component={EachTopicsPage} onEnter={verifyLogin} />
-      <Route path="/quiz" component={Quiz} />
+      <Route name="quiz" path="/quiz" component={Quiz} />
       <Route name="leaderboard" path="/board/:id" component={LeaderBoard} />
       <Route path="my-account/change-password" component={ChangePasswordView} onEnter={verifyLogin} />
+      <Route path="/create" component={CreateTournament} onEnter={verifyLogin}/>
+      <Route path="/tournament" component={TournamentsContainer} onEnter={verifyLogin}/>
     </Router>
   </MuiThemeProvider>
   </ContextComponent>

@@ -184,6 +184,8 @@ io.on('connection',function(socket){
     playerMiddleWareService.use('./gameplayMiddlewarePlugin', {
       username:msg.username,
       tournamentId:msg.tournamentId,
+      isTournament:msg.isTournament,
+      knockoutId:msg.knockoutId,
       socket:socket
     });
   });
