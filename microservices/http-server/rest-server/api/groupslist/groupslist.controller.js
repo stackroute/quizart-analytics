@@ -3,16 +3,6 @@ var mesh = context.mesh;
 
 var controller = {};
 
-// controller.getfriendslist = function(req, res) {
-//   var uid = req.param("uid");
-//   console.log("======user id passed to server "+uid);
-//   mesh.act('role:chat,cmd:getFriendList', {uid:req.param("uid")}, function(err, response) {
-//     if(err) { console.log('===== ERR: ', err, ' ====='); return res.status(500).send(); }
-//     if(response.response !== 'success') { return res.status(403).send(); }
-//     console.log("==========Inside controller====== ",response.friends);
-//     return res.status(201).json({data:response.friends});
-//   });
-// };
 
 controller.getgroupslist = function(req, res) {
   var uid = req.param("uid");
@@ -33,8 +23,8 @@ controller.addgroup = function(req, res) {
   mesh.act('role:chat,cmd:creategroup', req.body, function(err, response) {
     if(err) { console.log('===== ERR: ', err, ' ====='); return res.status(500).send(); }
     if(response.response !== 'success') { return res.status(403).send(); }
-    console.log("==========Inside controller data to post into groups====== ",response.group);
-    var groupObj = {subject:response.group.topicid,relation:"Members are",object:req.body.members};
+    console.log("==========Inside controller,group data to post into friends collection====== ",response.group);
+    var groupObj = {subject:response.group.topicid,relation:"members are",object:req.body.members};
     console.log("====Inside controller the groupobj to be updated in friends ",groupObj);
     mesh.act('role:chat,cmd:createFriends',groupObj,
     function(err,response1){

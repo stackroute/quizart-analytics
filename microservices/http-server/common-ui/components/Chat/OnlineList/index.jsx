@@ -116,7 +116,7 @@ export default class OnlineList extends React.Component{
           members:groupInfo.users
       };
 
-      console.log(groupDataPost);
+      console.log("Inside Post group and data to be posted====",groupDataPost);
 
       $.ajax({
         url: restUrl + '/api/v1/groupslist/addgroup',

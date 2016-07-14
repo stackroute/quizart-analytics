@@ -78,6 +78,19 @@ export default class LoginForm extends React.Component {
     this.setState({openFailDialog: false});
   }
 
+  googleLogin(){
+    $.ajax({
+      type: 'POST',
+      url : restUrl + 'api/authenticate/google',
+      contentType : 'application/json',
+      success : (function(data){
+        if(data.redirect){
+          window.location.href = data.redirect;
+        }
+      }).bind(this)
+    })
+  }
+
   render() {
     const actions = [
       <FlatButton
@@ -111,6 +124,7 @@ export default class LoginForm extends React.Component {
             label="Login"
             primary={true}
             style={{width: '100%', marginTop: '25px'}} />
+          <RaisedButton label = "Login With Google" secondary = {true} style = {{width: '100%', marginTop: '25px'}} onClick={this.googleLogin.bind(this) }/>
           <Link to ='/SignUP'>
             <RaisedButton label = "Sign Up" secondary = {true} style = {styles}/><br/><br/>
           </Link>

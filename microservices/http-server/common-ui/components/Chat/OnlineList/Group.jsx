@@ -62,7 +62,8 @@ import base64 from 'base-64';
 
   handleSubmit(){
     console.log("======Inside Add group client, selected users ,",this.state.selectedusers);
-    this.setState({selectedusers:this.state.selectedusers.concat(this.state.username)})
+    console.log("=======InsideAdd group client, username is === ", this.state.username);
+    this.setState({selectedusers:this.state.selectedusers.push(this.state.username)})
     this.props.addGroup(this.state.groupName,this.state.selectedusers);
     this.props.close;
     this.setState({
