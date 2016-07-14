@@ -59,9 +59,19 @@ export default class Profile extends React.Component{
       uid:this.props.username,
       Profile: {
         username: JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub,
-      }
+      },
+      openFailed: false,
+      openSuccess: false,
+      disable: false,
+      addFriend: "Add Friend"
     }
   };
+
+  static get contextTypes() {
+    return {
+      router: React.PropTypes.object.isRequired
+    }
+  }
 
   // handleUserName(event) {
   //   if(event.target.value != this.state.Profile.username){
@@ -114,10 +124,12 @@ export default class Profile extends React.Component{
         });
 
         request.done(function(data) {
-          console.log(JSON.stringify(data));
+          // console.log(JSON.stringify(data));
+          this.setState({openSuccess: true});
         }.bind(this));
         request.fail(function() {
             console.log("Cannot Edit");
+            this.setState({openFailed: true});
           }.bind(this));
 
           this.setState({
@@ -129,31 +141,31 @@ export default class Profile extends React.Component{
 
         addFriend(){
 
-              // var friendsData = {
-              //   subject: this.state.Profile.username,
-              //   relation: "sent friend request",
-              //   object: "preethi1@gmail.com",
-              //   };
-              //
-              // var request = $.ajax({
-              //   url: restUrl + '/api/v1/friend',
-              //   type: 'POST',
-              //   data: JSON.stringify(friendsData),
-              //   contentType: 'application/json',
-              //   headers: {JWT: localStorage.token}
-              // });
-              // request.done(function(data) {
-              //   console.log(JSON.stringify(data));
-              // }.bind(this));
-              // request.fail(function() {
-              //   this.setState({
-              //     error: true
-              //     });
-              //   }.bind(this));
-              //
-              //   this.setState({
-              //     open:false
-              //   })
+              var friendsData = {
+                subject: [this.state.Profile.username,"preeth1@gmail.com"],
+                relation: "friends",
+                object: [],
+                };
+
+              var request = $.ajax({
+                url: restUrl + '/api/v1/friend',
+                type: 'POST',
+                data: JSON.stringify(friendsData),
+                contentType: 'application/json',
+
+              });
+              request.done(function(data) {
+                console.log(JSON.stringify(data));
+                this.setState({
+                  disable:true,
+                  addFriend: "Friends"
+                });
+              }.bind(this));
+              request.fail(function() {
+                  console.log("Error sending Friend request");
+                }.bind(this));
+
+
                 console.log("Added As Friend");
               }
 
@@ -179,6 +191,15 @@ export default class Profile extends React.Component{
 
   };
 
+  handleSuccessClose() {
+    this.context.router.push('/ProfilePage/'+this.props.username);
+    this.setState({openSuccess:false});
+  }
+
+  handleFailClose() {
+    this.setState({openFailed: false});
+  }
+
   render(){
     const actions = [
       <FlatButton
@@ -193,6 +214,21 @@ export default class Profile extends React.Component{
         onTouchTap={this.handleSubmit.bind(this)}
       />,
     ];
+
+    const failDialogActions = [
+      <FlatButton
+        label="Retry"
+        primary={true}
+        onTouchTap={this.handleFailClose.bind(this)} />
+    ];
+    const successDialogActions = [
+      <FlatButton
+        label="Close"
+        primary={true}
+        onTouchTap={this.handleSuccessClose.bind(this)} />
+    ];
+
+
     console.log("arr[0]",this.state.arr);
     // this.state.Profile.username.value.split("@")[0]
     // var profile = this.state.arr[0];
@@ -276,8 +312,9 @@ export default class Profile extends React.Component{
                     </div>
                   ): (
                     <RaisedButton
-                        label="Add Friend"
+                        label={this.state.addFriend}
                         primary={true}
+                        disable = {this.state.disable}
                         style={{marginTop: 50}}
                         icon={<FontIcon style={{cursor:'pointer'}} className="muidocs-icon-social-person_add"/>}
                         onTouchTap={this.addFriend.bind(this)}
@@ -285,6 +322,20 @@ export default class Profile extends React.Component{
                   )
 
                 }
+                <Dialog
+                  title="Unsuccessful"
+                  actions={failDialogActions}
+                  modal={true}
+                  open={this.state.openFailed}>
+                  Couldnt Edit your profile. Please try again.
+                </Dialog>
+                <Dialog
+                  title="Profile Edited"
+                  actions={successDialogActions}
+                  modal={true}
+                  open={this.state.openSuccess}>
+                  Profile edited successfully!
+                </Dialog>
               </div>
             </div>
             <br/>

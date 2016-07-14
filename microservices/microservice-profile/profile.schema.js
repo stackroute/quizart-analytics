@@ -11,7 +11,9 @@ var UserProfileSchema  = new Schema({
   liketopics: { type: [String]},
   following: {type : Number},
   followers: {type: Number},
-  category: {type: String}
+  category: {type: String},
+  friends :{type: [String]},
+  ranking : {type: Number, default: 1200}
 });
 
 exports = module.exports = mongoose.model('UserProfile', UserProfileSchema );
