@@ -32,9 +32,13 @@ exports = module.exports = function(options) {
 
 
   this.add('role:profile,cmd:create', function(msg, respond) {
-    return UserProfile.create(msg, function(err, createdProfile) {
+    return UserProfile.find({username:msg.username},function(err,retrievedProfiles){
       if(err) { return respond(err); }
-      return respond(null, {response: 'success', entity: createdProfile});
+      if(retrievedProfiles.length > 0) { return respond(null, {response: 'fail'}); }
+      return UserProfile.create(msg, function(err, createdProfile) {
+        if(err) { return respond(err); }
+        return respond(null, {response: 'success', entity: createdProfile});
+      }
     });
   });
 
