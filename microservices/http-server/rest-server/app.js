@@ -127,7 +127,7 @@ app.get('/api/auth/success/google',function(req,res){
             // res.setHeader("token",tokenresponse.token);
             // res.setHeader("token",tokenresponse.token).redirect('http://192.168.99.101:8001/#/');
             // res.send({ token: tokenresponse.token });
-            res.redirect('http://192.168.99.101:8001/#/authsuccess/'+tokenresponse.token);
+            res.redirect('http://192.168.99.100:8001/#/authsuccess/'+tokenresponse.token);
             // res
           })
       } else {

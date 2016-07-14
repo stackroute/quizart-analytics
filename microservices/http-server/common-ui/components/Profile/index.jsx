@@ -314,7 +314,7 @@ export default class Profile extends React.Component{
                     <RaisedButton
                         label={this.state.addFriend}
                         primary={true}
-                        disable = {this.state.disable}
+                        disabled = {this.state.disable}
                         style={{marginTop: 50}}
                         icon={<FontIcon style={{cursor:'pointer'}} className="muidocs-icon-social-person_add"/>}
                         onTouchTap={this.addFriend.bind(this)}
