@@ -142,7 +142,7 @@ export default class Profile extends React.Component{
         addFriend(){
 
               var friendsData = {
-                subject: [this.state.Profile.username,"preeth1@gmail.com"],
+                subject: [this.state.Profile.username,this.props.username],
                 relation: "friends",
                 object: [],
                 };
