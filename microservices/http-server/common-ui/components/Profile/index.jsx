@@ -51,23 +51,36 @@ export default class Profile extends React.Component{
     console.log("Inside Constructor of Profile Page===",this.props.username);
     this.state = {
       name: "",
-      imageLink: "http://lorempixel.com/100/100/nature/",
+      useravatar: "http://lorempixel.com/100/100/nature/",
       age: "",
       country: "",
       open: false,
       arr:[],
-      uid:this.props.username
+      uid:this.props.username,
+      Profile: {
+        username: JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub,
+      },
+      openFailed: false,
+      openSuccess: false,
+      disable: false,
+      addFriend: "Add Friend"
     }
   };
 
-  handleUserName(event) {
-    if(event.target.value != this.state.Profile.username.value){
-    return{
-      username: 'UserName cannot be changed'
+  static get contextTypes() {
+    return {
+      router: React.PropTypes.object.isRequired
     }
   }
-  this.setState({username: event.target.value});
-  };
+
+  // handleUserName(event) {
+  //   if(event.target.value != this.state.Profile.username){
+  //   return{
+  //     username: 'UserName cannot be changed'
+  //   }
+  // }
+  // this.setState({username: event.target.value});
+  // };
 
   handleName(event) {
     this.setState({name: event.target.value});
@@ -96,41 +109,42 @@ export default class Profile extends React.Component{
   handleSubmit(){
 
         var profileData = {
-          username: this.state.username,
+          username: this.state.Profile.username,
           name: this.state.name,
-          imageLink: this.state.useravatar,
+          useravatar: this.state.useravatar,
           age: this.state.age,
           country: this.state.country
         };
 
         var request = $.ajax({
-          url: restUrl + '/api/v1/profile',
-          type: 'PUT',
-          data: JSON.stringify(profileData),
-          contentType: 'application/json',
-          headers: {JWT: localStorage.token}
+        url: restUrl + '/api/v1/profile',
+        type: 'PUT',
+        data: JSON.stringify(profileData),
+        contentType: 'application/json',
         });
+
         request.done(function(data) {
-          console.log(JSON.stringify(data));
+          // console.log(JSON.stringify(data));
+          this.setState({openSuccess: true});
         }.bind(this));
         request.fail(function() {
-          this.setState({
-            error: true
-            });
+            console.log("Cannot Edit");
+            this.setState({openFailed: true});
           }.bind(this));
 
           this.setState({
             open:false
-          })
+          });
+        console.log("Submitted");
 
         }
 
         addFriend(){
 
               var friendsData = {
-                subject: this.state.Profile.username.value,
-                relation: "sent friend request",
-                object: "preethi1@gmail.com",
+                subject: [this.state.Profile.username,"preeth1@gmail.com"],
+                relation: "friends",
+                object: [],
                 };
 
               var request = $.ajax({
@@ -138,21 +152,21 @@ export default class Profile extends React.Component{
                 type: 'POST',
                 data: JSON.stringify(friendsData),
                 contentType: 'application/json',
-                headers: {JWT: localStorage.token}
+
               });
               request.done(function(data) {
                 console.log(JSON.stringify(data));
+                this.setState({
+                  disable:true,
+                  addFriend: "Friends"
+                });
               }.bind(this));
               request.fail(function() {
-                this.setState({
-                  error: true
-                  });
+                  console.log("Error sending Friend request");
                 }.bind(this));
 
-                this.setState({
-                  open:false
-                })
 
+                console.log("Added As Friend");
               }
 
   componentDidMount(){
@@ -177,6 +191,15 @@ export default class Profile extends React.Component{
 
   };
 
+  handleSuccessClose() {
+    this.context.router.push('/ProfilePage/'+this.props.username);
+    this.setState({openSuccess:false});
+  }
+
+  handleFailClose() {
+    this.setState({openFailed: false});
+  }
+
   render(){
     const actions = [
       <FlatButton
@@ -191,6 +214,21 @@ export default class Profile extends React.Component{
         onTouchTap={this.handleSubmit.bind(this)}
       />,
     ];
+
+    const failDialogActions = [
+      <FlatButton
+        label="Retry"
+        primary={true}
+        onTouchTap={this.handleFailClose.bind(this)} />
+    ];
+    const successDialogActions = [
+      <FlatButton
+        label="Close"
+        primary={true}
+        onTouchTap={this.handleSuccessClose.bind(this)} />
+    ];
+
+
     console.log("arr[0]",this.state.arr);
     // this.state.Profile.username.value.split("@")[0]
     // var profile = this.state.arr[0];
@@ -216,7 +254,7 @@ export default class Profile extends React.Component{
               </div>
               <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4" >
                 {
-                  localStorage.token ? (
+                  ((this.state.Profile.username)===(this.state.uid)) ? (
                     <div>
                     <RaisedButton
                     label="Edit Profile"
@@ -239,8 +277,7 @@ export default class Profile extends React.Component{
                       hintText="userName"
                       floatingLabelText="UserName"
                       fullWidth={true}
-                      value={this.state.username}
-                      onChange={this.handleUserName.bind(this)}
+                      value={this.state.Profile.username}
                     /><br />
                     <TextField
                       hintText="Name"
@@ -275,8 +312,9 @@ export default class Profile extends React.Component{
                     </div>
                   ): (
                     <RaisedButton
-                        label="Add Friend"
+                        label={this.state.addFriend}
                         primary={true}
+                        disabled = {this.state.disable}
                         style={{marginTop: 50}}
                         icon={<FontIcon style={{cursor:'pointer'}} className="muidocs-icon-social-person_add"/>}
                         onTouchTap={this.addFriend.bind(this)}
@@ -284,6 +322,20 @@ export default class Profile extends React.Component{
                   )
 
                 }
+                <Dialog
+                  title="Unsuccessful"
+                  actions={failDialogActions}
+                  modal={true}
+                  open={this.state.openFailed}>
+                  Couldnt Edit your profile. Please try again.
+                </Dialog>
+                <Dialog
+                  title="Profile Edited"
+                  actions={successDialogActions}
+                  modal={true}
+                  open={this.state.openSuccess}>
+                  Profile edited successfully!
+                </Dialog>
               </div>
             </div>
             <br/>
@@ -338,7 +390,7 @@ export default class Profile extends React.Component{
 
           <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-lg-offset-1" style={styles}>
           <h4>Games</h4>
-          <h2>{this.state.arr[0].totalGames}</h2>
+          <h2>{this.state.arr[0].totalgames}</h2>
           </div>
           <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4" style={style}>
           <h4>Followers</h4>

@@ -7,11 +7,13 @@ var UserProfileSchema  = new Schema({
   name : {type: String},
   age :{ type: Number},
   country :{ type: String},
-  totalGames :{ type: Number},
+  totalgames :{ type: Number},
   liketopics: { type: [String]},
   following: {type : Number},
   followers: {type: Number},
-  category: {type: String}
+  category: {type: String},
+  friends :{type: [String]},
+  ranking : {type: Number, default: 1200}
 });
 
 exports = module.exports = mongoose.model('UserProfile', UserProfileSchema );

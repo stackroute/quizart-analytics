@@ -2,7 +2,7 @@
   "name": "friend-microservice",
   "version": "0.1.0",
   "description": "Friends entity",
-  "main": "chatroom-plugin.js",
+  "main": "friend-plugin.js",
   "scripts": {
     "start": "node friend-microservice.js",
     "test": "node_modules/grunt/bin/grunt test"
