@@ -189,6 +189,12 @@ services:
     depends_on:
       - db
       - microservice-mesh-base
+  chatservice:
+    container_name: chatservice-container
+    build: chatservice
+    image: boilerplate/chatservice
+    network_mode: host
+    restart: always
   http-server:
     container_name: http-server0
     build: microservices/http-server

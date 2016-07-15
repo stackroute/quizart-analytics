@@ -1,7 +1,6 @@
 FROM quizrtsocial/base-image
 WORKDIR /usr/src/service
 
-MKDIR /data/chathistory -p
 COPY package.json /usr/src/service
 RUN npm install --production
 
