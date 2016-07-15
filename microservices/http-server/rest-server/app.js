@@ -122,8 +122,8 @@ app.get('/api/auth/success/google',function(req,res){
               };
                 mesh.act('role:profile,cmd:create',userObj,function(err,response){
                     if(err) { return res.status(500).json(err); }
-                    if(response.response !== 'success') { res.redirect('http://192.168.99.101:8001/#/authsuccess/'+tokenresponse.token); }
-                    res.redirect('http://192.168.99.101:8001/#/authsuccess/'+tokenresponse.token);
+                    if(response.response !== 'success') { res.redirect('http://192.168.99.100:8001/#/authsuccess/'+tokenresponse.token); }
+                    res.redirect('http://192.168.99.100:8001/#/authsuccess/'+tokenresponse.token);
                 });
             }
             // console.log("Inside Express , token after acting on google token us is ======",tokenresponse.token);

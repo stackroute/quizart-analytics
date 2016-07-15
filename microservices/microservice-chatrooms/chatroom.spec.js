@@ -201,7 +201,7 @@
     describe('Retrieve History', function() {
       it('Retrieve Chat History', function(done) {
         this.timeout(5000);
-        consumerMicroservice.act('role:chat,cmd:retrievechathistory', {fileid: 1234}, function(err, response) {
+        consumerMicroservice.act('role:chat,cmd:retrievechathistory', {fileid: 2411}, function(err, response) {
           if(err) { return done(err); }
           response.should.have.property('response');
           response.response.should.be.exactly('success');

@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var jsonfile = require('jsonfile');
 var fs = require('fs');
+var mkdirp = require('mkdirp');
 var MsgObj = {} ;
 
 
@@ -225,19 +226,20 @@ exports = module.exports = function(options) {
             message: message,
             sentby: sentby
           }
-          if(arr.length>=2){
-            fs.mkdir('./jsonfiles/'+topicid,function(err,result){
+          if(arr.length>=20){
+            fs.mkdir('/data/chathistory/'+topicid,function(err,result){
+
               console.log("Inside loop for creating directory");
               if(err){
                 console.log("Inside loop for creating directory and ther is an error logging the error",err);
                 console.log("Inside loop for creating directory and ther is an error");
                   if(err.code === "EEXIST"){
                     console.log("History already Exist");
-                    fs.readdir('./jsonfiles/'+topicid,function(err,files){
+                    fs.readdir('/data/chathistory/'+topicid,function(err,files){
                         console.log("Inside Read File directory, retrieved number of files are,==",files);
                         console.log("Inside Read File directory, retrieved number of files length is,==",files.length);
                         var fileNumber = files.length;
-                        var file = './jsonfiles/'+topicid+'/'+topicid+'-'+(fileNumber+1)+'.json';
+                        var file = '/data/chathistory/'+topicid+'/'+topicid+'-'+(fileNumber+1)+'.json';
                         console.log("Inside loop for creating directory the new file to be written in old folder is ",file);
                         fs.writeFile(file,JSON.stringify(MsgObj),'utf-8',function cb(err,data){
                             if(err){return respond(err);}
@@ -251,7 +253,7 @@ exports = module.exports = function(options) {
               }
               else{
                 console.log("Inside loop for creating directory and ther is no folder existing ,so folder created");
-                var file = './jsonfiles/'+topicid+'/'+topicid+'-1.json';
+                var file = '/data/chathistory/'+topicid+'/'+topicid+'-1.json';
                 console.log("Inside loop for creating directory the new file to be written in new folder is ",file);
                 fs.writeFile(file,JSON.stringify(MsgObj),'utf-8',function cb(err,data){
                     if(err){return respond(err);}
