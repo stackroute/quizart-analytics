@@ -141,7 +141,9 @@ export default class MainAppBar extends React.Component {
               onTouchTap={this.handleTopics.bind(this)}/>
             <ListItem primaryText="Tournaments" leftIcon={<ActionViewquilt />}
               />
-              <ListItem primaryText="Change Password" leftIcon={<ActionFingerprint />} containerElement={<Link to="/my-account/change-password" />}/>
+           <ListItem primaryText="Change Password" leftIcon={<ActionFingerprint />} containerElement={<Link to="/my-account/change-password" />}/>
+           <ListItem primaryText="link with twitter" leftIcon={<ActionFingerprint />} />
+
           </List>
         </Drawer>
         </div>

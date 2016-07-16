@@ -189,6 +189,15 @@ services:
     depends_on:
       - db
       - microservice-mesh-base
+  microservice-timeline:
+    container_name: microservice-timeline
+    build: microservices/microservice-timeline
+    image: boilerplate/microservice-timeline
+    network_mode: host
+    restart: always
+    depends_on:
+      - db
+      - microservice-mesh-base
   http-server:
     container_name: http-server0
     build: microservices/http-server

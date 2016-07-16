@@ -56,8 +56,6 @@ app.use('/api/v1', require('./router'));
 
 var chat = io.of('/chat');
 
-
-
 app.post('/api/authenticate/google',function(req,res,next){
   console.log("Inside Express, inside google login call=======");
 

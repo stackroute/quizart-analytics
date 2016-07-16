@@ -52,4 +52,26 @@ exports = module.exports = function(options) {
       return respond(null, {response: 'success', claims});
     });
   });
+
+
+  this.add('role:jwt,cmd:createAuthToken', function(msg, respond) {
+    return jwt.sign({key:msg.key,secret:msg.secret,userId:msg.userId},secret,{subject:msg.username },function(err, token) {
+        if(err) { return respond(err); }
+        return respond(null, {token, response: 'success'});
+      });
+  });
+
+  this.add('role:jwt,cmd:verifyAuthToken', function(msg,respond) {
+    var options = {
+      clockTolerance: 30
+    };
+    console.log("======verification request=====");
+    return jwt.verify(msg.token,secret, _.merge(options,msg.options), function(err,claims) {
+      if(err || !claims) { return respond(err);
+       console.log("failed to verify");
+      }
+      return respond(null, {response: 'success',claims:claims});
+    });
+  });
+
 };
