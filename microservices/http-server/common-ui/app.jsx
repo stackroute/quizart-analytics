@@ -24,9 +24,6 @@ import ContextComponent from './context';
 import ProfilePage from './views/ProfilePage';
 
 const verifyLogin = function(nextState, replace) {
-  // var token = cookie.load('auth_cookie');
-  // console.log("===inside app.jsx, cookie token is ====",token);
-  // console.log( response.getHeader("token"));
   if(!localStorage.token) {
     replace({
       pathname: '/login',
@@ -43,15 +40,7 @@ const handleLoginEnter = function(nextState, replace) {
   }
 };
 
-// requireAuth(nextState, replace) {
-//   var token = cookie.load('auth_cookie');
-//   /*if(token == undefined){
-//     replace({
-//     pathname: '/login',
-//     state: { nextPathname: nextState.location.pathname }
-//   });
-//   }*/
-// }
+
 
 const clearLogin = function(nextState, replace) {
   delete localStorage.token;
