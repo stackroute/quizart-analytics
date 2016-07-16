@@ -15,9 +15,12 @@ export default class CommentBox extends React.Component{
 
 loadDataFromSever(){
  var request =  $.ajax({
-    url: "api/v1/timeline/gettweet/"+id,
+    url: "api/v1/timeline/twitter/getTwitterData/"+id,
     contentType: 'application/json',
-    cache: false});
+    cache: false,
+    headers: {JWT: localStorage.authToken}
+
+  });
 
   request.done(function(data) {
 
@@ -29,37 +32,16 @@ loadDataFromSever(){
     }.bind(this));
 
       request.fail(function(xhr, status, err) {
-      console.error("api/v1/timeline/tournament/posts", status, err.toString());
+      console.error("api/v1/timeline/gettweet/", status, err.toString());
     }.bind(this));
-
-
-}
-
-linkWithTwitter(){
-  var request =  $.ajax({
-     url: "/api/v1/auth/twitter/authUrl",
-     contentType: 'application/json',
-     cache: false});
-
-   request.done(function(data) {
-
-                 console.log("=======msg=======",data);
-                if(data.url){
-                  window.location.href = data.url;
-                }
-
-     }.bind(this));
-
-       request.fail(function(xhr, status, err) {
-       console.error("auth/twitter", status, err.toString());
-     }.bind(this));
-
 
 
 }
 
 
   componentDidMount(){
+
+          console.log("=====token",localStorage.authToken);
           this.loadDataFromSever();
           console.log(" new new  componentDidMount called");
           var  that = this;
@@ -112,39 +94,17 @@ linkWithTwitter(){
 
 
 
-   handleDeletePost(postData) {
-       var i = this.state.postList.indexOf(postData);
-       console.log("indexOf",i);
-       var newList = this.state.postList.splice(i,1);
-       this.setState({postList:this.state.postList});
-       console.log("lenght after delete:"+ this.state.postList.length);
-       var url =  "api/v1/timeline/posts/"+postData._id;
-     $.ajax({
-           url: url,
-           dataType:'json',
-           type: 'DELETE',
-
-           error: function(xhr, status, err) {
-             console.error(url, status, err.toString());
-           }.bind(this)
-         });
-
-   }
 
   render() {
 
 
-     var createPost = this.state.postList.map(function(postData,key) {
-         var data = {};
-           console.log(postData);
-           data.text = postData.text
-           data.imgUrl = postData.user.profile_image_url;
-           data.user   = postData.user.name;
-         return (<Post post={data} key={key}/>);
+     var createPost = this.state.postList.map(function(data) {
+
+         return (<Tweet data = {data}/>);
     });
     return (
       <div>
-          <FlatButton label="Primary" primary={true} onTouchTap={this.linkWithTwitter}/>
+
         <div style = {{marginLeft:0}}>
             {
               createPost

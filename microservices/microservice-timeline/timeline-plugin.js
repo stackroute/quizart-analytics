@@ -21,7 +21,7 @@ exports = module.exports = function(options) {
    const TwitterAuth = connection.model('TwitterAuth', require('./twitter.auth.schema'));
 
    this.add('role:timelineservice,cmd:createAuth', function(msg, respond) {
-          console.log("data recieved===="+msg+"=====");
+          console.log("data recieved====",msg);
         return TwitterAuth.create(msg,function(err,newAuth){
              if(err){
                       return respond(err);

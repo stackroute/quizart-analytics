@@ -29,6 +29,7 @@ import ActionViewmodule from 'material-ui/svg-icons/action/view-module';
 import ActionViewquilt from 'material-ui/svg-icons/action/view-quilt';
 import ActionHome from 'material-ui/svg-icons/action/home';
 import ActionFingerprint from 'material-ui/svg-icons/action/fingerprint';
+import LinkIcon from 'material-ui/svg-icons/content/link';
 
 
 export default class MainAppBar extends React.Component {
@@ -97,6 +98,30 @@ export default class MainAppBar extends React.Component {
     );
   }
 
+  linkwithTwitter (){
+
+    var request =  $.ajax({
+       url: "/api/v1/auth/twitter/authUrl",
+       contentType: 'application/json',
+       cache: false,
+       headers: {JWT: localStorage.token}
+     });
+
+     request.done(function(data) {
+
+                   console.log("=======msg=======",data);
+                  if(data.url){
+                    window.location.href = data.url;
+                  }
+
+           }.bind(this));
+
+      request.fail(function(xhr, status, err) {
+         console.error("auth/twitter", status, err.toString());
+       }.bind(this));
+
+  }
+
   render() {
     const style = {
       margin: 12,
@@ -142,7 +167,7 @@ export default class MainAppBar extends React.Component {
             <ListItem primaryText="Tournaments" leftIcon={<ActionViewquilt />}
               />
            <ListItem primaryText="Change Password" leftIcon={<ActionFingerprint />} containerElement={<Link to="/my-account/change-password" />}/>
-           <ListItem primaryText="link with twitter" leftIcon={<ActionFingerprint />} />
+           <ListItem primaryText="link with twitter" leftIcon={<LinkIcon/>} onTouchTap={this.linkwithTwitter.bind(this)}/>
 
           </List>
         </Drawer>

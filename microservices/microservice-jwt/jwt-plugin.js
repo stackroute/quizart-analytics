@@ -8,12 +8,17 @@ exports = module.exports = function(options) {
     this.act('role:authentication,cmd:authenticate', msg, function(err, response) {
       if(err) { return respond(err); }
       if(!response.hasOwnProperty('response') || response.response !== 'success') { return respond(null, {response: 'fail'}); }
+
       return jwt.sign({}, secret, { subject: msg.username }, function(err, token) {
         if(err) { return respond(err); }
         return respond(null, {token, response: 'success'});
+
+
       });
-    });
-  });
+
+     });
+
+});
 
 
   this.add('role:jwt,cmd:generateGoogleToken', function(msg, respond) {

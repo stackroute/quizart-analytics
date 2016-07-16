@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import CommentBox from './CommentBox1';
+import CommentBox from './CommentBox';
 
 export default class Timeline extends React.Component{
 
