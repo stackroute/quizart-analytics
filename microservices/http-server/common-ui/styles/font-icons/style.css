@@ -79,6 +79,21 @@
 .muidocs-icon-social-person:after {
     content: "person";
 }
+.muidocs-icon-social-person_add:after {
+    content: "person_add";
+}
 .muidocs-icon-social-notifications:after {
     content: "notifications";
+}
+.muidocs-icon-social-people_outline:after {
+    content: "people_outline";
+}
+.muidocs-icon-social-people:after {
+    content: "people";
+}
+.muidocs-icon-action-favorite:after {
+    content: "favorite";
+}
+.muidocs-icon-action-favorite_border:after {
+    content: "favorite_border";
 }

@@ -3,8 +3,20 @@ var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
+var google = require('googleapis');
+var OAuth2 = google.auth.OAuth2;
+var request = require('request');
+
+
+var secret = process.env.AUTH_SECRET || "the matrix";
+var googlecredentials = require('./secrets/googlecredentials');
+var oauth2Client = new OAuth2(googlecredentials.CLIENT_ID, googlecredentials.CLIENT_SECRET, googlecredentials.REDIRECT_URL);
+var redirectHost = process.env.REDIRECT_HOST || "localhost";
+var port = process.env.PORT || '8001';
+var redirectPort = process.env.REDIRECT_PORT || port;
 
 var name = process.env.NAME || "default";
+
 
 var mesh = seneca();
 mesh.use('mesh',{auto:true});
@@ -13,6 +25,7 @@ var context = require('./context');
 
 context.mesh = mesh;
 context.authorizeMiddleware = function(req, res, next) {
+  console.log("Inside Express and Inside authorizeMiddleware function at the top====================");
   mesh.act('role:jwt,cmd:verify', {token: req.get('JWT')}, function(err, response) {
     if(err) { return res.status(500).json(err); }
     if(response.response !== 'success') { return res.status(404).send(); }
@@ -41,10 +54,92 @@ if(env.trim() === 'dev') {
 };
 
 app.use(require('body-parser').json());
-
+app.set('secret',secret);
 app.use('/api/v1', require('./router'));
 
 var chat = io.of('/chat');
+
+
+
+app.post('/api/authenticate/google',function(req,res,next){
+  console.log("Inside Express, inside google login call=======");
+
+  // generate a url that asks permissions for Google+ and Google Calendar scopes
+  var scopes = [
+    googlecredentials.SCOPE[0],
+    googlecredentials.SCOPE[1]
+  ];
+
+  var url = oauth2Client.generateAuthUrl({
+    access_type: 'online', // 'online' (default) or 'offline' (gets refresh_token)
+    scope: scopes,
+    approval_prompt: "force" // If you only need one scope you can pass it as string
+  });
+  // res.redirect('http://'+redirectHost+':'+redirectPort+'/api/auth/success/google');
+  console.log("Inside express, redirection url================",url);
+  res.send({ redirect: url });
+  // next();
+});
+
+app.get('/api/auth/success/google',function(req,res){
+  console.log("Inside google page===========");
+  var code = req.query.code;
+  console.log("Inside Express, code to get Token is=============",code);
+  oauth2Client.getToken(code, function(err, tokens) {
+    // Now tokens contains an access_token and an optional refresh_token. Save them.
+    console.log("Inside Express , after getting token=======",tokens);
+    console.log("Inside Express , after getting token=======",JSON.stringify(tokens));
+    if(!err) {
+      oauth2Client.setCredentials(tokens);
+    }
+    if(err){
+      console.log(err);
+    }
+
+    var access_token = tokens['access_token'];
+    var user_profile = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token='+access_token;
+      request({
+        url: user_profile,
+        json: true
+      }, function (error, response, body) {
+        if (!error) {
+          console.log("Inside the Express after getting the user profile the body is ======",body);
+          var tokendata = {
+            user : body.email
+          }
+          console.log("Inside Express, the user profile token data========,",tokendata);
+          mesh.act('role:jwt,cmd:generateGoogleToken',{data:tokendata},function(err,tokenresponse){
+            if(err) { return res.status(500).json(err); }
+            if(tokenresponse.response==='success'){
+              var userObj = {
+                username: tokendata.user,
+                useravatar :body.picture,
+                name : body.given_name,
+                age : null,
+                country : 'NA',
+                totalGames : 0,
+                liketopics: '',
+                following: 0,
+                followers: 0,
+                category: 'Beginner'
+              };
+                mesh.act('role:profile,cmd:create',userObj,function(err,response){
+                    if(err) { return res.status(500).json(err); }
+                    if(response.response !== 'success') { res.redirect('http://192.168.99.100:8001/#/authsuccess/'+tokenresponse.token); }
+                    res.redirect('http://192.168.99.100:8001/#/authsuccess/'+tokenresponse.token);
+                });
+            }
+            // console.log("Inside Express , token after acting on google token us is ======",tokenresponse.token);
+            // console.log("Inside Express , token after acting on google token us is stringified======",JSON.stringify(tokenresponse.token));
+          });
+      } else {
+        res.redirect('/login');
+          console.log(error);
+      }
+    })
+  });
+
+});
 
 
 chat.on('connection', function(socket) {
@@ -53,26 +148,44 @@ chat.on('connection', function(socket) {
   var flag = false;
   var count =0;
   socket.on('create_room', function(userids){
-    // chatmiddleware.use('redis-transport');
-
-    count++;
-    console.log("=====Inside App.js Socket initaited , ",count);
+    console.log("Inside the Express, the user ids got to act on the plugin======== ",userids);
       var channelId = false;
-      mesh.act('role:chat,cmd:joinprivateroom',{ids:userids}, function(err, response){
-          if(err) { console.error('===== ERR: ', err, ' =====');  }
+      if(userids.length>1){
+        console.log("====Inside express inside create room if loop");
+        mesh.act('role:chat,cmd:joinprivateroom',{ids:userids}, function(err, response){
+            if(err) { console.error('===== ERR: ', err, ' =====');  }
+            console.log("Inside App.js getting room ID===",response.roomId[0].object);
+            channelId = response.roomId[0].object ;
+            socket.emit('channelId',channelId);
+        }).ready(function(){
+        chatMiddlewareMicroservice.use('chatmiddlewareplugin',{chatroomId:channelId,socket:socket});
+      });
+      }
+      else{
+        channelId = userids[0];
+        chatMiddlewareMicroservice.use('chatmiddlewareplugin',{chatroomId:channelId,socket:socket});
+      }
 
-          console.log("Inside App.js getting room ID===",response.roomId[0].object);
-          channelId = response.roomId[0].object ;
-      }).ready(function(){
-      chatMiddlewareMicroservice.use('chatmiddlewareplugin',{chatroomId:channelId,socket:socket});
-    });
   });
+  // socket.on('create_grouproom',function(groupid){
+  //   console.log("Inside the Express, the group id to get the channel id is =====",groupid);
+  //   var channelId = groupid;
+  //   chatMiddlewareMicroservice.use('chatmiddlewareplugin',{chatroomId:channelId,socket:socket});
+  // });
 
-  socket.on('chat_message', function(msgToSend){
-    console.log("Inside App.js meessage from client via socket====",msgToSend);
-
-      console.log("Inside App.js meessage from client via socket inside flag condition====",msgToSend);
-      chatMiddlewareMicroservice.act('role:chat,cmd:sendMsg', {msg: msgToSend}, function(err, response) {
+  socket.on('chat_message', function(msg){
+      console.log("Inside App.js meessage from client via socket====",msg);
+      var ChatMsg =
+        {
+          topicid : msg.topicid,
+          message : msg.msg,
+          sentby: msg.user
+        };
+      mesh.act('role:chat,cmd:savehistory',{ChatMsg:ChatMsg},function(err,response){
+          if(err) { console.error('===== ERR: ', err, ' =====');  }
+          console.log("Retrieved result after saving history is",response.result);
+      });
+      chatMiddlewareMicroservice.act('role:chat,cmd:sendMsg', {msg: msg.msg,user:msg.user}, function(err, response) {
           if(err) { console.error('===== ERR: ', err, ' =====');  }
           if(response.response === 'success')
           console.log("====Inside express after acting the response is msg ,===",response.message);

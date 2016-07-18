@@ -24,7 +24,7 @@ export default class SignUPComponent extends React.Component{
   constructor(props,context){
     super(props,context);
     this.state = {
-      formInput: { username: '', password: ''}
+      formInput: { username: '', password: '' , name : ''}
     };
     console.log("Inside SignUPComponent");
   }
@@ -44,12 +44,14 @@ export default class SignUPComponent extends React.Component{
     event.preventDefault();
     var pass = this.state.formInput.password;
     var username = this.state.formInput.username;
+    var name = this.state.formInput.name;
     var router = this.context.router;
     // var bcrypt = require('bcryptjs');
     var x = this;
 
             var data = {
-              name : username,
+              username : username,
+              name: name,
               password : pass
             }
             console.log("Inside Client",data);
@@ -61,11 +63,14 @@ export default class SignUPComponent extends React.Component{
               success: (function(data) {
                 console.log("inside signup ajax call");
                 if(data['success'] == false){
+                  this.setState({$invalid :true});
                   router.push('/SignUP');
                   // x.setState({$invalid: true});
+
                 }
                 else{
                   // x.setState({$signedUp:true});
+                  this.setState({$signedUp : true});
                   router.push('/'); // This uses a react router to configure the link provided in router
                 }
               }).bind(this)
@@ -74,6 +79,9 @@ export default class SignUPComponent extends React.Component{
 
   usernameChanged(event) {
     this.state.formInput.username = event.target.value;
+  }
+  nameChanged(event) {
+    this.state.formInput.name = event.target.value;
   }
   passwordChanged(event) {
     this.state.formInput.password = event.target.value;
@@ -86,6 +94,7 @@ export default class SignUPComponent extends React.Component{
         <h1 style={text}>QuizRT</h1><br/>
             <p style={text}>Sign-Up to continue with QuizRT</p>
             <form onSubmit={this.handleSubmit.bind(this)} id='signup' >
+                  <TextField hintText="Jack" floatingLabelText="Name" fullWidth={true} onChange={this.nameChanged.bind(this)} />
                   <TextField hintText="abc@def.com" floatingLabelText="Email" fullWidth={true} onChange={this.usernameChanged.bind(this)} type="email" />
                   <TextField fullWidth={true}  floatingLabelText="Password" type="password" onChange={this.passwordChanged.bind(this)} />
                   <RaisedButton type="submit" label="Sign Up" primary={true} style={style} />
