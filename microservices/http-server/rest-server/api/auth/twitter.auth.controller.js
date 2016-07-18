@@ -4,10 +4,7 @@ const twitterConfig =  require('./twitter.auth.config')
 var twitterAPI = require('node-twitter-api');
 var twitterAuth = new twitterAPI(twitterConfig);
 var controller = {}
-var _requestToken;
-var _requestTokenSecret;
-var _accessToken,_accessTokenSecret;
-var obj = {};
+var requestTokenQueue = {};
 
 controller.getRequestToken = function(req,res){
 
@@ -23,18 +20,32 @@ controller.getRequestToken = function(req,res){
               _requestTokenSecret =requestTokenSecret;
                //res.send("https://api.twitter.com/oauth/authenticate?oauth_token=" +requestToken);
                console.log("===request token====",requestToken);
-               obj[requestToken] = username;
+               requestTokenQueue[requestToken] = {username:username,secret: _requestTokenSecret, time:Date.now()};
                res.status(201).json({url:"https://api.twitter.com/oauth/authenticate?oauth_token=" +requestToken});
            }
    });
 };
 
+var deleteStaleTokens = function() {
+    for(key in requestTokenQueue ){
+    var diffMs = Date.now() - requestTokenQueue[key].time;
+    var diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000);
+    if(diffMins>=5){
+    delete requestTokenQueue[key];
+    }
+   }
+};
+
+
 controller.getAccessToken =   function(req,res){
 
   var requestToken = req.query.oauth_token;
   var oauth_verifier  = req.query.oauth_verifier;
-  var username = obj[requestToken];
-  delete obj[requestToken];
+  var curUser = requestTokenQueue[requestToken];
+  var username = curUser.username;
+  var _requestTokenSecret = curUser.secret;
+   //this.deleteStaleTokens;
+  delete requestTokenQueue[requestToken];
   console.log('====Received Auth Token!!======');
   console.log("=====requestToken",requestToken);
   twitterAuth.getAccessToken(requestToken, _requestTokenSecret,oauth_verifier,function(error, accessToken, accessTokenSecret, results) {

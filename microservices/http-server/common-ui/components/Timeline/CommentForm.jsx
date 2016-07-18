@@ -33,10 +33,8 @@ export default class CommentForm extends React.Component{
             onKeyDown={this.handleKeyDown.bind(this)}
             value={this.state.value}
             id = "post"
-            disabled= {true}
           />
-          <a href="https://twitter.com/intent/tweet?screen_name=quizrtsocial" className="twitter-mention-button" data-show-count="false">Tweet to @quizrtsocial</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-  
+
         </CardText>
       </Card>
     );

@@ -117,7 +117,7 @@ export default class MainAppBar extends React.Component {
            }.bind(this));
 
       request.fail(function(xhr, status, err) {
-         console.error("auth/twitter", status, err.toString());
+         console.error("/api/v1/auth/twitter/authUrl", status, err.toString());
        }.bind(this));
 
   }

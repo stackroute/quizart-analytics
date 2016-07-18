@@ -8,8 +8,9 @@ var controller = {}  // role:timelineservice,cmd:createAuth'
 
 controller.createToken = function(req,res){
 
-         //console.log("=====Jwt token=====",req.claims);
-          var username = 'sandeep'; //req.claims.sub;
+          console.log("=====Jwt token=====",req.claims);
+          console.log("=====inside create jwt twitter authToken token=====",req.claims);
+          var username = req.claims.sub;
           mesh.act('role:timelineservice,cmd:getTwitterAuth',{username:username},function(err,response){
              if(err){
                     console.log("===error in retrieving===",err);
@@ -51,14 +52,6 @@ var twitterAuthConfig  ={};
   if(authToken){
          var params;
          var endpoint;
-     if(req.param("id")!=null){
-         params = {q:"#"+req.param("id"),count:10};
-         endpoint='search/tweets';
-       }
-     else {
-        params = {q:"#"+req.param("id"),count:10};
-        endpoint='search/tweets';
-      }
 
     mesh.act('role:jwt,cmd:verifyAuthToken',{token:authToken},function(err,response){
       if(err){res.status(500).send(err);
@@ -68,29 +61,41 @@ var twitterAuthConfig  ={};
         var claims = response.claims;
         twitterAuthConfig.access_token_key = claims.key;
         twitterAuthConfig.access_token_secret= claims.secret;
+           if(req.param("id")==="user"){
+              console.log("===twitter user id====",claims.userId);
+              params = {user_id:"+/"+claims.userId/"+",count:10};
+              endpoint='statuses/user_timeline';
+           }
+          else {
+            params = {q:"#"+req.param("id"),count:10};
+            endpoint='search/tweets';
+            console.log("=====topic timeline=====");
+           }
+
 
         var client =  new Twitter(twitterAuthConfig);
 
-        client.get('search/tweets',params, function(error, tweets, response) {
+        client.get(endpoint,params, function(error, tweets, response) {
 
         if(error){
-           res.status(500).send(err);
+           res.status(500).send(error);
+           console.log('=======error from twitter===',error);
         }
         else {
-            console.log(util.inspect(tweets.statuses.length));
+            console.log(util.inspect(tweets));
             res.status(201).json(tweets);
          }
         });
       }
-   });
+   });  // end of mesh act
    }
   else{
-    res.status(500).json(err);
+    res.status(403).json(err);
    }
 };
 
 controller.postToTwitter  = function(req,res) {
-console.log("====request came getTwitterData=====");
+console.log("====request came post to twitter=====");
 var twitterAuthConfig  ={};
 
  twitterAuthConfig.consumer_key = appAuth.consumer_key;
@@ -98,6 +103,7 @@ var twitterAuthConfig  ={};
 
   var authToken =  req.get("JWT");
  console.log("=====authtoken=====",authToken);
+ console.log("===post=====",req.body.text);
   if(authToken){
 
     mesh.act('role:jwt,cmd:verifyAuthToken',{token:authToken},function(err,response){
@@ -110,9 +116,7 @@ var twitterAuthConfig  ={};
         twitterAuthConfig.access_token_secret= claims.secret;
 
         var client =  new Twitter(twitterAuthConfig);
-
-
-        client.post('statuses/update', {status: 'I Love Twitter'},  function(error, tweet, response){
+        client.post('statuses/update', {status: req.body.text},  function(error, tweet, response){
               if(error) {
                   console.log("error in posting tweet",error);
                   res.status(500).json(error)
