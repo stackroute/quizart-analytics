@@ -41,7 +41,7 @@ export default class EachTopicsPage extends React.Component {
                             <AbtTopic id={this.props.params.id}/>
                           </div>
                            <div className="col-xs-5 col-sm-5 col-md-5 col-lg-5" >
-                           <Timeline hashtag ="hello" />
+                           <Timeline hashtag ="SYTYCDGrandFinale"/>
                           </div>
                           <div className="col-xs-1 col-sm-1 col-md-1 col-lg-1"  style={{paddingTop:20}}>
                             <ChatDrawer/>

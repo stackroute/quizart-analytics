@@ -281,7 +281,7 @@ exports = module.exports = function(options) {
         console.log("Inside Read File directory, retrieved number of files are,==",files);
         console.log("Inside Read File directory, retrieved number of files length is,==",files.length);
         var fileNumber = files.length;
-        var fileToRead = './jsonfiles/'+msg.fileid+'/'+msg.fileid+'-'+fileNumber+'.json';
+        var fileToRead = '/data/chathistory/'+msg.fileid+'/'+msg.fileid+'-'+fileNumber+'.json';
         console.log("FileToRead is ",fileToRead);
         fs.readFile(fileToRead,'utf-8',function cb(err,data){
           if(err){return respond(err);}

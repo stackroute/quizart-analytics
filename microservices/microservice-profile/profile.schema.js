@@ -12,7 +12,7 @@ var UserProfileSchema  = new Schema({
   following: {type : Number},
   followers: {type: Number},
   category: {type: String},
-  friends :{type: [String]},
+  friends :{type: [String]}, //add unique 
   ranking : {type: Number, default: 1200}
 });
 

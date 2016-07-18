@@ -16,7 +16,7 @@ loadDataFromSever(){
     console.log("====user timeline");
   }
  else {
-    id ="SuperheroPIXathon";
+    id ="SYTYCDGrandFinale";
    console.log("topic timeline");
  }
  var request =  $.ajax({
@@ -48,11 +48,11 @@ loadDataFromSever(){
 }
 
   componentDidMount(){
-          console.log("=====token",localStorage.authToken);
           this.loadDataFromSever();
-          console.log(" new new  componentDidMount called");
+          socket.emit("ctreatStream",{id:this.props.hashtag,localStorage.authToken})
+          console.log("=====token",localStorage.authToken);
           var  that = this;
-          socket.on('tweetData', function getTweet (tweet) {
+           socket.on('tweetData', function getTweet (tweet) {
            console.log("============tweet ",tweet);
           if(tweet.user.id!="undefined"){
              console.log("====username====",tweet.user.name);

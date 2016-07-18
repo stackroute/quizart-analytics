@@ -23,6 +23,7 @@ var mesh = seneca();
 mesh.use('mesh',{auto:true});
 
 var context = require('./context');
+
 context.mesh = mesh;
 context.authorizeMiddleware = function(req, res, next) {
   console.log("Inside Express and Inside authorizeMiddleware function at the top====================");
@@ -34,6 +35,8 @@ context.authorizeMiddleware = function(req, res, next) {
   });
 };
 
+var schedular = require('./schedular');
+schedular();
 
 var env = process.env.NODE_ENV || 'dev';
 
@@ -56,7 +59,7 @@ app.set('secret',secret);
 app.use('/api/v1', require('./router'));
 
 var chat = io.of('/chat');
-
+var tweets =io.of('/tweets');
 app.post('/api/authenticate/google',function(req,res,next){
   console.log("Inside Express, inside google login call=======");
 
@@ -135,6 +138,17 @@ app.get('/api/auth/success/google',function(req,res){
     })
   });
 
+});
+
+  tweets.on('connection',function(socket){
+  socket.on("createStream",function(data){
+
+
+   })
+  socket.on("disconnect",function(){
+
+
+  });
 });
 
 
@@ -293,9 +307,12 @@ io.on('connection',function(socket){
      playerMiddleWareService.use('redis-transport');
     // console.log('\n Setting up middleware for user \n');
     console.log('\n======Initializing plugin for  : '+(msg.username)+'\n');
+    console.log('\n\n'+JSON.stringify(msg)+'\n\n');
     playerMiddleWareService.use('./gameplayMiddlewarePlugin', {
       username:msg.username,
       tournamentId:msg.tournamentId,
+      isTournament:msg.isTournament,
+      knockoutId:msg.knockoutId,
       socket:socket
     });
   });
