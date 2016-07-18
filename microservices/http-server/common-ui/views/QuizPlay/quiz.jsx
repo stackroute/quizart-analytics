@@ -226,19 +226,19 @@ export default class QuizPlay extends React.Component{
         selectedOptionId:value
       }
 
-      // var request = $.ajax({
-      // url: restUrl + '/api/v1/analytics',
-      // type: 'POST',
-      // data: JSON.stringify(analyticsData),
-      // contentType: 'application/json',
-      // });
-      //
-      // request.done(function(data) {
-      //   console.log(JSON.stringify(data));
-      // }.bind(this));
-      // request.fail(function() {
-      //     console.log("Error");
-      //   }.bind(this));
+      var request = $.ajax({
+      url: restUrl + '/api/v1/analytics',
+      type: 'POST',
+      data: JSON.stringify(analyticsData),
+      contentType: 'application/json',
+      });
+
+      request.done(function(data) {
+        console.log(JSON.stringify(data));
+      }.bind(this));
+      request.fail(function() {
+          console.log("Error");
+        }.bind(this));
     }
 
   render(){
