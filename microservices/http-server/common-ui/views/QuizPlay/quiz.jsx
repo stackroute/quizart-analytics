@@ -96,6 +96,7 @@ export default class QuizPlay extends React.Component{
       option3Color: grey100
 
     };
+    console.log('QuizPlay props: ' + JSON.stringify(this.props));
   }
   static get contextTypes(){
     return {
@@ -109,9 +110,11 @@ export default class QuizPlay extends React.Component{
     }
 
   componentDidMount(){
+    console.log('QuizPlay props: ' + JSON.stringify(this.props));
       var username = JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub;
       console.log('\n\n===========Cookie says username as: '+username+" "+this.context.socket+":socket");
       console.log('context: '+this.context.socket);
+      //console.log('props1: '+this.props.params.id);
       var that = this;
         this.context.socket.on('newQuestion',function(data){
 
@@ -138,8 +141,8 @@ export default class QuizPlay extends React.Component{
         })
         // console.log('Mounting the component: ', (++countMount));
 
-        console.log('Before playGame emit');
-        this.context.socket.emit('playGame',{username:username,tournamentId:'1234'});
+        console.log('Before playGame emit\n'+(JSON.stringify(this.props.params)));
+        this.context.socket.emit('playGame',{username:username,tournamentId:'1234',knockoutId:this.props.params.knockoutId,isTournament:this.props.params.isTournament});
 
         this.context.socket.on('queued',function(msg){
 
