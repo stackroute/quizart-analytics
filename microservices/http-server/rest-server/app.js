@@ -1,6 +1,7 @@
 var seneca = require('seneca');
 var express = require('express');
 var app = express();
+
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 var google = require('googleapis');
@@ -58,9 +59,7 @@ app.set('secret',secret);
 app.use('/api/v1', require('./router'));
 
 var chat = io.of('/chat');
-
-
-
+var tweets =io.of('/tweets');
 app.post('/api/authenticate/google',function(req,res,next){
   console.log("Inside Express, inside google login call=======");
 
@@ -139,6 +138,17 @@ app.get('/api/auth/success/google',function(req,res){
     })
   });
 
+});
+
+  tweets.on('connection',function(socket){
+  socket.on("createStream",function(data){
+
+
+   })
+  socket.on("disconnect",function(){
+
+
+  });
 });
 
 

@@ -17,6 +17,10 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.muidocs-icon-Communication-link:after {
+    content: "link";
+}
+
 .muidocs-icon-action-thumb-up:after {
     content: "thumb_up";
 }

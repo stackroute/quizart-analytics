@@ -18,6 +18,8 @@ exports = module.exports = function(options) {
     });
   });
 
+
+
   const UserProfile = connection.model('UserProfile', require('./profile.schema'));
 
 
@@ -32,7 +34,6 @@ exports = module.exports = function(options) {
       })
     });
   });
-
 
   this.add('role:profile,cmd:getProfile', function(msg, respond) {
     console.log("=============Inside plugin getProfile list msg==== ",msg);

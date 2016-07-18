@@ -10,6 +10,8 @@ router.use('/tournaments', require('./api/tournament/tournament.router'));
 router.use('/profile', require('./api/profile/profile.router'));
 router.use('/friend', require('./api/friend/friend.router'));
 router.use('/topic', require('./api/topic/topic.router'));
+router.use('/timeline', require('./api/timeline/timeline.router'));
+router.use('/auth', require('./api/auth/twitter.router'));
 
 
 exports = module.exports = router;
