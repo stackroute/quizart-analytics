@@ -26,7 +26,8 @@ exports = module.exports = function(options) {
     console.log("=============Inside plugin addAsFriend msg username of the person adding the friend==== ",msg.subject[0]);
     return Friend.create(msg, function (err, createdFriend) {
       if(err) { return respond(err); }
-      return UserProfile.update({username: msg.subject[0]},{$push:{friends:msg.subject[1]}},function(err,updatedProfile){
+
+      return UserProfile.update({username: msg.subject[0]},{$addToSet:{friends:msg.subject[1]}},function(err,updatedProfile){
           if(err) { console.error("Error"); }
           return respond(null, {response: 'success', frienddata: createdFriend});
     });

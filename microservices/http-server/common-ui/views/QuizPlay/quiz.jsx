@@ -125,6 +125,7 @@ export default class QuizPlay extends React.Component{
             that.setState({seconds:seconds--});
            },1000)
           that.setState({ques:data.msg})
+          // console.log("===============ques================",data.msg);
           if(that.state.waiting)
             that.setState({waiting:false})
           that.setState({enabled:true});
@@ -198,6 +199,7 @@ export default class QuizPlay extends React.Component{
   }
   }
     onClick(value,e){
+      this.UserAnalysis(value);
       this.setState({answered:true});
       this.setState({enabled:false});
       var socketObj ={
@@ -208,6 +210,30 @@ export default class QuizPlay extends React.Component{
       this.context.socket.emit('myAnswer',socketObj);
       switch(value){
       }
+    }
+
+    UserAnalysis(value){
+      console.log("======================================value=================================",value);
+      var analyticsData = {
+        userId:JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub,
+        tournamentId: "1234",
+        questionId:this.state.ques._Id,
+        selectedOptionId:value
+      }
+
+      // var request = $.ajax({
+      // url: restUrl + '/api/v1/analytics',
+      // type: 'POST',
+      // data: JSON.stringify(analyticsData),
+      // contentType: 'application/json',
+      // });
+      //
+      // request.done(function(data) {
+      //   console.log(JSON.stringify(data));
+      // }.bind(this));
+      // request.fail(function() {
+      //     console.log("Error");
+      //   }.bind(this));
     }
 
   render(){
