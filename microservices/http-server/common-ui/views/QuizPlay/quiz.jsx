@@ -88,6 +88,7 @@ export default class QuizPlay extends React.Component{
       score:[],
       names:[],
       seconds:0,
+      // seconds2:0,
       progress: 10,
       option0Color: grey100,
       option1Color: grey100,
@@ -200,6 +201,7 @@ export default class QuizPlay extends React.Component{
   }
     onClick(value,e){
       this.UserAnalysis(value);
+      // this.setState({seconds2:this.state.second});
       this.setState({answered:true});
       this.setState({enabled:false});
       var socketObj ={
