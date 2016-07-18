@@ -17,6 +17,8 @@ module.exports = function(options){
                       .client({type:'redis',pin:'role:*,action:gameInitiated'});
     // console.log('\n ==========Game Provisioner Initialized=========== \n')
     var tournamentId = msg.tournamentId;
+    console.log('Inside game provisioner plugin');
+    console.log('\n\n'+msg.knockoutId+'\n\n');
 
     //add the users to a global queue with tournament id
 
@@ -67,6 +69,8 @@ module.exports = function(options){
       var gameId = Math.ceil(Math.random()*1231);
       // console.log(' \n Since players are more than 2, spawning game manager.')
       respond(null,{answer:'gameInitiated'});
+      console.log('Inside game provisioner plugin');
+      console.log('\n\n'+(isTournament)+' '+(knockoutId)+'\n\n');
       gameManager.use(require('./gameManagerPlugin'),
                                 {
                                   gameId: gameId,

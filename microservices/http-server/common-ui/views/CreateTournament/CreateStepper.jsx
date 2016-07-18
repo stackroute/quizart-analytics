@@ -23,8 +23,11 @@ export default class CreateStepper extends React.Component {
       error: false,
       title: "", subTitle: "", desc: "", imgUrl: "http://lorempixel.com/600/337/nature/", avatarUrl: "http://lorempixel.com/600/337/nature/",
       topics: "", games: "", level: "", instructions: "", prize: "",
-      regEndDate: "", regEndTime: "", tourStartDate: "", tourStartTime: "", tourEndDate:"", tourEndTime:"",
-      registeredPlayers: [], gamePlayedPlayers: []
+      regEndDate: "", regEndTime: "", tourStartDate: [], tourStartTime: [], tourEndDate:[], tourEndTime:[],
+      registeredPlayers: [], gamePlayedPlayers: [],
+      finished1: false,
+      stepIndex1: 0,
+      step: []
     };
   }
 
@@ -38,25 +41,54 @@ export default class CreateStepper extends React.Component {
       stepIndex: stepIndex + 1,
       finished: stepIndex >= 2,
     });
-    var tournamentData = {
-      title: this.state.title,
-      avatarURL: this.state.avatarUrl,
-      imageURL: this.state.imgUrl,
-      overlayTitle: this.state.title,
-      overlaySubtitle: this.state.subTitle,
-      description: this.state.desc,
-      instructions: this.state.instructions,
-      prizes: this.state.prize,
-      regEndDate: new Date(this.state.regEndDate+"T"+this.state.regEndTime),
-      tourStartDate: new Date(this.state.tourStartDate+"T"+this.state.tourStartTime),
-      tourEndDate: new Date(this.state.tourEndDate+"T"+this.state.tourEndTime),
-      topics: this.state.topics,
-      playersPerGame: this.state.games,
-      level: this.state.level,
-      registeredPlayers: this.state.registeredPlayers,
-      gamePlayedPlayers: this.state.gamePlayedPlayers
-    };
+    if(stepIndex == 1) {
+      for(var i=1;i<=this.state.level;i++) {
+        this.state.step.push(
+          <Step>
+            <StepLabel>Level {i} dates</StepLabel>
+          </Step>
+        );
+        this.state.tourStartDate.push("");
+        this.state.tourStartTime.push("");
+        this.state.tourEndDate.push("");
+        this.state.tourEndTime.push("");
+      }
+    }
     if(stepIndex >= 2) {
+      var levels = [];
+      for(var i=0;i<this.state.level;i++) {
+        var date = this.state.tourStartDate[i];
+        var date1 = this.state.tourEndDate[i];
+        var time = this.state.tourStartTime[i];
+        var time1 = this.state.tourEndTime[i];
+        levels.push(
+          {
+            tourStartDate: new Date(date.getFullYear(),date.getMonth(),date.getDate(),time.getHours(),time.getMinutes(),time.getSeconds(),time.getMilliseconds()),
+            tourEndDate: new Date(date1.getFullYear(),date1.getMonth(),date1.getDate(),time1.getHours(),time1.getMinutes(),time1.getSeconds(),time1.getMilliseconds()),
+            registeredPlayers: [],
+            gamePlayedPlayers: []
+          }
+        )
+      }
+      var date = this.state.regEndDate;
+      var time = this.state.regEndTime;
+      var tournamentData = {
+        title: this.state.title,
+        avatarURL: this.state.avatarUrl,
+        imageURL: this.state.imgUrl,
+        overlayTitle: this.state.title,
+        overlaySubtitle: this.state.subTitle,
+        description: this.state.desc,
+        instructions: this.state.instructions,
+        prizes: this.state.prize,
+        noOfLevels: this.state.level,
+        topics: this.state.topics,
+        playersPerGame: this.state.games,
+        regEndDate: new Date(date.getFullYear(),date.getMonth(),date.getDate(),time.getHours(),time.getMinutes(),time.getSeconds(),time.getMilliseconds()),
+        levels: levels
+      };
+      console.log(JSON.stringify(tournamentData));
+      console.log(this.state.regEndDate+"T"+this.state.regEndTime);
       var request = $.ajax({
         url: restUrl + '/api/v1/tournaments',
         type: 'POST',
@@ -76,8 +108,31 @@ export default class CreateStepper extends React.Component {
 
   handlePrev = () => {
     const {stepIndex} = this.state;
-    if (stepIndex > 0) {
+    const {stepIndex1} = this.state;
+    if(stepIndex === 2) {
+      this.setState({
+        stepIndex: stepIndex - 1,
+        tourStartDate: [],
+        tourStartTime: [],
+        tourEndDate: [],
+        tourEndTime: []
+      });
+    } else if (stepIndex > 0) {
       this.setState({stepIndex: stepIndex - 1});
+    }
+  };
+
+  handleNext1 = () => {
+    const {stepIndex1} = this.state;
+    if (stepIndex1 < this.state.level-1) {
+      this.setState({stepIndex1: stepIndex1 + 1});
+    }
+  };
+
+  handlePrev1 = () => {
+    const {stepIndex1} = this.state;
+    if (stepIndex1 > 0) {
+      this.setState({stepIndex1: stepIndex1 - 1});
     }
   };
 
@@ -130,20 +185,66 @@ export default class CreateStepper extends React.Component {
   };
 
   handleTourStartDate(event, date) {
-    this.setState({tourStartDate: date});
+    console.log("date: "+date);
+    var arr = this.state.tourStartDate;
+    arr[this.state.stepIndex1] = new Date(date);
+    console.log(arr);
+    this.setState({tourStartDate: arr});
   };
 
   handleTourStartTime(event, time) {
-    this.setState({tourStartTime: time});
+    console.log("start_time: "+time);
+    var arr = this.state.tourStartTime;
+    arr[this.state.stepIndex1] = new Date(time);
+    console.log(arr);
+    this.setState({tourStartTime: arr});
   };
 
   handleTourEndDate(event, date) {
-    this.setState({tourEndDate: date});
+    var arr = this.state.tourEndDate;
+    arr[this.state.stepIndex1] = new Date(date);
+    this.setState({tourEndDate: arr});
   };
 
   handleTourEndTime(event, time) {
-    this.setState({tourEndTime: time});
+    var arr = this.state.tourEndTime;
+    arr[this.state.stepIndex1] = new Date(time);
+    this.setState({tourEndTime: arr});
   };
+
+  getStepContent1(stepIndex) {
+    const dateStyle = {paddingTop: '25px'};
+    return (
+      <div>
+        <div className="row">
+          <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <DatePicker hintText="Tournament Start Date" style={dateStyle}
+              fullWidth={true}
+              value={this.state.tourStartDate[stepIndex]}
+              onChange={this.handleTourStartDate.bind(this)}/>
+          </div>
+          <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <TimePicker hintText="Tournament Start Time" style={dateStyle} fullWidth={true}
+              value={this.state.tourStartTime[stepIndex]} onChange={this.handleTourStartTime.bind(this)} format="24hr" hintText="24hr Format"
+            />
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <DatePicker hintText="Tournament End Date" style={dateStyle}
+              fullWidth={true}
+              value={this.state.tourEndDate[stepIndex]}
+              onChange={this.handleTourEndDate.bind(this)}/>
+          </div>
+          <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+            <TimePicker hintText="Tournament End Time" style={dateStyle} fullWidth={true}
+              value={this.state.tourEndTime[stepIndex]} onChange={this.handleTourEndTime.bind(this)} format="24hr" hintText="24hr Format"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   getStepContent(stepIndex) {
     const dateStyle = {paddingTop: '25px'};
@@ -155,6 +256,7 @@ export default class CreateStepper extends React.Component {
         marginBottom: 16,
       },
     };
+    const contentStyle = {margin: '0 16px'};
     switch (stepIndex) {
       case 0:
         return (
@@ -277,7 +379,7 @@ export default class CreateStepper extends React.Component {
           <div>
           <div className="row">
             <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-              <DatePicker hintText="Registration End Date" shouldDisableDate={this.disableWeekends.bind(this)} style={dateStyle}
+              <DatePicker hintText="Registration End Date" style={dateStyle}
                 fullWidth={true}
                 value={this.state.regEndDate}
                 onChange={this.handleRegEndDate.bind(this)}/>
@@ -288,30 +390,28 @@ export default class CreateStepper extends React.Component {
               />
             </div>
           </div>
-          <div className="row">
-            <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-              <DatePicker hintText="Tournament Start Date" shouldDisableDate={this.disableWeekends.bind(this)} style={dateStyle}
-                fullWidth={true}
-                value={this.state.tourStartDate}
-                onChange={this.handleTourStartDate.bind(this)}/>
-            </div>
-            <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-              <TimePicker hintText="Tournament Start Time" style={dateStyle} fullWidth={true}
-                value={this.state.tourStartTime} onChange={this.handleTourStartTime.bind(this)} format="24hr" hintText="24hr Format"
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-              <DatePicker hintText="Tournament End Date" shouldDisableDate={this.disableWeekends.bind(this)} style={dateStyle}
-                fullWidth={true}
-                value={this.state.tourEndDate}
-                onChange={this.handleTourEndDate.bind(this)}/>
-            </div>
-            <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-              <TimePicker hintText="Tournament End Time" style={dateStyle} fullWidth={true}
-                value={this.state.tourEndTime} onChange={this.handleTourEndTime.bind(this)} format="24hr" hintText="24hr Format"
-              />
+          <div style={{width: '100%', maxWidth: 700, margin: 'auto'}}>
+            <Stepper activeStep={this.state.stepIndex1}>
+              {this.state.step}
+            </Stepper>
+            <div style={contentStyle}>
+              <div>
+                <p>{this.getStepContent1(this.state.stepIndex1)}</p>
+                <div style={{marginTop: 12}}>
+                  <FlatButton
+                    label="Back"
+                    disabled={this.state.stepIndex1 === 0}
+                    onTouchTap={this.handlePrev1}
+                    style={{marginRight: 12}}
+                  />
+                  <RaisedButton
+                    label="Next"
+                    disabled={this.state.stepIndex1 === this.state.level-1}
+                    primary={true}
+                    onTouchTap={this.handleNext1}
+                  />
+                </div>
+              </div>
             </div>
           </div>
           </div>
@@ -348,7 +448,7 @@ export default class CreateStepper extends React.Component {
                   href="#"
                   onClick={(event) => {
                     event.preventDefault();
-                    this.setState({stepIndex: 0, finished: false});
+                    this.setState({stepIndex: 0, finished: false, regEndDate: "", regEndTime: "", tourStartDate: [], tourStartTime: [], tourEndDate:[], tourEndTime:[], step: []});
                   }}
                 >
                   Click here
@@ -363,7 +463,7 @@ export default class CreateStepper extends React.Component {
                   href="#"
                   onClick={(event) => {
                     event.preventDefault();
-                    this.setState({stepIndex: 0, finished: false});
+                    this.setState({stepIndex: 0, finished: false, regEndDate: "", regEndTime: "", tourStartDate: [], tourStartTime: [], tourEndDate:[], tourEndTime:[], step: []});
                   }}
                 >
                   Click here

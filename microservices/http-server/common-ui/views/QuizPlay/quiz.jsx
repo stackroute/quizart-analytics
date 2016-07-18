@@ -139,8 +139,8 @@ export default class QuizPlay extends React.Component{
         })
         // console.log('Mounting the component: ', (++countMount));
 
-        console.log('Before playGame emit');
-        this.context.socket.emit('playGame',{username:username,tournamentId:'1234',knockoutId:'578606ad9df4c90f007e0d23',isTournament:'true'});
+        console.log('Before playGame emit\n'+(JSON.stringify(this.props.params)));
+        this.context.socket.emit('playGame',{username:username,tournamentId:'1234',knockoutId:this.props.params.knockoutId,isTournament:this.props.params.isTournament});
 
         this.context.socket.on('queued',function(msg){
 

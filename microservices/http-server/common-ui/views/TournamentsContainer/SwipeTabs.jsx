@@ -26,6 +26,7 @@ handleChange: function(value){
   this.setState({slideIndex:value});
 },
 render: function(){
+  var currentLevel = this.props.tournament.currentLevel-1;
 return (
   <div>
     <Tabs
@@ -41,9 +42,9 @@ return (
       onChangeIndex={this.handleChange}
     >
         <div style={styles.slide}>{
-            this.props.tournament.description+'\nStart Date: '+
-            this.props.tournament.tourStartDate+'\End Date: '+
-            this.props.tournament.tourEndDate
+            this.props.tournament.description+"\n"}<br/>{'Start Date: '+
+            this.props.tournament.levels[currentLevel].tourStartDate+"\n"}<br/>{'End Date: '+
+            this.props.tournament.levels[currentLevel].tourEndDate
           }</div>
 
       <div style={styles.slide}>

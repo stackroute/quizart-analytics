@@ -6,6 +6,9 @@ module.exports = function(options){
   self.socket = options.socket;
   self.knockoutId = options.knockoutId;
   self.isTournament = options.isTournament;
+  console.log('\n ==============Inside gameplayMiddlewarePlugin ========\n');
+  console.log('\n\n'+(options.knockoutId)+'\n\n');
+  console.log(options);
 
   var broadcastListener = require('seneca')();
   broadcastListener.use('redis-transport');
@@ -73,6 +76,7 @@ module.exports = function(options){
   .listen({type:'redis',pin:'role:'+self.username+',action:gameInitiated'})
   .ready(function(){
     console.log('\n ==============1. Pin Receiver ready ========\n');
+    console.log('\n\n'+options.knockoutId+'\n\n');
     setTimeout(function(){
       provisionerClient.client({type:'redis',pin:'role:provisioner,action:queue'})
         .act('role:provisioner,action:queue',{username:self.username,tournamentId:self.tournamentId,knockoutId:self.knockoutId,isTournament:self.isTournament},function(err,response){

@@ -10,6 +10,7 @@ var mesh = seneca();
 mesh.use('mesh',{auto:true});
 
 var context = require('./context');
+
 context.mesh = mesh;
 context.authorizeMiddleware = function(req, res, next) {
   mesh.act('role:jwt,cmd:verify', {token: req.get('JWT')}, function(err, response) {
@@ -20,6 +21,8 @@ context.authorizeMiddleware = function(req, res, next) {
   });
 };
 
+var schedular = require('./schedular');
+schedular();
 
 var env = process.env.NODE_ENV || 'dev';
 
@@ -181,6 +184,7 @@ io.on('connection',function(socket){
      playerMiddleWareService.use('redis-transport');
     // console.log('\n Setting up middleware for user \n');
     console.log('\n======Initializing plugin for  : '+(msg.username)+'\n');
+    console.log('\n\n'+JSON.stringify(msg)+'\n\n');
     playerMiddleWareService.use('./gameplayMiddlewarePlugin', {
       username:msg.username,
       tournamentId:msg.tournamentId,

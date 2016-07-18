@@ -88,6 +88,12 @@ class TournamentsSubCard extends React.Component {
     };
   }
 
+  static get contextTypes(){
+    return {
+      router: PropTypes.object.isRequired
+    }
+  }
+
   handleNext = () => {
     if(this.state.label==='Register') {
       var request = $.ajax({
@@ -108,42 +114,40 @@ class TournamentsSubCard extends React.Component {
         });
       }.bind(this));
     } else if(this.state.label==='Play') {
-      var data = {isTournament:true, id:this.props.tournament._id};
       this.context.router.push('/quiz/true/'+this.props.tournament._id);
-      /*this.context.router.push({
-        pathname: '/quiz',
-        query: data,
-        state: data
-      });*/
     }
   };
 
   handleDates = () => {
-    if(this.props.tournament.currentLevel===1) {
-      console.log('Inside handleDates sub card');
-      var date = new Date();
-      var regEndDate = new Date(this.props.tournament.regEndDate);
-      var tourEndDate = new Date(this.props.tournament.tourEndDate);
-      var alreadyPlayedGame = false;
-      var alreadyRegistered = false;
-      for(var i=0;i<this.props.tournament.gamePlayedPlayers.length;i++) {
-        var obj = this.props.tournament.gamePlayedPlayers[i];
-        if(this.state.username==obj.userId) {
-          alreadyPlayedGame = true;
-          break;
-        }
+    var currentLevel = this.props.tournament.currentLevel-1;
+    
+    console.log('Inside handleDates sub card');
+    var date = new Date();
+    var regEndDate = new Date(this.props.tournament.regEndDate);
+    var tourEndDate = new Date(this.props.tournament.levels[currentLevel].tourEndDate);
+    var alreadyPlayedGame = false;
+    var alreadyRegistered = false;
+    for(var i=0;i<this.props.tournament.levels[currentLevel].gamePlayedPlayers.length;i++) {
+      var obj = this.props.tournament.levels[currentLevel].gamePlayedPlayers[i];
+      if(this.state.username==obj.userId) {
+        alreadyPlayedGame = true;
+        break;
       }
-      for(var i=0;i<this.props.tournament.registeredPlayers.length;i++) {
-        var obj = this.props.tournament.registeredPlayers[i];
-        if(this.state.username==obj.userId) {
-          alreadyRegistered = true;
-          break;
-        }
+    }
+    for(var i=0;i<this.props.tournament.levels[currentLevel].registeredPlayers.length;i++) {
+      var obj = this.props.tournament.levels[currentLevel].registeredPlayers[i];
+      if(this.state.username==obj.userId) {
+        alreadyRegistered = true;
+        break;
       }
-      console.log(date);
-      console.log(regEndDate);
-      console.log(tourEndDate);
-      console.log(date.getTime()<tourEndDate.getTime());
+    }
+    console.log(date);
+    console.log(regEndDate);
+    console.log((regEndDate instanceof Date)+" "+(typeof regEndDate === "string"));
+    console.log((tourEndDate instanceof Date)+" "+(typeof tourEndDate === "string"));
+    // console.log(date.getTime()<tourEndDate.getTime());
+
+    if(currentLevel+1===1) {
       if(date.getTime()<regEndDate.getTime()) {
         if(alreadyRegistered) {
           this.setState({label:'You are Registered', finished: true});

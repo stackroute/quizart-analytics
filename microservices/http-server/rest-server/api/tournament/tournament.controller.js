@@ -20,7 +20,7 @@ controller.retrieveAll = function(req, res) {
 };
 
 controller.registerPlayer = function(req, res) {
-  mesh.act('role:tournaments,cmd:registerPlayer',req.body, function(err, response) {
+  mesh.act('role:tournaments,cmd:registerPlayerFirstLevel',req.body, function(err, response) {
     if(err) { console.error('===== ERR: ', err, ' ====='); return res.status(500).send(); }
     if(response.response !== 'success') { return res.status(404).send(); }
     return res.status(201).json(response.entity);

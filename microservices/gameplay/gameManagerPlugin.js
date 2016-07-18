@@ -14,7 +14,11 @@ module.exports = function(options){
 
      var self = this;
      var userCount = options.users.length;
+     console.log('Inside game manager plugin');
+     console.log('\n\n'+options.isTournament+' '+options.knockoutId+'\n\n');
      self.gameId = options.gameId;
+     self.knockoutId = options.knockoutId;
+     self.isTournament = options.isTournament;
      var gameStarted = false;
      var leaderboardId = Math.random()*300;
 
@@ -136,7 +140,7 @@ module.exports = function(options){
              };
              for(var i=0;i<arr.length;i++) {
                input.leaderboard.push({
-                 name:arr[i],
+                 userId:arr[i],
                  score:leaderboard[arr[i]]
                });
              }
@@ -148,11 +152,13 @@ module.exports = function(options){
              )
              console.log('\n\ninput: '+JSON.stringify(input)+'\n\n');
              console.log('\n==============Sending final leaderboard as: '+JSON.stringify(leaderboard)+'===================\n');
-             if(options.isTournament) {
-               meshConsumerMicroservice.act('role:tournaments,cmd:updateWinners',{id:options.knockoutId, winners:input.leaderboard}, function(err, response) {
+             console.log('\n==============options.isTournament==================='+self.isTournament+'\n');
+             if(self.isTournament) {
+               meshConsumerMicroservice.act('role:tournaments,cmd:updateTournamentLeaderboard',{id:self.knockoutId, leaderboard:input.leaderboard}, function(err, response) {
                  if(err) { console.error('===== ERR: ', err, ' ====='); return res.status(500).send(); }
                  if(response.response !== 'success') { return res.status(404).send(); }
                  //return res.status(201).json(response.entity);
+                 console.log('\n==============Updated tournament===================\n');
                });
              }
              meshConsumerMicroservice.act('role:leaderboards,cmd:create',input, function(err, response) {
