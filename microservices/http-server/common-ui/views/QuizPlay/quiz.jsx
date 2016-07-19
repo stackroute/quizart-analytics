@@ -205,7 +205,7 @@ export default class QuizPlay extends React.Component{
   }
     onClick(value,e){
 
-      console.log("===================seconds when clicked===============",that.state.seconds);
+      console.log("===================seconds when clicked===============",this.state.seconds);
       const resSeconds = this.state.seconds;
       console.log("===============Time==================",resSeconds);
       var res = (10-resSeconds);
