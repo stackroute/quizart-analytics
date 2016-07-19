@@ -143,71 +143,71 @@ export default class Profile extends React.Component{
 
         addFriend(){
 
-           this.getUuid();
+          //  this.getUuid();
 
          }
 
-        getUuid(){
-
-          var d = new Date().getTime();
-          var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-              var r = (d + Math.random()*16)%16 | 0;
-              d = Math.floor(d/16);
-              return (c=='x' ? r : (r&0x3|0x8)).toString(16);
-          });
-          var requestMsg ={
-            message : {content: uuid, command : 'generateUUID'},
-            details : {subject :[this.state.Profile.username,this.props.username]}
-          };
-          console.log("Request Message is ",requestMsg);
-
-          var topicid ;
-
-            var request = $.ajax({
-            url: restUrl + '/api/generateuuid/uuid',
-            type : 'POST',
-            data : JSON.stringify(requestMsg),
-            contentType: 'application/json',
-            });
-            request.done(function(data) {
-              topicid = data.result.message.content;
-              var friendsData = {
-                subject: [this.state.Profile.username,this.props.username],
-                relation: "friends",
-                object: [this.state.topicid],
-                };
-                this.add({"friendsInfo":friendsData});
-
-            }.bind(this));
-            request.fail(function() {
-            console.error('err');
-            }.bind(this));
-
-          }
-
-        add(friendsInfo){
-
-          friendsData = friendsInfo.friendsInfo;
-
-            var request = $.ajax({
-              url: restUrl + '/api/v1/friend',
-              type: 'POST',
-              data: JSON.stringify(friendsData),
-              contentType: 'application/json',
-
-            });
-            request.done(function(data) {
-              console.log(JSON.stringify(data));
-              console.log("Added As Friend");
-              this.setState({
-                disable:true,
-                addFriend: "Friends"
-              });
-            }.bind(this));
-            request.fail(function() {
-                console.log("Error sending Friend request");
-              }.bind(this));
-          }
+        // getUuid(){
+        //
+        //   var d = new Date().getTime();
+        //   var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        //       var r = (d + Math.random()*16)%16 | 0;
+        //       d = Math.floor(d/16);
+        //       return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+        //   });
+        //   var requestMsg ={
+        //     message : {content: uuid, command : 'generateUUID'},
+        //     details : {subject :[this.state.Profile.username,this.props.username]}
+        //   };
+        //   console.log("Request Message is ",requestMsg);
+        //
+        //   var topicid ;
+        //
+        //     var request = $.ajax({
+        //     url: restUrl + '/api/generateuuid/uuid',
+        //     type : 'POST',
+        //     data : JSON.stringify(requestMsg),
+        //     contentType: 'application/json',
+        //     });
+        //     request.done(function(data) {
+        //       topicid = data.result.message.content;
+        //       var friendsData = {
+        //         subject: [this.state.Profile.username,this.props.username],
+        //         relation: "friends",
+        //         object: [this.state.topicid],
+        //         };
+        //         this.add({"friendsInfo":friendsData});
+        //
+        //     }.bind(this));
+        //     request.fail(function() {
+        //     console.error('err');
+        //     }.bind(this));
+        //
+        //   }
+        //
+        // add(friendsInfo){
+        //
+        //   friendsData = friendsInfo.friendsInfo;
+        //
+        //     var request = $.ajax({
+        //       url: restUrl + '/api/v1/friend',
+        //       type: 'POST',
+        //       data: JSON.stringify(friendsData),
+        //       contentType: 'application/json',
+        //
+        //     });
+        //     request.done(function(data) {
+        //       console.log(JSON.stringify(data));
+        //       console.log("Added As Friend");
+        //       this.setState({
+        //         disable:true,
+        //         addFriend: "Friends"
+        //       });
+        //     }.bind(this));
+        //     request.fail(function() {
+        //         console.log("Error sending Friend request");
+        //       }.bind(this));
+        //   }
 
   componentDidMount(){
     console.log("props.username======",this.props.username);
