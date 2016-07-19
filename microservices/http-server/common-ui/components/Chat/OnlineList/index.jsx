@@ -117,15 +117,47 @@ export default class OnlineList extends React.Component{
     };
 
     postGroupName(groupInfo){
-      var groupDataPost ={
-          groupname:groupInfo.groupname,
-          groupavatar:"http://lorempixel.com/100/100",
-          topicid:Math.ceil(Math.random()*1231),
-          members:groupInfo.users
+      var d = new Date().getTime();
+      var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = (d + Math.random()*16)%16 | 0;
+          d = Math.floor(d/16);
+          return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+      });
+      var requestMsg ={
+        message : {content: uuid, command : 'generateUUID'},
+        details : {groupname :groupInfo.groupname}
       };
+      console.log("Request Message is ",requestMsg);
 
-      console.log("Inside Post group and data to be posted====",groupDataPost);
+      var topicid ;
+      $.ajax({
+          url: restUrl + '/api/generateuuid/uuid',
+          contentType : 'application/json',
+          type : 'POST',
+          data : JSON.stringify(requestMsg),
+          success : function(data){
+              console.log("Response for the ajax req to generateuuid is",data.response);
+              topicid = data.result.message.content;
+              console.log("The Topic id retrived is ",topicid);
+              var groupDataPost ={
+                  groupname:groupInfo.groupname,
+                  groupavatar:"http://lorempixel.com/100/100",
+                  topicid:topicid,
+                  members:groupInfo.users
+              };
+              console.log("inside success of ajax after retrieving the UUID, the groupdata to be posted is ",groupDataPost);
+              this.postGroupNameDB({"groupInfo":groupDataPost})
+          }.bind(this),
+          error : function(xhr,status,err){
+              console.log("Error in making the request to generateuuid");
+          }.bind(this)
+      });
+    }
 
+    postGroupNameDB(groupInfo){
+      console.log("inside post group to DB the received data is ",groupInfo);
+      var groupDataPost = groupInfo.groupInfo;
+      console.log("inside post group to DB the data to be posted is ",groupDataPost);
       $.ajax({
         url: restUrl + '/api/v1/groupslist/addgroup',
         contentType: 'application/json',
@@ -137,13 +169,12 @@ export default class OnlineList extends React.Component{
           this.setState({GroupData: this.state.GroupData.concat(data.groupdata)});
         }.bind(this),
         error: function(xhr, status, err) {
-          console.log("Inside Online list Post groupo method, Faill response from server");
+          console.log("Something Went wrong");
         }.bind(this)
       });
     }
 
     addGroup(groupname,groupusers){
-
       this.postGroupName({"groupname":groupname , "users":groupusers});
       this.setState({
         groupName : '',view: "List",
