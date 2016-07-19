@@ -43,6 +43,13 @@ exports = module.exports = function(options) {
   });
 
   this.add('role:tournaments,cmd:retrieveAll', function(msg, respond) {
+    Tournament.find({}, function (err, retrievedTournament) {
+      if(err) { return respond(err); }
+      return respond(null, {response: 'success', entity: retrievedTournament});
+    });
+  });
+
+  this.add('role:tournaments,cmd:retrieveActive', function(msg, respond) {
     Tournament.find({isComplete: false}, function (err, retrievedTournament) {
       if(err) { return respond(err); }
       return respond(null, {response: 'success', entity: retrievedTournament});
@@ -94,14 +101,17 @@ exports = module.exports = function(options) {
           break;
         }
       }
-      retrievedTournament.levels[currentLevel].gamePlayedPlayers.sort(
+      for(var i=0;i<retrievedTournament.levels[currentLevel].games.length;i++) {
+        var arr = retrievedTournament.levels[currentLevel].games[i];
+        for(var j=0;j<arr.length;j++) {
+          retrievedTournament.levels[currentLevel].leaderboard.push(arr[j]);
+        }
+      }
+      retrievedTournament.levels[currentLevel].leaderboard.sort(
         function(a, b) {
-            return b.score - a.score;
+          return b.score - a.score;
         }
       )
-      for(var i=0;i<(retrievedTournament.levels[currentLevel].gamePlayedPlayers.length*(retrievedTournament.eliminationPercentagePerGame/100));i++) {
-        retrievedTournament.levels[currentLevel].levelWinners.push({userId: retrievedTournament.levels[currentLevel].gamePlayedPlayers[i].userId});
-      }
       if((currentLevel+1)==retrievedTournament.noOfLevels) {
         retrievedTournament.isComplete = true;
         retrievedTournament.levels[currentLevel].active='no';
@@ -131,9 +141,7 @@ exports = module.exports = function(options) {
         }
       }
       var leaderboard = msg.leaderboard;
-      for(var i=0;i<leaderboard.length;i++) {
-        retrievedTournament.levels[currentLevel].gamePlayedPlayers.push(leaderboard[i]);
-      }
+      retrievedTournament.levels[currentLevel].games.push(leaderboard);
       retrievedTournament.save(function (err) {
         if(err) {
             console.error('ERROR!');

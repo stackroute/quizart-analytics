@@ -139,6 +139,11 @@ export default class QuizPlay extends React.Component{
         })
         // console.log('Mounting the component: ', (++countMount));
 
+        this.context.socket.on('inlineLeaderBoard',function(data){
+          console.log('Inline leaderboard is: ' + JSON.stringify(data));
+          that.setState({leaderboard:data.leaderboard});
+        })
+
         console.log('Before playGame emit\n'+(JSON.stringify(this.props.params)));
         this.context.socket.emit('playGame',{username:username,tournamentId:'1234',knockoutId:this.props.params.knockoutId,isTournament:this.props.params.isTournament});
 

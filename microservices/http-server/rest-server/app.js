@@ -7,6 +7,9 @@ var google = require('googleapis');
 var OAuth2 = google.auth.OAuth2;
 var request = require('request');
 
+var cloudinary = require('cloudinary');
+var formidable = require('express-formidable');
+
 
 var secret = process.env.AUTH_SECRET || "the matrix";
 var googlecredentials = require('./secrets/googlecredentials');
@@ -282,6 +285,33 @@ app.post('/api/check',function(req,res){
 app.use(function(req, res) {
   return res.status(404).send();
 });
+
+//------------------------------------------
+
+
+
+app.use(formidable.parse());
+app.post('/api/check',function(req,res){
+  console.log('-------------- abc from express floow---------------',req.body);
+  //console.log('-------------- abc from express floow---------------',req.body.file);
+  console.log('-------------- abc from express floow---------------',req.body.file.path);
+  //console.log(req.body.incre+'   0----------------------');
+  //console.log(req.body.id+'    ---------------------');
+
+  cloudinary.config({
+   cloud_name: 'quizrt-social',
+   api_key: '866928426995948',
+   api_secret: 'a0_PX4nmJqak_k3lc29Ges5dcNw'
+  });
+  var url = '';
+  cloudinary.uploader.upload(req.body.file.path, function(result) {
+    url = result.url;
+   console.log(result.url);
+  });
+  return url;
+}
+
+---------------------------------------------
 
 //---------------------------------------
 var middleWareCount =0;

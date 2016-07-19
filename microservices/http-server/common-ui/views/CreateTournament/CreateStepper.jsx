@@ -81,7 +81,8 @@ export default class CreateStepper extends React.Component {
             tourStartDate: new Date(date.getFullYear(),date.getMonth(),date.getDate(),time.getHours(),time.getMinutes(),time.getSeconds(),time.getMilliseconds()),
             tourEndDate: new Date(date1.getFullYear(),date1.getMonth(),date1.getDate(),time1.getHours(),time1.getMinutes(),time1.getSeconds(),time1.getMilliseconds()),
             registeredPlayers: [],
-            gamePlayedPlayers: []
+            games: [],
+            leaderboard: []
           }
         )
       }
@@ -166,11 +167,47 @@ export default class CreateStepper extends React.Component {
   };
 
   handleImgUrl(event) {
-    this.setState({imgUrl: event.target.value, firstChange: true});
+    //this.setState({imgUrl: event.target.value, firstChange: true});
+    var fd = new FormData();
+    fd.append( 'file', this.refs.file.files[0] );
+
+    $.ajax({
+      url: restUrl+'/api/check',
+      data: fd,
+      processData: false,
+      contentType: false,
+      type: 'POST',
+      success: function(data) {
+        console.log('url is: '+data);
+        this.setState({imgUrl: data, firstChange: true});
+      },
+      error: function() {
+        console.error('error while uploading file');
+      },
+    });
+    e.preventDefault()
   };
 
   handleAvatarUrl(event) {
-    this.setState({avatarUrl: event.target.value, firstChange: true});
+    //this.setState({avatarUrl: event.target.value, firstChange: true});
+    var fd = new FormData();
+    fd.append( 'file', this.refs.file.files[0] );
+
+    $.ajax({
+      url: restUrl+'/api/check',
+      data: fd,
+      processData: false,
+      contentType: false,
+      type: 'POST',
+      success: function(data) {
+        console.log('url is: '+data);
+        this.setState({avatarUrl: data, firstChange: true});
+      },
+      error: function() {
+        console.error('error while uploading file');
+      },
+    });
+    e.preventDefault()
   };
 
   handleTopics(event) {
@@ -318,26 +355,16 @@ export default class CreateStepper extends React.Component {
             </div>
             <div className="row">
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <TextField fullWidth={true}
-                  hintText="Image Url"
-                  floatingLabelText="Image Url"
-                  value={this.state.imgUrl}
-                  onChange={this.handleImgUrl.bind(this)}
-                  errorText={!this.state.firstChange ? '' : (this.state.imgUrl=='' ? 'This field is required' : '')}
-                  errorStyle={{textAlign: 'left'}}
-                />
+                <FlatButton label="Main imag" labelPosition="before">
+                  <input type="file" ref="file" accept="image/*" onClick={this.handleImgUrl.bind(this)} />
+                </FlatButton>
               </div>
             </div>
             <div className="row">
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <TextField fullWidth={true}
-                  hintText="Avatar Url"
-                  floatingLabelText="Avatar Url"
-                  value={this.state.avatarUrl}
-                  onChange={this.handleAvatarUrl.bind(this)}
-                  errorText={!this.state.firstChange ? '' : (this.state.avatarUrl=='' ? 'This field is required' : '')}
-                  errorStyle={{textAlign: 'left'}}
-                />
+                <FlatButton label="Avatar Image" labelPosition="before">
+                  <input type="file" ref="file" accept="image/*" onClick={this.handleAvatarUrl.bind(this)} />
+                </FlatButton>
               </div>
             </div>
           </div>

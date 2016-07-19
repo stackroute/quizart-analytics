@@ -9,6 +9,7 @@ import ChatComponent from '../Chat/ChatComponent';
 import SubTopicContainer from '../SubTopics/SubTopicContainer';
 import ProfilePage from '../Profile';
 import Dashboard from '../dashboard';
+import CreateStepper from '../../views/CreateTournament';
 
 var bodyContainer = {
   // padding: "16px",
@@ -132,6 +133,7 @@ export default class TabsMobile extends React.Component {
               <Dashboard/>
             </div>
             :
+            this.props.page.toString()=="CreateTournament"?<CreateStepper/>:
              this.props.page.toString()=="Topics"?<SubTopicContainer topics ={this.props.topics} fun={this.handleCheck}/>:
              this.props.page.toString()=="Home"?<Dashboard />:
              this.props.page.toString()=="TopicPage"?<EachTopic id={this.props.id}/>:null}

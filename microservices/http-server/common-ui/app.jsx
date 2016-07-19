@@ -20,6 +20,7 @@ import SignUP from './views/SignUP';
 import AuthSuccess from './views/AuthSuccess';
 import cookie from 'react-cookie';
 import LeaderBoard from './views/LeaderBoard';
+import TournamentLeaderBoard from './views/LeaderBoard';
 import ContextComponent from './context';
 import CreateTournament from './views/CreateTournament';
 import TournamentsContainer from './views/TournamentsContainer';
@@ -61,6 +62,7 @@ ReactDOM.render(
       <Route path="/ProfilePage/:username" component={ProfilePage}/>
       <Route path="/eachTopic/:id" component={EachTopicsPage} onEnter={verifyLogin} />
       <Route name="leaderboard" path="/board/:id/:isTournament" component={LeaderBoard} />
+      <Route name="tournamentboard" path="/board/:id" component={LeaderBoard} />
       <Route path="my-account/change-password" component={ChangePasswordView} onEnter={verifyLogin} />
       <Route path="/create" component={CreateTournament} onEnter={verifyLogin}/>
       <Route path="/tournament" component={TournamentsContainer} onEnter={verifyLogin}/>

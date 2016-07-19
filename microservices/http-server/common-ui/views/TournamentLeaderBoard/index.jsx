@@ -7,7 +7,7 @@ import {PropTypes} from 'react';
 
 import restUrl from '../../restUrl';
 
-export default class LeaderBoard extends React.Component {
+export default class TournamentLeaderBoard extends React.Component {
   constructor(props){
     super(props);
     console.log('Inside LeaderBoard constructor: '+this.props.params.id);
@@ -30,20 +30,23 @@ export default class LeaderBoard extends React.Component {
 
   componentDidMount() {
     var request = $.ajax({
-      url: restUrl + '/api/v1/leaderboard/'+this.props.params.id,
+      url: restUrl + '/api/v1/tournaments/'+this.props.params.id,
       type: 'GET',
     });
     request.done(function(data) {
-      console.log('Inside gameplay');
       console.log(JSON.stringify(data));
-      console.log(Object.keys(data));
-      console.log(JSON.stringify(data.leaderboard));
-      data.leaderboard.sort(
-        function(a, b) {
-            return b.score - a.score;
+      var levels = data.levels;
+      var currentLevel = -1;
+      for(var i=0;i<levels.length;i++) {
+        if(levels[i].active=='yes') {
+          currentLevel = i;
+          break;
         }
-      )
-      this.setState({rows:data.leaderboard});
+      }
+      if(currentLevel==-1) {
+        currentLevel = levels.length;
+      }
+      this.setState({rows:data.levels[currentLevel-1].leaderboard});
     }.bind(this));
     request.fail(function() {
       console.error('LeaderBoard error');

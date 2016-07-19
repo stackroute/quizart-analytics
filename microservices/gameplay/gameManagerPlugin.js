@@ -53,6 +53,10 @@ module.exports = function(options){
                 leaderboard: leaderboard
                }
                console.log('\n=====SEnding resposne as ====='+JSON.stringify(respondToQuestion)+'===\n');
+               self.broadcast.act('gameId:'+self.gameId+',role:broadcast,action:inlineLeaderBoard',{leaderboard: leaderboard},function(err,response){
+                 if(err) return console.log(err);
+                 console.log('\n======================== Inline leaderboard sent =======\n');
+              });
                respond(null,{respondToQuestion:respondToQuestion});
            })
            .listen({type:'redis',pin:'role:'+user+',gameId:'+self.gameId+',action:*'})
@@ -160,11 +164,17 @@ module.exports = function(options){
                  if(response.response !== 'success') { return; }
                  //return res.status(201).json(response.entity);
                  console.log('\n==============Updated tournament===================\n');
+               });
+               meshConsumerMicroservice.act('role:leaderboards,cmd:create',input, function(err, response) {
+                 if(err) { console.error('===== ERR: ', err, ' ====='); return; }
+                 if(response.response !== 'success') { return; }
+                 console.log('\n==============Inside gameplay part==================='+response.entity._id+'\n');
                  self.broadcast.act('gameId:'+self.gameId+',role:broadcast,action:leaderboard',{id:response.entity._id,isTournament:true},function(err,response){
                    if(err) return console.log(err);
                    console.log('\n Received response for leaderboard \n');
                 })
                 self.close();
+                 //return res.status(201).json(response.entity);
                });
              } else {
                console.log('\n==============Inside gameplay part==================='+input+'\n');

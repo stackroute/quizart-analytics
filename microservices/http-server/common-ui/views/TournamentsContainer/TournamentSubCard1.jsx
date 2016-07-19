@@ -77,7 +77,7 @@ const avatarstyle={
 }
 
 
-class TournamentsSubCard extends React.Component {
+class TournamentsSubCard1 extends React.Component {
 
   constructor(props){
     super(props);
@@ -95,7 +95,7 @@ class TournamentsSubCard extends React.Component {
   }
 
   handleLeaderboard = () => {
-    this.context.router.push('/board/'+this.props.tournament._id+"/true");
+    this.context.router.push('/tournamentboard/'+this.props.tournament._id);
   }
 
   handleNext = () => {
@@ -264,29 +264,22 @@ class TournamentsSubCard extends React.Component {
 
     <CardActions>
       <div className="col-xs col-md col-lg col-sm">
-      <div>
-        {finished ? (
-          <div>
-            <RaisedButton
-              style={btnFontColor}
-              label={this.state.label}
-              primary={true}
-              disabled={true}
-            />
-          </div>
-        ) : (
-          <div>
+        <div>
+          {active ? (
             <div>
-              <RaisedButton
-                style={btnFontColor}
-                label={this.state.label}
-                secondary={true}
-                onClick={this.handleNext}
-              />
+              <div>
+                <RaisedButton
+                  style={btnFontColor}
+                  label={'Leaderboard'}
+                  secondary={true}
+                  onClick={this.handleLeaderboard}
+                />
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          ) : (
+            <div></div>
+          )}
+        </div>
       </div>
     </CardActions>
 
