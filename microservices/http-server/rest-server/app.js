@@ -1,30 +1,24 @@
 var seneca = require('seneca');
 var express = require('express');
 var app = express();
-
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 var google = require('googleapis');
 var OAuth2 = google.auth.OAuth2;
 var request = require('request');
-
-
 var secret = process.env.AUTH_SECRET || "the matrix";
 var googlecredentials = require('./secrets/googlecredentials');
 var oauth2Client = new OAuth2(googlecredentials.CLIENT_ID, googlecredentials.CLIENT_SECRET, googlecredentials.REDIRECT_URL);
 var redirectHost = process.env.REDIRECT_HOST || "localhost";
 var port = process.env.PORT || '8001';
 var redirectPort = process.env.REDIRECT_PORT || port;
-
 var name = process.env.NAME || "default";
-
-
 var mesh = seneca();
 mesh.use('mesh',{auto:true});
-
 var context = require('./context');
-
 context.mesh = mesh;
+var twitterStream = require('./api/timeline/TwitterStream');
+
 context.authorizeMiddleware = function(req, res, next) {
   console.log("Inside Express and Inside authorizeMiddleware function at the top====================");
   mesh.act('role:jwt,cmd:verify', {token: req.get('JWT')}, function(err, response) {
@@ -141,14 +135,14 @@ app.get('/api/auth/success/google',function(req,res){
 });
 
   tweets.on('connection',function(socket){
-  socket.on("createStream",function(data){
-
-
-   })
-  socket.on("disconnect",function(){
-
-
-  });
+  console.log("===conected to tweet socket");
+   twitterStream(socket)
+  // socket.on('creatstream',function(data){
+  //   // term  = data.term;
+  //   // token = data.token;
+  //  console.log("============================================INSIDE OF CREATE TWITTER STREAM===========================",data);
+  //
+  //  });
 });
 
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import CommentForm from  './CommentForm';
 import Tweet from 'react-tweet';
-var socket = io('/tweets');
+var socket = io.connect('/tweets');
 export default class Timeline extends React.Component{
   constructor (props){
      super(props);
@@ -35,7 +35,7 @@ loadDataFromSever(){
                   this.setState({tweets:data})
                }
                else {
-                  this.setState({tweets:data.statuses});
+                   this.setState({tweets:data.statuses});
                }
 
     }.bind(this));
@@ -49,15 +49,15 @@ loadDataFromSever(){
 
   componentDidMount(){
           this.loadDataFromSever();
-          socket.emit("ctreatStream",{id:this.props.hashtag,localStorage.authToken})
+          socket.emit('creatstream',{token:localStorage.authToken,term:'SYTYCDGrandFinale'});
           console.log("=====token",localStorage.authToken);
           var  that = this;
-           socket.on('tweetData', function getTweet (tweet) {
+           socket.on('tweetdata', function getTweet (tweet) {
            console.log("============tweet ",tweet);
           if(tweet.user.id!="undefined"){
              console.log("====username====",tweet.user.name);
              that.setState({tweets:[tweet].concat(that.state.tweets)});
-         }
+          }
 });
 
 }
