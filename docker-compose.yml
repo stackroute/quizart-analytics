@@ -6,27 +6,6 @@ services:
     image: boilerplate/mesh-base
     network_mode: host
     restart: always
-  # microservice-register-user:
-  #   container_name: microservice-register-user
-  #   build: microservices/LoginAuthentication/registerUser
-  #   image: boilerplate/microservice-register-user
-  #   network_mode: host
-  #   restart: always
-  #   depends_on:
-  #     - microservice-mesh-base
-  #     - db
-  #   environment:
-  #     MONGO_HOST: localhost
-  #     MONGO_PORT: 27017
-  #     MONGO_DB_NAME: quizRT4
-  # microservice-verify-token:
-  #   container_name: microservice-verify-token
-  #   build: microservices/LoginAuthentication/verifyToken
-  #   image: boilerplate/microservice-verify-token
-  #   network_mode: host
-  #   restart: always
-  #   depends_on:
-  #     - microservice-mesh-base
   microservice-accounts:
     container_name: microservice-accounts
     build: microservices/microservice-accounts
@@ -37,15 +16,6 @@ services:
       - microservice-mesh-base
     environment:
       MONGO_URL: 'mongodb://localhost:27017/boilerplate-production'
-  microservice-timeline:
-    container_name: microservice-timeline
-    build: microservices/microservice-timeline
-    image: boilerplate/microservice-timeline
-    network_mode: host
-    restart: always
-    depends_on:
-      - db
-      - microservice-mesh-base
   microservice-profile:
       container_name: microservice-profile
       build: microservices/microservice-profile
@@ -121,8 +91,6 @@ services:
       depends_on:
         - microservice-mesh-base
         - microservice-random-question
-        - microservice-leaderboard
-        - microservice-tournaments
         - redis
       environment:
         REDIS_URL: localhost
@@ -140,32 +108,19 @@ services:
       MONGO_HOST: localhost
       MONGO_PORT: 27017
       MONGO_DB_NAME: quizRT4
-  microservice-tournaments:
-    container_name: microservice-tournaments
-    build: microservices/microservice-tournaments
-    image: boilerplate/microservice-tournaments
-    network_mode: host
-    restart: always
-    depends_on:
-      - db
-      - microservice-mesh-base
-    environment:
-      MONGO_HOST: localhost
-      MONGO_PORT: 27017
-      MONGO_DB_NAME: quizRT4
-  microservice-all-tournaments:
-    container_name: microservice-all-tournaments
-    build: microservices/allTournaments
-    image: boilerplate/microservice-all-tournaments
-    network_mode: host
-    restart: always
-    depends_on:
-      - microservice-mesh-base
-      - db
-    environment:
-      MONGO_HOST: localhost
-      MONGO_PORT: 27017
-      MONGO_DB_NAME: quizRT4
+  # microservice-all-tournaments:
+  #   container_name: microservice-all-tournaments
+  #   build: microservices/allTournaments
+  #   image: boilerplate/microservice-all-tournaments
+  #   network_mode: host
+  #   restart: always
+  #   depends_on:
+  #     - microservice-mesh-base
+  #     - db
+  #   environment:
+  #     MONGO_HOST: localhost
+  #     MONGO_PORT: 27017
+  #     MONGO_DB_NAME: quizRT4
   microservice-jwt:
     container_name: microservice-jwt
     build: microservices/microservice-jwt
@@ -196,6 +151,7 @@ services:
   #         MONGO_HOST: localhost
   #         MONGO_PORT: 27017
   #         MONGO_DB_NAME: quizRT4
+  # microservice-like-topic:
   #   container_name: microservice-like-topic
   #   build: microservices/likesTopic
   #   image: boilerplate/microservice-like-topic:0.1.0
@@ -213,21 +169,30 @@ services:
   #   depends_on:
   #     - db
   #     - microservice-mesh-base
-  # microservice-chatrooms:
-  #   container_name: microservice-chatrooms
-  #   build: microservices/microservice-chatrooms
-  #   image: boilerplate/microservice-chatrooms
+  microservice-chatrooms:
+    container_name: microservice-chatrooms
+    build: microservices/microservice-chatrooms
+    image: boilerplate/microservice-chatrooms
+    network_mode: host
+    restart: always
+    depends_on:
+      - db
+      - microservice-mesh-base
+  # microservice-timeline:
+  #   container_name: microservice-timeline
+  #   build: microservices/microservice-timeline
+  #   image: boilerplate/microservice-timeline
   #   network_mode: host
   #   restart: always
   #   depends_on:
   #     - db
   #     - microservice-mesh-base
-  # chatservice:
-  #   container_name: chatservice-container
-  #   build: chatservice
-  #   image: boilerplate/chatservice
-  #   network_mode: host
-  #   restart: always
+  chatservice:
+    container_name: chatservice-container
+    build: chatservice
+    image: boilerplate/chatservice
+    network_mode: host
+    restart: always
   http-server:
     container_name: http-server0
     build: microservices/http-server
@@ -236,17 +201,6 @@ services:
     restart: always
     depends_on:
       - microservice-mesh-base
-  microservice-analytics:
-    container_name: microservice-analytics
-    build: microservices/microservice-analytics
-    image: boilerplate/analytics
-    network_mode: host
-    restart: always
-    depends_on:
-      - microservice-mesh-base
-      - db
-    environment:
-      MONGO_URL: 'mongodb://localhost:27017/boilerplate-production'
   db:
     container_name: mongo
     image: mvertes/alpine-mongo

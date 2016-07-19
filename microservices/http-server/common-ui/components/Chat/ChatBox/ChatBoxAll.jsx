@@ -52,12 +52,21 @@ export default class ChatBoxAll extends React.Component {
       outerThis.setState({
         channelId : channelid
       },function(){
+        this.props.socket.emit('retrieveHistory',this.state.channelId);
         console.log("Inside the chatboxall, channel ild recived from express is==",outerThis.state.channelId);
       })
     });
+    this.props.socket.on('retrievedHistory',function(historymsgserver){
+      console.log(historymsgserver);
+      console.log("Message received as history is ",historymsgserver.text);
+      console.log("Message received and as history and it is sent by",historymsgserver.text.sentBy);
+      this.setState({messages : this.state.messages.concat([{text : historymsgserver.text.text, sentby: historymsgserver.text.sentBy}])});
+    }.bind(this));
     this.props.socket.on('received_msg',function(msgserver){
       console.log(msgserver);
-      this.setState({messages : this.state.messages.concat([{text : msgserver}])});
+      console.log("Message received is ",msgserver.text);
+      console.log("Message received and is sent by",msgserver.sentBy);
+      this.setState({messages : this.state.messages.concat([{text : msgserver.text, sentby: msgserver.sentBy}])});
     }.bind(this));
   }
 

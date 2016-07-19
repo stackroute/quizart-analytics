@@ -23,10 +23,9 @@ var mesh = seneca();
 mesh.use('mesh',{auto:true});
 
 var context = require('./context');
-
+var chatMiddlewarePlugin  = require('./chatmiddlewareplugin');
 context.mesh = mesh;
 context.authorizeMiddleware = function(req, res, next) {
-  console.log("Inside Express and Inside authorizeMiddleware function at the top====================");
   mesh.act('role:jwt,cmd:verify', {token: req.get('JWT')}, function(err, response) {
     if(err) { return res.status(500).json(err); }
     if(response.response !== 'success') { return res.status(404).send(); }
@@ -59,6 +58,26 @@ app.set('secret',secret);
 app.use('/api/v1', require('./router'));
 
 var chat = io.of('/chat');
+
+app.post('/api/generateuuid/uuid',function(req,res){
+  // console.log("Request inside generatuuid is ",req.body);
+  // console.log("Request inside generatuuid and the stringified data is ",JSON.stringify(req.body));
+  const redis=require('redis');
+  const publisher=redis.createClient(6379,'172.23.238.253');
+  const subscriber=redis.createClient(6379,'172.23.238.253');
+  subscriber.subscribe(req.body.message.content);
+  console.log("Inside uuid generator in app.js ,the req body is",req.body);
+  console.log("Inside uuid generator in app.js ,the req body stringified is",JSON.stringify(req.body));
+  publisher.publish('uuidgenerator',JSON.stringify(req.body));
+  subscriber.on('message',function(channel,message){
+    var message1=JSON.parse(message);
+    // console.log('channel'+":"+channel);
+    // console.log('message :',message1);
+    // console.log(message);
+    res.send({response:'success',result:message1});
+  });
+
+});
 var tweets =io.of('/tweets');
 app.post('/api/authenticate/google',function(req,res,next){
   console.log("Inside Express, inside google login call=======");
@@ -128,8 +147,6 @@ app.get('/api/auth/success/google',function(req,res){
                     res.redirect('http://192.168.99.100:8001/#/authsuccess/'+tokenresponse.token);
                 });
             }
-            // console.log("Inside Express , token after acting on google token us is ======",tokenresponse.token);
-            // console.log("Inside Express , token after acting on google token us is stringified======",JSON.stringify(tokenresponse.token));
           });
       } else {
         res.redirect('/login');
@@ -152,66 +169,73 @@ app.get('/api/auth/success/google',function(req,res){
 });
 
 
-chat.on('connection', function(socket) {
-  console.log("Inside socket.io");
-  var chatMiddlewareMicroservice = require('seneca')();
-  var flag = false;
-  var count =0;
-  socket.on('create_room', function(userids){
-    console.log("Inside the Express, the user ids got to act on the plugin======== ",userids);
-      var channelId = false;
-      if(userids.length>1){
-        console.log("====Inside express inside create room if loop");
-        mesh.act('role:chat,cmd:joinprivateroom',{ids:userids}, function(err, response){
-            if(err) { console.error('===== ERR: ', err, ' =====');  }
-            console.log("Inside App.js getting room ID===",response.roomId[0].object);
-            channelId = response.roomId[0].object ;
-            socket.emit('channelId',channelId);
-        }).ready(function(){
-        chatMiddlewareMicroservice.use('chatmiddlewareplugin',{chatroomId:channelId,socket:socket});
-      });
-      }
-      else{
-        channelId = userids[0];
-        chatMiddlewareMicroservice.use('chatmiddlewareplugin',{chatroomId:channelId,socket:socket});
-      }
-
+  chat.on('connection',function(socket){
+    console.log("Inside Express, Socket Connected");
+    var chatmiddleware = new chatMiddlewarePlugin(socket);
   });
-  // socket.on('create_grouproom',function(groupid){
-  //   console.log("Inside the Express, the group id to get the channel id is =====",groupid);
-  //   var channelId = groupid;
-  //   chatMiddlewareMicroservice.use('chatmiddlewareplugin',{chatroomId:channelId,socket:socket});
-  // });
 
-  socket.on('chat_message', function(msg){
-      console.log("Inside App.js meessage from client via socket====",msg);
-      var ChatMsg =
-        {
-          topicid : msg.topicid,
-          message : msg.msg,
-          sentby: msg.user
-        };
-      mesh.act('role:chat,cmd:savehistory',{ChatMsg:ChatMsg},function(err,response){
-          if(err) { console.error('===== ERR: ', err, ' =====');  }
-          console.log("Retrieved result after saving history is",response.result);
-      });
-      chatMiddlewareMicroservice.act('role:chat,cmd:sendMsg', {msg: msg.msg,user:msg.user}, function(err, response) {
-          if(err) { console.error('===== ERR: ', err, ' =====');  }
-          if(response.response === 'success')
-          console.log("====Inside express after acting the response is msg ,===",response.message);
-        });
-      });
-
-    socket.on('disconnect',function(){
-      chatMiddlewareMicroservice.act('role:chat,cmd:unsubscribe', {msg: 'unsubscribe'}, function(err, response) {
-          if(err) { console.error('===== ERR: ', err, ' =====');  }
-          if(response.response === 'success')
-          console.log("====Inside express unsubscribed from redis=== ",response.message);
-        });
-      console.log("=====Inside Express Socket.disconnected and redis unsubscribed=====");
-
-    });
-});
+// chat.on('connection', function(socket) {
+//   console.log("Inside socket.io");
+//   var chatMiddlewareMicroservice = require('seneca')();
+//   var flag = false;
+//   var count =0;
+//   socket.on('create_room', function(userids){
+//     console.log("Inside the Express, the user ids got to act on the plugin======== ",userids);
+//       var channelId = false;
+//       if(userids.length>1){
+//         console.log("====Inside express inside create room if loop");
+//         mesh.act('role:chat,cmd:joinprivateroom',{ids:userids}, function(err, response){
+//             if(err) { console.error('===== ERR: ', err, ' =====');  }
+//             console.log("Inside App.js getting room ID===",response.roomId[0].object);
+//             channelId = response.roomId[0].object ;
+//             socket.emit('channelId',channelId);
+//         }).ready(function(){
+//         chatMiddlewareMicroservice.use('chatmiddlewareplugin',{chatroomId:channelId,socket:socket});
+//       });
+//       }
+//       else{
+//         channelId = userids[0];
+//         socket.emit('channelId',channelId);
+//         chatMiddlewareMicroservice.use('chatmiddlewareplugin',{chatroomId:channelId,socket:socket});
+//       }
+//
+//   });
+//   // socket.on('create_grouproom',function(groupid){
+//   //   console.log("Inside the Express, the group id to get the channel id is =====",groupid);
+//   //   var channelId = groupid;
+//   //   chatMiddlewareMicroservice.use('chatmiddlewareplugin',{chatroomId:channelId,socket:socket});
+//   // });
+//
+//   socket.on('chat_message', function(msg){
+//       console.log("Inside App.js message from client via socket====",msg);
+//       var message =
+//         {
+//           content : msg.topicid,
+//           text : msg.msg,
+//           command: 'sendMessage',
+//           sentBy: msg.user
+//         };
+//       // mesh.act('role:chat,cmd:savehistory',{ChatMsg:ChatMsg},function(err,response){
+//       //     if(err) { console.error('===== ERR: ', err, ' =====');  }
+//       //     console.log("Retrieved result after saving history is",response.result);
+//       // });
+//       chatMiddlewareMicroservice.act('role:chat,cmd:sendMsg', {message:message}, function(err, response) {
+//           if(err) { console.error('===== ERR: ', err, ' =====');  }
+//           if(response.response === 'success')
+//           console.log("====Inside express after acting the response is msg ,===",response.message);
+//         });
+//       });
+//
+//     socket.on('disconnect',function(){
+//       chatMiddlewareMicroservice.act('role:chat,cmd:unsubscribe', {msg: 'unsubscribe'}, function(err, response) {
+//           if(err) { console.error('===== ERR: ', err, ' =====');  }
+//           if(response.response === 'success')
+//           console.log("====Inside express unsubscribed from redis=== ",response.message);
+//         });
+//       console.log("=====Inside Express Socket.disconnected and redis unsubscribed=====");
+//
+//     });
+// });
 
 app.get('/topics',function(req,res) {
   console.log('form express-alltopics');
