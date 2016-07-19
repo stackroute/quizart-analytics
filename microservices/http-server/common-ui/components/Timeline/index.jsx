@@ -2,6 +2,7 @@ import React from 'react';
 import CommentForm from  './CommentForm';
 import Tweet from 'react-tweet';
 var socket = io.connect('/tweets');
+var terms = ['QuizRT','QuizRTSocail','@Stackroute'];
 export default class Timeline extends React.Component{
   constructor (props){
      super(props);
@@ -16,7 +17,7 @@ loadDataFromSever(){
     console.log("====user timeline");
   }
  else {
-    id ="SYTYCDGrandFinale";
+    id ="QuizRT";
    console.log("topic timeline");
  }
  var request =  $.ajax({
@@ -48,8 +49,12 @@ loadDataFromSever(){
 }
 
   componentDidMount(){
+
+          var index = Math.floor(Math.random() * 3) + 0;
+          term =  terms[index];
+          console.log("=====================track term is",term);
           this.loadDataFromSever();
-          socket.emit('creatstream',{token:localStorage.authToken,term:'SYTYCDGrandFinale'});
+          socket.emit('creatstream',{token:localStorage.authToken,term:term});
           console.log("=====token",localStorage.authToken);
           var  that = this;
            socket.on('tweetdata', function getTweet (tweet) {

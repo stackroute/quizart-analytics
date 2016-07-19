@@ -6,18 +6,17 @@ const twitterAppConfig =  require('./twitter.auth.config');
 var mesh = context.mesh;
 const timeinterval = 30000;
 
-
-
 var getTwitterStream = function(socket){
     var term ;
     var token;
     var twitterUserAuthConfig ={};
     var _client;
     var _stream;
-
+    var count=0;
+    var count1=0;
      var startStream = function(client){
-       console.log("======stream start called====");
-        client.stream('statuses/filter', {track:'#100EpisodesOfKRPKAB'},function(stream) {
+       console.log("======stream start called====term is",term);
+        client.stream('statuses/filter', {track:'#'+term.trim()},function(stream) {
                  _stream = stream;
                   stream.on('data', function(tweet) {
                   socket.emit('tweetdata',tweet);
@@ -34,11 +33,14 @@ var getTwitterStream = function(socket){
 
    socket.on("creatstream",function(data){
     token = data.token;
+    term = data.term;
+    count++;
     console.log("============================================INSIDE OF CREATE TWITTER STREAM===========================",data);
-
+    console.log("===================create stream count========================================",count);
     mesh.act('role:jwt,cmd:verifyAuthToken',{token:token},function(err,response){
     if(err){
             console.log("====invalid token===");
+            sokcet.close();
           }
    else{
        console.log("====valid token===");
@@ -56,8 +58,10 @@ var getTwitterStream = function(socket){
 });
 
  socket.on('disconnect',function(){
+    count1++;
     if(_stream){
       _stream.destroy();
+      console.log("============disconnect count=================",count1);
     }
   });
 
