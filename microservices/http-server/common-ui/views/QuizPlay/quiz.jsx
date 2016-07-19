@@ -13,6 +13,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 import cookie from 'react-cookie';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import base64 from 'base-64';
+import restUrl from '../../restUrl'
 
 const optionStyle = {
   margin:12,
@@ -203,8 +204,13 @@ export default class QuizPlay extends React.Component{
   }
   }
     onClick(value,e){
-      this.UserAnalysis(value);
-      // this.setState({seconds2:this.state.second});
+
+      console.log("===================seconds when clicked===============",that.state.seconds);
+      const resSeconds = this.state.seconds;
+      console.log("===============Time==================",resSeconds);
+      var res = (10-resSeconds);
+      console.log("response time",res);
+      this.analyseData(value,res);
       this.setState({answered:true});
       this.setState({enabled:false});
       var socketObj ={
@@ -217,13 +223,16 @@ export default class QuizPlay extends React.Component{
       }
     }
 
-    UserAnalysis(value){
+    analyseData(value,res){
+      console.log("======================================response time=================================",res);
+
       console.log("======================================value=================================",value);
       var analyticsData = {
         userId:JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub,
         tournamentId: "1234",
         questionId:this.state.ques._Id,
-        selectedOptionId:value
+        selectedOptionId:value,
+        responseTime:res
       }
 
       var request = $.ajax({

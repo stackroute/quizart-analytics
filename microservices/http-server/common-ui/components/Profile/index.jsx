@@ -57,6 +57,7 @@ export default class Profile extends React.Component{
       open: false,
       arr:[],
       uid:this.props.username,
+      uuid:"",
       Profile: {
         username: JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub,
       },
@@ -139,35 +140,56 @@ export default class Profile extends React.Component{
 
         }
 
+
         addFriend(){
 
-              var friendsData = {
-                subject: [this.state.Profile.username,this.props.username],
-                relation: "friends",
-                object: [],
-                };
+           this.getUuid();
 
-              var request = $.ajax({
-                url: restUrl + '/api/v1/friend',
-                type: 'POST',
-                data: JSON.stringify(friendsData),
-                contentType: 'application/json',
+         }
 
+        getUuid(){
+            var request = $.ajax({
+            url: restUrl + '/api/v1/profile/'+this.state.uid,
+            type: 'GET',
+            contentType: 'application/json',
+            });
+            request.done(function(data) {
+            this.setState({uuid: data});
+            }.bind(this));
+            request.fail(function() {
+            console.error('err');
+            }.bind(this));
+
+            this.add(this.state.uuid);
+          }
+
+        add(this.state.uid){
+
+            var friendsData = {
+              subject: [this.state.Profile.username,this.props.username],
+              relation: "friends",
+              object: [this.state.uuid],
+              };
+
+            var request = $.ajax({
+              url: restUrl + '/api/v1/friend',
+              type: 'POST',
+              data: JSON.stringify(friendsData),
+              contentType: 'application/json',
+
+            });
+            request.done(function(data) {
+              console.log(JSON.stringify(data));
+              console.log("Added As Friend");
+              this.setState({
+                disable:true,
+                addFriend: "Friends"
               });
-              request.done(function(data) {
-                console.log(JSON.stringify(data));
-                console.log("Added As Friend");
-                this.setState({
-                  disable:true,
-                  addFriend: "Friends"
-                });
+            }.bind(this));
+            request.fail(function() {
+                console.log("Error sending Friend request");
               }.bind(this));
-              request.fail(function() {
-                  console.log("Error sending Friend request");
-                }.bind(this));
-
-
-              }
+          }
 
   componentDidMount(){
     console.log("props.username======",this.props.username);
