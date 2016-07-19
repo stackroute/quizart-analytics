@@ -1,4 +1,3 @@
-
 module.exports = function(options){
   var self = this;
   self.username = options.username;
@@ -54,7 +53,8 @@ module.exports = function(options){
       done(null,{answer:'QuestionReceived'})
     })
     .add('gameId:'+gameId+',role:broadcast,action:leaderboard',function(msg,leaderboardCallback){
-      self.socket.emit('leaderboard',msg.id);
+      console.log('\n\nInside gameplayMiddlewarePlugin: '+JSON.stringify(msg));
+      self.socket.emit('leaderboard',msg);
       leaderboardCallback(null,{answer:'received leaderboard'});
     })
     .use('entity')

@@ -65,7 +65,14 @@ exports = module.exports = function(options) {
   this.add('role:tournaments,cmd:registerPlayersHigherLevels', function(msg, respond) {
     Tournament.findById(msg.id, function (err, retrievedTournament) {
       if(err) { return respond(err); }
-      var currentLevel = retrievedTournament.currentLevel-1;
+      var levels = retrievedTournament.levels;
+      var currentLevel = -1;
+      for(var i=0;i<levels.length;i++) {
+        if(levels[i].active=='yes') {
+          currentLevel = i;
+          break;
+        }
+      }
       retrievedTournament.levels[currentLevel].registeredPlayers = retrievedTournament.levels[currentLevel-1].levelWinners;
       retrievedTournament.save(function (err) {
         if(err) {
@@ -79,7 +86,14 @@ exports = module.exports = function(options) {
   this.add('role:tournaments,cmd:updateWinners', function(msg, respond) {
     Tournament.findById(msg.id, function (err, retrievedTournament) {
       if(err) { return respond(err); }
-      var currentLevel = retrievedTournament.currentLevel-1;
+      var levels = retrievedTournament.levels;
+      var currentLevel = -1;
+      for(var i=0;i<levels.length;i++) {
+        if(levels[i].active=='yes') {
+          currentLevel = i;
+          break;
+        }
+      }
       retrievedTournament.levels[currentLevel].gamePlayedPlayers.sort(
         function(a, b) {
             return b.score - a.score;
@@ -88,10 +102,12 @@ exports = module.exports = function(options) {
       for(var i=0;i<(retrievedTournament.levels[currentLevel].gamePlayedPlayers.length*(retrievedTournament.eliminationPercentagePerGame/100));i++) {
         retrievedTournament.levels[currentLevel].levelWinners.push({userId: retrievedTournament.levels[currentLevel].gamePlayedPlayers[i].userId});
       }
-      if(retrievedTournament.currentLevel==retrievedTournament.noOfLevels) {
+      if((currentLevel+1)==retrievedTournament.noOfLevels) {
         retrievedTournament.isComplete = true;
+        retrievedTournament.levels[currentLevel].active='no';
       } else {
-        retrievedTournament.currentLevel+=1;
+        retrievedTournament.levels[currentLevel+1].active='yes';
+        retrievedTournament.levels[currentLevel].active='no';
       }
 
       retrievedTournament.save(function (err) {
@@ -106,7 +122,14 @@ exports = module.exports = function(options) {
   this.add('role:tournaments,cmd:updateTournamentLeaderboard', function(msg, respond) {
     Tournament.findById(msg.id, function (err, retrievedTournament) {
       if(err) { return respond(err); }
-      var currentLevel = retrievedTournament.currentLevel-1;
+      var levels = retrievedTournament.levels;
+      var currentLevel = -1;
+      for(var i=0;i<levels.length;i++) {
+        if(levels[i].active=='yes') {
+          currentLevel = i;
+          break;
+        }
+      }
       var leaderboard = msg.leaderboard;
       for(var i=0;i<leaderboard.length;i++) {
         retrievedTournament.levels[currentLevel].gamePlayedPlayers.push(leaderboard[i]);

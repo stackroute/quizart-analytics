@@ -36,10 +36,11 @@ var TournamentSchema = new Schema({
   noOfLevels: { type: Number, required: true },
   topics: { type: String, required: true },
   isComplete: { type:Boolean, default: false },
-  currentLevel: { type: Number, default: 1 },
+  //currentLevel: { type: Number, default: 1 },
   playersPerGame: { type: Number, required: true },
   regEndDate: { type: Date, required: true },
   levels: [{
+    active: { type: String, required: true },
     tourStartDate: { type: Date, required: true },
     tourEndDate: { type: Date, required: true },
     registeredPlayers: [{userId: { type: String, required: true }}],

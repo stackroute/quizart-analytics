@@ -82,7 +82,7 @@ class TournamentsSubCard extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      finished: false,
+      finished: false, active: false,
       label:'',
       username: JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub,
     };
@@ -92,6 +92,10 @@ class TournamentsSubCard extends React.Component {
     return {
       router: PropTypes.object.isRequired
     }
+  }
+
+  handleLeaderboard = () => {
+    this.context.router.push('/board/'+this.props.tournament._id+"/true");
   }
 
   handleNext = () => {
@@ -118,22 +122,28 @@ class TournamentsSubCard extends React.Component {
     }
   };
 
-  handleDates = () => {
-    var currentLevel = this.props.tournament.currentLevel-1;
-    
-    console.log('Inside handleDates sub card');
-    var date = new Date();
-    var regEndDate = new Date(this.props.tournament.regEndDate);
-    var tourEndDate = new Date(this.props.tournament.levels[currentLevel].tourEndDate);
-    var alreadyPlayedGame = false;
-    var alreadyRegistered = false;
-    for(var i=0;i<this.props.tournament.levels[currentLevel].gamePlayedPlayers.length;i++) {
-      var obj = this.props.tournament.levels[currentLevel].gamePlayedPlayers[i];
-      if(this.state.username==obj.userId) {
-        alreadyPlayedGame = true;
+  currentLevel(retrievedTournament) {
+    var levels = retrievedTournament.levels;
+    var currentLevel = -1;
+    for(var i=0;i<levels.length;i++) {
+      if(levels[i].active=='yes') {
+        currentLevel = i;
         break;
       }
     }
+    return currentLevel;
+  }
+
+  handleDates = () => {
+    var currentLevel = this.currentLevel(this.props.tournament);
+
+    console.log('Inside handleDates sub card: Level is '+currentLevel);
+    var date = new Date();
+    var regEndDate = new Date(this.props.tournament.regEndDate);
+    var tourEndDate = new Date(this.props.tournament.levels[currentLevel].tourEndDate);
+    var tourStartDate = new Date(this.props.tournament.levels[currentLevel].tourStartDate);
+    var alreadyPlayedGame = false;
+    var alreadyRegistered = false;
     for(var i=0;i<this.props.tournament.levels[currentLevel].registeredPlayers.length;i++) {
       var obj = this.props.tournament.levels[currentLevel].registeredPlayers[i];
       if(this.state.username==obj.userId) {
@@ -141,6 +151,14 @@ class TournamentsSubCard extends React.Component {
         break;
       }
     }
+    for(var i=0;i<this.props.tournament.levels[currentLevel].gamePlayedPlayers.length;i++) {
+      var obj = this.props.tournament.levels[currentLevel].gamePlayedPlayers[i];
+      if(this.state.username==obj.userId) {
+        alreadyPlayedGame = true;
+        break;
+      }
+    }
+
     console.log(date);
     console.log(regEndDate);
     console.log((regEndDate instanceof Date)+" "+(typeof regEndDate === "string"));
@@ -148,34 +166,45 @@ class TournamentsSubCard extends React.Component {
     // console.log(date.getTime()<tourEndDate.getTime());
 
     if(currentLevel+1===1) {
-      if(date.getTime()<regEndDate.getTime()) {
+      if(date.getTime()>tourStartDate.getTime() && date.getTime()<tourEndDate.getTime()) {
+        this.setState({active: true});
         if(alreadyRegistered) {
-          this.setState({label:'You are Registered', finished: true});
+          if(alreadyPlayedGame) {
+            this.setState({label:'Game Completed', finished: true});
+          } else {
+            this.setState({label:'Play', finished: false});
+          }
+        } else {
+          this.setState({label:'Not Registered', finished: true});
+        }
+      } else if(date.getTime()<regEndDate.getTime()) {
+        if(alreadyRegistered) {
+          this.setState({label:'Registered', finished: true});
         } else {
           this.setState({label:'Register', finished: false});
-        }
-      } else if(date.getTime()<tourEndDate.getTime()) {
-        if(alreadyPlayedGame) {
-          this.setState({label:'Game Completed', finished: true});
-        } else {
-          this.setState({label:'Play', finished: false});
         }
       } else {
         console.log('Coming here1');
       }
     } else {
-      if(date.getTime()<regEndDate.getTime()) {
+      if(date.getTime()<tourStartDate.getTime()) {
         if(alreadyRegistered) {
-          this.setState({label:'You are Registered', finished: true});
+          this.setState({label:'Registered', finished: true});
         } else {
-          this.setState({label:'You are already eliminated', finished: true});
+          this.setState({label:'Eliminated', finished: true});
         }
       } else if(date.getTime()<tourEndDate.getTime()) {
-        if(alreadyPlayedGame) {
-          this.setState({label:'Game Completed', finished: true});
+        this.setState({active: true});
+        if(alreadyRegistered) {
+          if(alreadyPlayedGame) {
+            this.setState({label:'Game Completed', finished: true});
+          } else {
+            this.setState({label:'Play', finished: false});
+          }
         } else {
-          this.setState({label:'Play', finished: false});
+          this.setState({label:'Eliminated ', finished: true});
         }
+
       } else {
         console.log('Coming here2');
       }
@@ -194,6 +223,7 @@ class TournamentsSubCard extends React.Component {
 
   render (){
   const {finished} = this.state;
+  const {active} = this.state;
   return(
   <Card style={styleCard} >
 
@@ -252,6 +282,24 @@ class TournamentsSubCard extends React.Component {
           </div>
         )}
       </div>
+      </div>
+      <div className="col-xs col-md col-lg col-sm">
+        <div>
+          {active ? (
+            <div>
+              <div>
+                <RaisedButton
+                  style={btnFontColor}
+                  label={'Leaderboard'}
+                  secondary={true}
+                  onClick={this.handleLeaderboard}
+                />
+              </div>
+            </div>
+          ) : (
+            <div></div>
+          )}
+        </div>
       </div>
     </CardActions>
 

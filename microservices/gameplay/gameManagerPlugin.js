@@ -153,27 +153,33 @@ module.exports = function(options){
              console.log('\n\ninput: '+JSON.stringify(input)+'\n\n');
              console.log('\n==============Sending final leaderboard as: '+JSON.stringify(leaderboard)+'===================\n');
              console.log('\n==============options.isTournament==================='+self.isTournament+'\n');
-             if(self.isTournament) {
+             if(self.isTournament=='true') {
+               console.log('\n==============Inside tournament part==================='+self.knockoutId+'\n');
                meshConsumerMicroservice.act('role:tournaments,cmd:updateTournamentLeaderboard',{id:self.knockoutId, leaderboard:input.leaderboard}, function(err, response) {
-                 if(err) { console.error('===== ERR: ', err, ' ====='); return res.status(500).send(); }
-                 if(response.response !== 'success') { return res.status(404).send(); }
+                 if(err) { console.error('===== ERR: ', err, ' ====='); return; }
+                 if(response.response !== 'success') { return; }
                  //return res.status(201).json(response.entity);
                  console.log('\n==============Updated tournament===================\n');
+                 self.broadcast.act('gameId:'+self.gameId+',role:broadcast,action:leaderboard',{id:response.entity._id,isTournament:true},function(err,response){
+                   if(err) return console.log(err);
+                   console.log('\n Received response for leaderboard \n');
+                })
+                self.close();
+               });
+             } else {
+               console.log('\n==============Inside gameplay part==================='+input+'\n');
+               meshConsumerMicroservice.act('role:leaderboards,cmd:create',input, function(err, response) {
+                 if(err) { console.error('===== ERR: ', err, ' ====='); return; }
+                 if(response.response !== 'success') { return; }
+                 console.log('\n==============Inside gameplay part==================='+response.entity._id+'\n');
+                 self.broadcast.act('gameId:'+self.gameId+',role:broadcast,action:leaderboard',{id:response.entity._id,isTournament:false},function(err,response){
+                   if(err) return console.log(err);
+                   console.log('\n Received response for leaderboard \n');
+                })
+                self.close();
+                 //return res.status(201).json(response.entity);
                });
              }
-             meshConsumerMicroservice.act('role:leaderboards,cmd:create',input, function(err, response) {
-               if(err) { console.error('===== ERR: ', err, ' ====='); return res.status(500).send(); }
-               if(response.response !== 'success') { return res.status(404).send(); }
-               self.broadcast.act('gameId:'+self.gameId+',role:broadcast,action:leaderboard',{id:response.entity._id},function(err,response){
-                 if(err) return console.log(err);
-                 console.log('\n Received response for leaderboard \n');
-              })
-              self.close();
-               //return res.status(201).json(response.entity);
-             });
-
-
-
            }
            else{
            currentQuestion = questions[questionCount];

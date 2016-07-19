@@ -24,7 +24,7 @@ export default class CreateStepper extends React.Component {
       title: "", subTitle: "", desc: "", imgUrl: "http://lorempixel.com/600/337/nature/", avatarUrl: "http://lorempixel.com/600/337/nature/",
       topics: "", games: "", level: "", instructions: "", prize: "",
       regEndDate: "", regEndTime: "", tourStartDate: [], tourStartTime: [], tourEndDate:[], tourEndTime:[],
-      registeredPlayers: [], gamePlayedPlayers: [],
+      registeredPlayers: [], gamePlayedPlayers: [], firstChange: false,
       finished1: false,
       stepIndex1: 0,
       step: []
@@ -37,10 +37,24 @@ export default class CreateStepper extends React.Component {
 
   handleNext = () => {
     const {stepIndex} = this.state;
+    if(stepIndex == 0) {
+      if(!this.state.title || !this.state.subTitle || !this.state.desc || !this.state.imgUrl || !this.state.avatarUrl) {
+        return;
+      } else {
+        this.setState({firstChange: false});
+      }
+    } else if(stepIndex == 1) {
+      if(!this.state.topics || !this.state.games || !this.state.level || !this.state.instructions || !this.state.prize) {
+        return;
+      } else {
+        this.setState({firstChange: false});
+      }
+    }
     this.setState({
       stepIndex: stepIndex + 1,
       finished: stepIndex >= 2,
     });
+
     if(stepIndex == 1) {
       for(var i=1;i<=this.state.level;i++) {
         this.state.step.push(
@@ -63,6 +77,7 @@ export default class CreateStepper extends React.Component {
         var time1 = this.state.tourEndTime[i];
         levels.push(
           {
+            active: false,
             tourStartDate: new Date(date.getFullYear(),date.getMonth(),date.getDate(),time.getHours(),time.getMinutes(),time.getSeconds(),time.getMilliseconds()),
             tourEndDate: new Date(date1.getFullYear(),date1.getMonth(),date1.getDate(),time1.getHours(),time1.getMinutes(),time1.getSeconds(),time1.getMilliseconds()),
             registeredPlayers: [],
@@ -70,6 +85,7 @@ export default class CreateStepper extends React.Component {
           }
         )
       }
+      levels[0].active = 'yes';
       var date = this.state.regEndDate;
       var time = this.state.regEndTime;
       var tournamentData = {
@@ -115,7 +131,8 @@ export default class CreateStepper extends React.Component {
         tourStartDate: [],
         tourStartTime: [],
         tourEndDate: [],
-        tourEndTime: []
+        tourEndTime: [],
+        step: []
       });
     } else if (stepIndex > 0) {
       this.setState({stepIndex: stepIndex - 1});
@@ -137,43 +154,43 @@ export default class CreateStepper extends React.Component {
   };
 
   handleTitle(event) {
-    this.setState({title: event.target.value});
+    this.setState({title: event.target.value, firstChange: true});
   };
 
   handleSubTitle(event) {
-    this.setState({subTitle: event.target.value});
+    this.setState({subTitle: event.target.value, firstChange: true});
   };
 
   handleDesc(event) {
-    this.setState({desc: event.target.value});
+    this.setState({desc: event.target.value, firstChange: true});
   };
 
   handleImgUrl(event) {
-    this.setState({imgUrl: event.target.value});
+    this.setState({imgUrl: event.target.value, firstChange: true});
   };
 
   handleAvatarUrl(event) {
-    this.setState({avatarUrl: event.target.value});
+    this.setState({avatarUrl: event.target.value, firstChange: true});
   };
 
   handleTopics(event) {
-    this.setState({topics: event.target.value});
+    this.setState({topics: event.target.value, firstChange: true});
   };
 
   handleGames(event) {
-    this.setState({games: event.target.value});
+    this.setState({games: event.target.value, firstChange: true});
   };
 
   handleLevel(event) {
-    this.setState({level: event.target.value});
+    this.setState({level: event.target.value, firstChange: true});
   };
 
   handleInstructions(event) {
-    this.setState({instructions: event.target.value});
+    this.setState({instructions: event.target.value, firstChange: true});
   };
 
   handlePrize(event) {
-    this.setState({prize: event.target.value});
+    this.setState({prize: event.target.value, firstChange: true});
   };
 
   handleRegEndDate(event, date) {
@@ -268,6 +285,8 @@ export default class CreateStepper extends React.Component {
                   floatingLabelText="Title"
                   value={this.state.title}
                   onChange={this.handleTitle.bind(this)}
+                  errorText={!this.state.firstChange ? '' : (this.state.title=='' ? 'This field is required' : '')}
+                  errorStyle={{textAlign: 'left'}}
                 />
               </div>
             </div>
@@ -278,6 +297,8 @@ export default class CreateStepper extends React.Component {
                   floatingLabelText="Sub Title"
                   value={this.state.subTitle}
                   onChange={this.handleSubTitle.bind(this)}
+                  errorText={!this.state.firstChange ? '' : (this.state.subTitle=='' ? 'This field is required' : '')}
+                  errorStyle={{textAlign: 'left'}}
                 />
               </div>
             </div>
@@ -290,6 +311,8 @@ export default class CreateStepper extends React.Component {
                   rows={4}
                   value={this.state.desc}
                   onChange={this.handleDesc.bind(this)}
+                  errorText={!this.state.firstChange ? '' : (this.state.desc=='' ? 'This field is required' : '')}
+                  errorStyle={{textAlign: 'left'}}
                 />
               </div>
             </div>
@@ -300,6 +323,8 @@ export default class CreateStepper extends React.Component {
                   floatingLabelText="Image Url"
                   value={this.state.imgUrl}
                   onChange={this.handleImgUrl.bind(this)}
+                  errorText={!this.state.firstChange ? '' : (this.state.imgUrl=='' ? 'This field is required' : '')}
+                  errorStyle={{textAlign: 'left'}}
                 />
               </div>
             </div>
@@ -310,6 +335,8 @@ export default class CreateStepper extends React.Component {
                   floatingLabelText="Avatar Url"
                   value={this.state.avatarUrl}
                   onChange={this.handleAvatarUrl.bind(this)}
+                  errorText={!this.state.firstChange ? '' : (this.state.avatarUrl=='' ? 'This field is required' : '')}
+                  errorStyle={{textAlign: 'left'}}
                 />
               </div>
             </div>
@@ -325,6 +352,8 @@ export default class CreateStepper extends React.Component {
                   floatingLabelText="Topics"
                   value={this.state.topics}
                   onChange={this.handleTopics.bind(this)}
+                  errorText={!this.state.firstChange ? '' : (this.state.topics=='' ? 'This field is required' : '')}
+                  errorStyle={{textAlign: 'left'}}
                 />
               </div>
             </div>
@@ -336,17 +365,21 @@ export default class CreateStepper extends React.Component {
                   type="number" min="2" max="1000" step="2"
                   value={this.state.games}
                   onChange={this.handleGames.bind(this)}
+                  errorText={!this.state.firstChange ? '' : (this.state.games=='' ? 'This field is required' : '')}
+                  errorStyle={{textAlign: 'left'}}
                 />
               </div>
             </div>
             <div className="row">
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <TextField fullWidth={true}
-                  hintText="Level"
-                  floatingLabelText="Level"
+                  hintText="Total Levels in Tournament"
+                  floatingLabelText="Total Levels in Tournament"
                   type="number" min="1" max="10" step="1"
                   value={this.state.level}
                   onChange={this.handleLevel.bind(this)}
+                  errorText={!this.state.firstChange ? '' : (this.state.level=='' ? 'This field is required' : '')}
+                  errorStyle={{textAlign: 'left'}}
                 />
               </div>
             </div>
@@ -359,6 +392,8 @@ export default class CreateStepper extends React.Component {
                   rows={4}
                   value={this.state.instructions}
                   onChange={this.handleInstructions.bind(this)}
+                  errorText={!this.state.firstChange ? '' : (this.state.instructions=='' ? 'This field is required' : '')}
+                  errorStyle={{textAlign: 'left'}}
                 />
               </div>
             </div>
@@ -369,6 +404,8 @@ export default class CreateStepper extends React.Component {
                   floatingLabelText="Prize"
                   value={this.state.prize}
                   onChange={this.handlePrize.bind(this)}
+                  errorText={!this.state.firstChange ? '' : (this.state.prize=='' ? 'This field is required' : '')}
+                  errorStyle={{textAlign: 'left'}}
                 />
               </div>
             </div>

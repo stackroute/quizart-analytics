@@ -36,7 +36,7 @@ module.exports = function(options){
       //If found x or more members
       if(tournamentQueue[msg.knockoutId].length==2){
         var users = tournamentQueue[msg.knockoutId].slice();
-        tournamentQueue[msg.knockoutId] = [];
+        delete tournamentQueue[msg.knockoutId];
         startGame(users,msg.tournamentId,msg.knockoutId,msg.isTournament);
       }
       else{
@@ -56,7 +56,7 @@ module.exports = function(options){
       //If found x or more members
       if(topicQueue[msg.tournamentId].length==2){
         var users = topicQueue[msg.tournamentId].slice();
-        topicQueue[msg.tournamentId] = [];
+        delete topicQueue[msg.tournamentId];
         startGame(users,msg.tournamentId,msg.knockoutId,msg.isTournament);
       }
       else{

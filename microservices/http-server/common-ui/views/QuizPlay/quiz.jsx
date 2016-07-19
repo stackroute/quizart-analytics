@@ -176,12 +176,12 @@ export default class QuizPlay extends React.Component{
 
 
         })
-        this.context.socket.on('leaderboard',function(id){
-           alert(' Your game has ended: '+id);
+        this.context.socket.on('leaderboard',function(msg){
+           alert(' Your game has ended: '+msg.id);
 
              // cookie.save('leaderboard',leaderboard);
-
-            that.context.router.push('/board/'+id);
+             console.log('/board/'+msg.id+"/"+msg.isTournament);
+            that.context.router.push('/board/'+msg.id+"/"+msg.isTournament);
         })
 
         this.context.socket.on('serverId',function(msg){

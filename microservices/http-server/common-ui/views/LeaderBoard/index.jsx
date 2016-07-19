@@ -3,6 +3,7 @@ import Avatar from 'material-ui/Avatar';
 import ListItem from 'material-ui/List/ListItem';
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {PropTypes} from 'react';
 
 import restUrl from '../../restUrl';
 
@@ -15,25 +16,66 @@ export default class LeaderBoard extends React.Component {
     };
   }
 
+  handleProfile(userId){
+    this.context.router.push(
+      '/profilePage/'+userId
+    );
+  }
+
+  static get contextTypes(){
+    return {
+      router: PropTypes.object.isRequired
+    }
+  }
+
   componentDidMount() {
-    var request = $.ajax({
-      url: restUrl + '/api/v1/leaderboard/'+this.props.params.id,
-      type: 'GET',
-    });
-    request.done(function(data) {
-      console.log(JSON.stringify(data));
-      console.log(Object.keys(data));
-      console.log(JSON.stringify(data.leaderboard));
-      data.leaderboard.sort(
-        function(a, b) {
-            return b.score - a.score;
+    if(this.props.params.isTournament=='true') {
+      var request = $.ajax({
+        url: restUrl + '/api/v1/tournaments/'+this.props.params.id,
+        type: 'GET',
+      });
+      request.done(function(data) {
+        console.log('Inside tournament');
+        console.log(JSON.stringify(data));
+        var levels = data.levels;
+        var currentLevel = -1;
+        for(var i=0;i<levels.length;i++) {
+          if(levels[i].active=='yes') {
+            currentLevel = i;
+            break;
+          }
         }
-      )
-      this.setState({rows:data.leaderboard});
-    }.bind(this));
-    request.fail(function() {
-      console.error('LeaderBoard error');
-    }.bind(this));
+        data.levels[currentLevel].gamePlayedPlayers.sort(
+          function(a, b) {
+              return b.score - a.score;
+          }
+        )
+        this.setState({rows:data.levels[currentLevel].gamePlayedPlayers});
+      }.bind(this));
+      request.fail(function() {
+        console.error('LeaderBoard error');
+      }.bind(this));
+    } else {
+      var request = $.ajax({
+        url: restUrl + '/api/v1/leaderboard/'+this.props.params.id,
+        type: 'GET',
+      });
+      request.done(function(data) {
+        console.log('Inside gameplay');
+        console.log(JSON.stringify(data));
+        console.log(Object.keys(data));
+        console.log(JSON.stringify(data.leaderboard));
+        data.leaderboard.sort(
+          function(a, b) {
+              return b.score - a.score;
+          }
+        )
+        this.setState({rows:data.leaderboard});
+      }.bind(this));
+      request.fail(function() {
+        console.error('LeaderBoard error');
+      }.bind(this));
+    }
   }
 
   render(){
@@ -55,7 +97,7 @@ export default class LeaderBoard extends React.Component {
                 />
               }
             >
-            {this.state.rows[i].name}
+            <div onClick={this.handleProfile.bind(this, this.state.rows[i].userId)}>{this.state.rows[i].userId}</div>
             </ListItem>
 
           </TableRowColumn>
