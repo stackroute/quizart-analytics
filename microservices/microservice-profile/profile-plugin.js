@@ -18,6 +18,8 @@ exports = module.exports = function(options) {
     });
   });
 
+
+
   const UserProfile = connection.model('UserProfile', require('./profile.schema'));
 
 
@@ -33,11 +35,13 @@ exports = module.exports = function(options) {
     });
   });
 
-
   this.add('role:profile,cmd:getProfile', function(msg, respond) {
     console.log("=============Inside plugin getProfile list msg==== ",msg);
     return UserProfile.find({username:msg.username}, function (err, retrievedProfile) {
       if(err) { return respond(err); }
+      if(!err){
+        retrievedProfile[0].username
+      }
       return respond(null, {response: 'success', profile: retrievedProfile});
     });
   });

@@ -18,9 +18,13 @@ import EachTopicsPage from './views/EachTopicsPage';
 import Quiz from './views/QuizPlay';
 import SignUP from './views/SignUP';
 import AuthSuccess from './views/AuthSuccess';
+import TwitterAuthSuccess from './views/TwitterAuthSuccess';
+
 import cookie from 'react-cookie';
 import LeaderBoard from './views/LeaderBoard';
 import ContextComponent from './context';
+import CreateTournament from './views/CreateTournament';
+import TournamentsContainer from './views/TournamentsContainer';
 import ProfilePage from './views/ProfilePage';
 
 const verifyLogin = function(nextState, replace) {
@@ -55,12 +59,15 @@ ReactDOM.render(
       <Route path="/SignUP" component={SignUP}/>
       <Route path="/topics" component={Topics} onEnter={verifyLogin} />
       <Route path="/tournaments" component={Tournaments} onEnter={verifyLogin} />
-      <Route path="/quiz" component={Quiz} />
       <Route path="/authsuccess/:token" component={AuthSuccess} />
+      <Route path="/twitterauthsuccess/:token" component={TwitterAuthSuccess} />
+      <Route name="quiz" path="/quiz/:isTournament/:knockoutId" component={Quiz} />
       <Route path="/ProfilePage/:username" component={ProfilePage}/>
       <Route path="/eachTopic/:id" component={EachTopicsPage} onEnter={verifyLogin} />
       <Route name="leaderboard" path="/board/:id" component={LeaderBoard} />
       <Route path="my-account/change-password" component={ChangePasswordView} onEnter={verifyLogin} />
+      <Route path="/create" component={CreateTournament} onEnter={verifyLogin}/>
+      <Route path="/tournament" component={TournamentsContainer} onEnter={verifyLogin}/>
     </Router>
   </MuiThemeProvider>
   </ContextComponent>
