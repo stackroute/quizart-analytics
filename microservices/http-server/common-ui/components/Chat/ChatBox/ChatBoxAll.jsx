@@ -62,16 +62,14 @@ export default class ChatBoxAll extends React.Component {
     this.props.socket.on('retrievedHistory',function(historymsgserver){
       console.log(historymsgserver);
       console.log("Message received as history is ",historymsgserver.text);
-      console.log("Message received as history is ",historymsgserver.text.text);
-      console.log("Message received as history is ",historymsgserver.text.sentBy);
-      if(historymsgserver.text){
-        this.setState({messages : this.state.messages.concat([{text : historymsgserver.text.text, sentby: historymsgserver.text.sentBy}])});
+        if(historymsgserver.text){
+          this.setState({messages : this.state.messages.concat(historymsgserver.text)});
       }
     }.bind(this));
     this.props.socket.on('received_msg',function(msgserver){
       console.log("Message received is ",msgserver.text);
       console.log("Message received and is sent by",msgserver.sentBy);
-      this.setState({messages : this.state.messages.concat([{text : msgserver.text, sentby: msgserver.sentBy}])});
+      this.setState({messages : this.state.messages.concat([{text : msgserver.text, sentBy: msgserver.sentBy}])});
     }.bind(this));
   }
 
@@ -102,7 +100,7 @@ export default class ChatBoxAll extends React.Component {
   render() {
     return (
           <div style={{height:'100vh'}}>
-            <div className="row" style={{height:'10%'}}>
+            <div className="row" style={{height:'5%' }}>
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <center><FlatButton
                   label="Load Earlier Messages"
@@ -114,7 +112,7 @@ export default class ChatBoxAll extends React.Component {
                 </center>
             </div>
             </div>
-            <div className="row" style={{height:'70%' , overflowY:'auto'}}>
+            <div className="row" style={{height:'75%' , overflowY:'auto'}}>
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <ChatList data={this.state.messages} />
               </div>
@@ -134,6 +132,15 @@ export default class ChatBoxAll extends React.Component {
     );
   }
 }
+
+// var text =[];
+// var sentBy =[];
+// historymsgserver.text.map(function(data){
+//
+// });
+// forEach(historymsgserver.text){
+//
+// }
 //
 // <span style={{cursor:'pointer'}}>
 //   <FontIcon className="muidocs-icon-action-history" onTouchTap={this.retrieveHistory.bind(this)}/>
