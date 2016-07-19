@@ -49,7 +49,7 @@ loadDataFromSever(){
 
   componentDidMount(){
           this.loadDataFromSever();
-          socket.emit("ctreatStream",{id:this.props.hashtag,localStorage.authToken})
+          // socket.emit("createStream",{id:this.props.hashtag,localStorage.authToken})
           console.log("=====token",localStorage.authToken);
           var  that = this;
            socket.on('tweetData', function getTweet (tweet) {

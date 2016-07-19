@@ -101,3 +101,6 @@
 .muidocs-icon-action-favorite_border:after {
     content: "favorite_border";
 }
+.muidocs-icon-action-history:after {
+    content: "history";
+}

@@ -18,19 +18,7 @@ exports = module.exports = function(socket) {
                  console.log("Inside App.js getting room ID===",response.roomId[0].object);
                  channelId = response.roomId[0].object ;
                  subscriber.subscribe(channelId);
-                 subscriber.on('message',function(channel,message){
-                     console.log("Subscribed to the Channel:",channel);
-                     console.log("message received and parsed is :",JSON.parse(message));
-                     var message1 = JSON.parse(message);
-                     console.log("message received and the command is ",message1.command);
-                     if(message1.command === "sendMessage"){
-                        socket.emit('received_msg',message1);
-                     }
-                     else if(message1.command === "retrieveHistory"){
-                       console.log("inside retrieved History is ",message1);
-                       socket.emit('retrievedHistory',message1);
-                     }
-                 });
+
                  socket.emit('channelId',channelId);
              });
            }
@@ -41,6 +29,19 @@ exports = module.exports = function(socket) {
              subscriber.subscribe(channelId);
              socket.emit('channelId',channelId);
            }
+           subscriber.on('message',function(channel,message){
+               console.log("Subscribed to the Channel:",channel);
+               var message1 = JSON.parse(message);
+               console.log("message received and the command is ",message1.command);
+               if(message1.command === "sendMessage"){
+                 console.log("Inside loop to send socket emit");
+                  socket.emit('received_msg',message1);
+               }
+               else if(message1.command === "retrieveHistory"){
+                 console.log("inside retrieved History is ",message1);
+                 socket.emit('retrievedHistory',message1);
+               }
+           });
         });
 
       socket.on('retrieveHistory' , function(channelid){
@@ -50,8 +51,8 @@ exports = module.exports = function(socket) {
             content : channelid[0],
             command: 'retrieveHistory'
           };
-        publisher.publish('uuidgenerator',JSON.stringify({message:message}));
-      })
+        publisher.publish('uuidgenerator2',JSON.stringify({message:message}));
+      });
 
       socket.on('chat_message', function(msg){
           console.log("Inside Middleware message from client via socket====",msg);
@@ -62,7 +63,6 @@ exports = module.exports = function(socket) {
               command: 'sendMessage',
               sentBy: msg.user
             };
-            console.log("Message to be published into Stringified after appending meesage onbect Redis is:",JSON.stringify({message:message}));
-            publisher.publish('uuidgenerator',JSON.stringify({message:message}));
+            publisher.publish('uuidgenerator2',JSON.stringify({message:message}));
       });
   };
