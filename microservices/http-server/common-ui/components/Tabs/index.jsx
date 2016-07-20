@@ -129,7 +129,7 @@ export default class TabsMobile extends React.Component {
 
             {this.props.page.toString()=="Profile"?
             <div>
-              <ProfilePage username = {this.state.username}/>
+              <ProfilePage username = {this.props.username}/>
               <Timeline/>
             </div>
             :

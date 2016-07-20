@@ -23,6 +23,10 @@ const style1 = {
   display: 'inline-block',
 };
 
+const stylePopular = {
+  textAlign: 'center',
+};
+
 const style = {
   borderLeft : 2,
   borderRight : 2,
@@ -202,7 +206,7 @@ export default class Profile extends React.Component{
           }
 
   componentDidMount(){
-
+    console.log("uid",this.state.uid);
     var request = $.ajax({
     url: restUrl + '/api/v1/profile/'+this.state.uid,
     type: 'GET',

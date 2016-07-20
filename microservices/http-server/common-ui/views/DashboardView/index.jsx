@@ -25,7 +25,7 @@ export default class DashboardView extends React.Component {
                 <MainAppBar/>
                 <MediaQuery query='(max-device-width: 800px)'>
                   <MediaQuery query='(max-width: 800px)'>
-
+                    <Dashboard style={bodyContainer}/>
                   </MediaQuery>
                 </MediaQuery>
 
