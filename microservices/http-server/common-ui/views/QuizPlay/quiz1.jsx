@@ -58,7 +58,7 @@ const style = {
 };
 
 
-var user1,user2,user3,user4,username1,username2,username3,username4;
+var user1,user2,user3,username1,username2,username3;
 // class SampleNextArrow extends React.Component{
 //   render(){
 //     return(
@@ -94,6 +94,7 @@ export default class QuizPlay extends React.Component{
       option2Color: grey100,
       option3Color: grey100,
       rows: [],
+      inline: [],
     };
     console.log('QuizPlay props: ' + JSON.stringify(this.props));
   }
@@ -143,12 +144,44 @@ export default class QuizPlay extends React.Component{
           console.log('Inline leaderboard is: ' + JSON.stringify(data));
           that.setState({leaderboard:data.leaderboard});
           var arr = [];
-          var keys = Object.keys(that.state.leaderboard);
-          user1 = keys[0];
-          user2 = keys[1];
-          user3 = keys[2];
-          user3 = keys[3];
-          that.setState({names:keys});
+
+          var keys = Object.keys(that.state.leaderboard) ;
+          var inline = [];
+          for(var i=0;i<keys.length;i++) {
+            var style = {
+              height: 'auto',
+              margin: '0 auto',
+              padding: 10,
+              position: 'relative',
+              width: 100
+            };
+            if(username==keys[i]) {
+              style = {
+                height: 'auto',
+                margin: '0 auto',
+                padding: 10,
+                position: 'relative',
+                width: 100,
+                background: 'orange',
+              };
+            }
+            inline.push(
+              {
+                score: data.leaderboard[keys[i]],
+                userId: keys[i],
+                style: style,
+              }
+            )
+          }
+          inline.sort(
+            function(a, b) {
+                return b.score - a.score;
+            }
+          );
+          that.setState({names:keys, inline: inline});
+
+
+
           for(var i=0;i<data.leaderboard.length;i++) {
             var style4 = {
               height: 'auto',
@@ -206,7 +239,39 @@ export default class QuizPlay extends React.Component{
              user2 = keys[1];
              user3 = keys[2];
              user3 = keys[3];
-             that.setState({names:keys});
+             var inline = [];
+             for(var i=0;i<keys.length;i++) {
+               var style = {
+                 height: 'auto',
+                 margin: '0 auto',
+                 padding: 10,
+                 position: 'relative',
+                 width: 100
+               };
+               if(username==keys[i]) {
+                 style = {
+                   height: 'auto',
+                   margin: '0 auto',
+                   padding: 10,
+                   position: 'relative',
+                   width: 100,
+                   background: 'orange',
+                 };
+               }
+               inline.push(
+                 {
+                   score: obj.answer.leaderboard[keys[i]],
+                   userId: keys[i],
+                   style: style,
+                 }
+               )
+             }
+             inline.sort(
+               function(a, b) {
+                   return b.score - a.score;
+               }
+             );
+             that.setState({names:keys, inline: inline});
              username1 = user1.match(/^([^@]*)@/)[1];
              username2 = user2.match(/^([^@]*)@/)[1];
              username3 = user3.match(/^([^@]*)@/)[1];
@@ -239,11 +304,11 @@ export default class QuizPlay extends React.Component{
                }
                arr.push(
                  <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
-                   <div style={style4}>
+                   <div style={this.state.inline.style[3]}>
                      <Paper style={style} zDepth={2} >
                        <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
-                       <div>{this.state.names[i]} </div>
-                       <div> {this.state.leaderboard[keys[i]]}</div>
+                       <div>{this.state.inline.userId[3]} </div>
+                       <div> {this.state.inline.score[3]}</div>
                      </Paper>
                    </div>
                  </div>
@@ -332,6 +397,7 @@ export default class QuizPlay extends React.Component{
             <div style={Style1}>
             <div>
             <h2>Waiting for the opponents</h2>
+            <h6>{this.state.serverId}</h6>
           </div>
           <div style={Style2}>
               <CircularProgress size={1.8}  />
@@ -352,8 +418,8 @@ export default class QuizPlay extends React.Component{
                     }}>
                       <Paper style={style} zDepth={2} >
                         <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
-                        <div>{this.state.names[0]} </div>
-                        <div> {this.state.leaderboard[user1]}</div>
+                        <div>{this.state.inline[0].userId} </div>
+                        <div> {this.state.inline[0].score}</div>
                       </Paper>
                     </div>
                   </div>
@@ -367,8 +433,8 @@ export default class QuizPlay extends React.Component{
                     }}>
                       <Paper style={style} zDepth={2} >
                         <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
-                        <div>{this.state.names[1]} </div>
-                        <div> {this.state.leaderboard[user2]}</div>
+                        <div>{this.state.inline[1].userId} </div>
+                        <div> {this.state.inline[1].score}</div>
                       </Paper>
                     </div>
                   </div>
@@ -382,8 +448,8 @@ export default class QuizPlay extends React.Component{
                     }}>
                       <Paper style={style} zDepth={2} >
                         <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
-                        <div>{this.state.names[2]} </div>
-                        <div> {this.state.leaderboard[user3]}</div>
+                        <div>{this.state.inline[2].userId} </div>
+                        <div> {this.state.inline[2].score}</div>
                       </Paper>
                     </div>
                   </div>
@@ -397,16 +463,13 @@ export default class QuizPlay extends React.Component{
                     }}>
                       <Paper style={style} zDepth={2} >
                         <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
-                        <div>{this.state.names[3]} </div>
-                        <div> {this.state.leaderboard[user4]}</div>
+                        <div>{this.state.inline[3].userId} </div>
+                        <div> {this.state.inline[3].score}</div>
                       </Paper>
                     </div>
                   </div>
                 </div>
                 <div>
-                  <div className='row'>
-                    <h6>{this.state.serverId}</h6>
-                  </div>
                   <div className='row'>
                     <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
 
