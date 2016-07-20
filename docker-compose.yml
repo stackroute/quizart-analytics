@@ -203,7 +203,7 @@ services:
     depends_on:
       - microservice-mesh-base
     environment:
-      REDIRECT_HOST: quizart
+      REDIRECT_HOST: quizrt.stackroute.in
       REDIRECT_PORT: 8001
   db:
     container_name: mongo
