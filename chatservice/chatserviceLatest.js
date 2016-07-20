@@ -27,8 +27,10 @@ subscriber.on('message',function(channel,message){
         });
         console.log("Generated UUID is ",uuid);
         var publishMsg ={
-          content: uuid, command : 'generateUUID' , details : message1.details
+          message : { content: uuid, command : 'generateUUID' },
+          details : message1.details
         }
+        console.log("Type of topic id in generate UUId is ",typeof(message1.message.content));
         publisher.publish(message1.message.content,JSON.stringify(publishMsg));
       }
 
@@ -50,14 +52,17 @@ subscriber.on('message',function(channel,message){
                       console.log("Msg from client to be put into MsgObj is===",updateMsgObj);
                       console.log("topic id to put into obj",topicId);
                       console.log("MsgObj inside first time before updation is ",MsgObj);
-                      MsgObj[topicId] = [updateMsgObj];
+                      MsgObj[topicId] = {count: 1};
+                      MsgObj[topicId][MsgObj[topicId].count] = updateMsgObj;
+                      console.log("====MsgObj[topicId][MsgObj[topicId].count] is",MsgObj[topicId][MsgObj[topicId].count]);
+                      // MsgObj[topicId] = [updateMsgObj];
                       console.log("====Msgobj updated is ",MsgObj);
               }
               else{
                     console.log("inside else loop for saving message");
                     var arr = MsgObj[topicId];
                     console.log("=====Already existing array is:",arr);
-                      if(arr.length>=4){
+                      if(arr.count>=4){
                         console.log("Inside If Loop");
                           fs.mkdir('/data/chathistory/'+topicId,function(err,result){
                           console.log("Inside loop for creating directory");
@@ -71,21 +76,19 @@ subscriber.on('message',function(channel,message){
                                       var fileNumber = files.length;
                                       var file = '/data/chathistory/'+topicId+'/'+topicId+'-'+(fileNumber+1)+'.json';
                                       console.log("Inside loop for creating directory the new file to be written in old folder is ",file);
-                                      console.log("Object to be written into file is",MsgObj[topicId]);
                                       fs.writeFile(file,JSON.stringify(MsgObj[topicId]),'utf-8',function cb(err,data){
                                           if(err){console.log("Error when writing the file and the error is ",err);}
-                                          MsgObj[topicId] = [];
-                                          MsgObj[topicId] = [updateMsgObj];
-                                          console.log("The New Message Object updated is ",MsgObj);
-                                          // MsgObj[topicId].count = MsgObj[topicId].count+1;
-                                          // var temp = MsgObj[topicId].count ;
-                                          // console.log("Before Reseting the MsgObj, the count is",MsgObj[topicId].count);
-                                          // MsgObj[topicId] ={};
-                                          // console.log("After Reseting the MsgObj, the count is",MsgObj[topicId].count);
-                                          // MsgObj[topicId] = {count: temp};
-                                          // MsgObj[topicId][MsgObj[topicId].count] = updateMsgObj;
-                                          // console.log("After Writing into file, the update MsgObj specific to topicid is",MsgObj[topicId]);
-                                          // console.log("After Writing into file, MsgObj is ",MsgObj);
+                                          // MsgObj[topicId] = [];
+                                          // MsgObj[topicId] = [updateMsgObj];
+                                          MsgObj[topicId].count = MsgObj[topicId].count+1;
+                                          var temp = MsgObj[topicId].count ;
+                                          console.log("Before Reseting the MsgObj, the count is",MsgObj[topicId].count);
+                                          MsgObj[topicId] ={};
+                                          console.log("After Reseting the MsgObj, the count is",MsgObj[topicId].count);
+                                          MsgObj[topicId] = {count: temp};
+                                          MsgObj[topicId][MsgObj[topicId].count] = updateMsgObj;
+                                          console.log("After Writing into file, the update MsgObj specific to topicid is",MsgObj[topicId]);
+                                          console.log("After Writing into file, MsgObj is ",MsgObj);
 
                                       });
                                   });
@@ -98,17 +101,17 @@ subscriber.on('message',function(channel,message){
                               console.log("==========Object to be written into file,",MsgObj[topicId]);
                               fs.writeFile(file,JSON.stringify(MsgObj[topicId]),'utf-8',function cb(err,data){
                                   if(err){console.log("Error when writing the file and the error is ",err);}
-                                  MsgObj[topicId] = [];
-                                  MsgObj[topicId] = [updateMsgObj];
-                                  // MsgObj[topicId].count = MsgObj[topicId].count+1;
-                                  // var temp = MsgObj[topicId].count ;
-                                  // console.log("Before Reseting the MsgObj, the count is",MsgObj[topicId].count);
-                                  // MsgObj[topicId] ={};
-                                  // console.log("After Reseting the MsgObj, the count is",MsgObj[topicId].count);
-                                  // console.log("After Reseting the MsgObj, the count is",temp);
-                                  // MsgObj[topicId] = {count: temp};
-                                  // MsgObj[topicId][MsgObj[topicId].count] = updateMsgObj;
-                                  // console.log("====After Writing into file, the update MsgObj specific to topicid is",MsgObj[topicId]);
+                                  // MsgObj[topicId] = [];
+                                  // MsgObj[topicId] = [updateMsgObj];
+                                  MsgObj[topicId].count = MsgObj[topicId].count+1;
+                                  var temp = MsgObj[topicId].count ;
+                                  console.log("Before Reseting the MsgObj, the count is",MsgObj[topicId].count);
+                                  MsgObj[topicId] ={};
+                                  console.log("After Reseting the MsgObj, the count is",MsgObj[topicId].count);
+                                  console.log("After Reseting the MsgObj, the count is",temp);
+                                  MsgObj[topicId] = {count: temp};
+                                  MsgObj[topicId][MsgObj[topicId].count] = updateMsgObj;
+                                  console.log("====After Writing into file, the update MsgObj specific to topicid is",MsgObj[topicId]);
                                   console.log("=====After Writing into file, MsgObj is ",MsgObj);
                               });
                             }
@@ -116,10 +119,8 @@ subscriber.on('message',function(channel,message){
                       }
                       else{
                         console.log("Inside Else loop");
-                        // MsgObj[topicId].count = MsgObj[topicId].count+1;
-                        // MsgObj[topicId][MsgObj[topicId].count] = updateMsgObj;
-                        arr.unshift(updateMsgObj);
-                        MsgObj[topicId] = arr;
+                        MsgObj[topicId].count = MsgObj[topicId].count+1;
+                        MsgObj[topicId][MsgObj[topicId].count] = updateMsgObj;
                         console.log("===after appending new message into MsgObj is ",MsgObj);
                         console.log("===after appending new message into MsgObj specific to topic is ",MsgObj[topicId]);
                       }
@@ -162,7 +163,7 @@ subscriber.on('message',function(channel,message){
                   obj = JSON.parse(data);
                   //Parse the data in file, and save it in Obj
                   console.log("Parsed file data to retrive history:",obj);
-                  var arr1 = obj;
+                  var arr1 = [obj];
                   //Convert into Array
                   console.log("The array after concating is arr1",arr1);
                   var history={
@@ -188,17 +189,17 @@ subscriber.on('message',function(channel,message){
                 //Then send back the data which is in in memory MsgObj
                   console.log("The current Msg Obj to be given back as history is",MsgObj[topicId]);
                   var msgarr =[];
-                  // for(key in MsgObj[topicId]){
-                  //   console.log("Message inside loop is,",MsgObj[topicId][key]);
-                  //   var temp = {};
-                  //   temp[key] = MsgObj[topicId][key];
-                  //   msgarr.push(temp);
-                  // }
+                  for(key in MsgObj[topicId]){
+                    console.log("Message inside loop is,",MsgObj[topicId][key]);
+                    var temp = {};
+                    temp[key] = MsgObj[topicId][key];
+                    msgarr.push(temp);
+                  }
                   console.log("msgarr to be sentr is ",msgarr);
                   console.log("The current Msg Obj to be given back as history is Array",[MsgObj[topicId]]);
                   var history={
                          'command':'retrieveHistory',
-                         'text':MsgObj[topicId],
+                         'text':msgarr,
                          'content':topicId
                   };
                   publisher.publish(topicId,JSON.stringify(history));
@@ -216,13 +217,13 @@ subscriber.on('message',function(channel,message){
                   obj = JSON.parse(data);
                   console.log("Parsed file data to retrive history when local obj is there:",obj);
                   console.log("Local MsgObj in memory is,",MsgObj[topicId]);
-                  var arr = MsgObj[topicId];
+                  var arr = [MsgObj[topicId]];
                   console.log("The array before concating local in memory object",arr);
-                  var arr1 = arr.concat(obj);
+                  var arr1 = arr.concat([obj]);
                   console.log("The array after concating is arr1",arr1);
                   var history={
                          'command':'retrieveHistory',
-                         'text':arr1,
+                         'text':obj,
                          'content':topicId
                      }
                   publisher.publish(topicId,JSON.stringify(history));

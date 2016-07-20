@@ -1,30 +1,27 @@
 var seneca = require('seneca');
 var express = require('express');
 var app = express();
-
 var server = require('http').createServer(app);
 var io = require('socket.io').listen(server);
 var google = require('googleapis');
 var OAuth2 = google.auth.OAuth2;
 var request = require('request');
-
-
 var secret = process.env.AUTH_SECRET || "the matrix";
 var googlecredentials = require('./secrets/googlecredentials');
 var oauth2Client = new OAuth2(googlecredentials.CLIENT_ID, googlecredentials.CLIENT_SECRET, googlecredentials.REDIRECT_URL);
 var redirectHost = process.env.REDIRECT_HOST || "localhost";
 var port = process.env.PORT || '8001';
 var redirectPort = process.env.REDIRECT_PORT || port;
-
 var name = process.env.NAME || "default";
-
-
 var mesh = seneca();
 mesh.use('mesh',{auto:true});
-
 var context = require('./context');
+
 var chatMiddlewarePlugin  = require('./chatmiddlewareplugin');
+
 context.mesh = mesh;
+var twitterStream = require('./api/timeline/TwitterStream');
+
 context.authorizeMiddleware = function(req, res, next) {
   mesh.act('role:jwt,cmd:verify', {token: req.get('JWT')}, function(err, response) {
     if(err) { return res.status(500).json(err); }
@@ -39,7 +36,7 @@ schedular();
 
 var env = process.env.NODE_ENV || 'dev';
 
-console.log('env is: ' + env);
+// console.log('env is: ' + env);
 
 app.use(express.static(__dirname + '/../common-ui'));
 
@@ -48,7 +45,7 @@ if(env.trim() === 'dev') {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, jwt");
     res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH");
-    console.log("inside server checking env",env);
+    // console.log("inside server checking env",env);
     next();
   });
 };
@@ -68,7 +65,7 @@ app.post('/api/generateuuid/uuid',function(req,res){
   subscriber.subscribe(req.body.message.content);
   console.log("Inside uuid generator in app.js ,the req body is",req.body);
   console.log("Inside uuid generator in app.js ,the req body stringified is",JSON.stringify(req.body));
-  publisher.publish('uuidgenerator',JSON.stringify(req.body));
+  publisher.publish('uuidgenerator2',JSON.stringify(req.body));
   subscriber.on('message',function(channel,message){
     var message1=JSON.parse(message);
     // console.log('channel'+":"+channel);
@@ -158,14 +155,14 @@ app.get('/api/auth/success/google',function(req,res){
 });
 
   tweets.on('connection',function(socket){
-  socket.on("createStream",function(data){
-
-
-   })
-  socket.on("disconnect",function(){
-
-
-  });
+  console.log("===conected to tweet socket");
+   twitterStream(socket)
+  // socket.on('creatstream',function(data){
+  //   // term  = data.term;
+  //   // token = data.token;
+  //  console.log("============================================INSIDE OF CREATE TWITTER STREAM===========================",data);
+  //
+  //  });
 });
 
 

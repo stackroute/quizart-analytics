@@ -82,7 +82,7 @@ var twitterAuthConfig  ={};
            console.log('=======error from twitter===',error);
         }
         else {
-            console.log(util.inspect(tweets));
+            //console.log(util.inspect(tweets));
             res.status(201).json(tweets);
          }
         });

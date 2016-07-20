@@ -132,16 +132,7 @@ export default class MainAppBar extends React.Component {
       <div className="row">
         <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <AppBar title="QuizRT-Social" style={this.state.appbarContainer} onLeftIconButtonTouchTap={this.handleDrawerOpen.bind(this)}  >
-              <RaisedButton label="Go to Deepak's Profile" onTouchTap={this.handleClick.bind(this)}/>
-              <Badge
-                badgeContent={2}
-                default={true}
-              >
-              <span style={{cursor:'pointer'}}>
-              <FontIcon className="muidocs-icon-social-notifications" style={{color:'white'}} />
-              </span>
 
-              </Badge>
               <span style={{cursor:'pointer'}}>
               <FontIcon className="muidocs-icon-action-exit_to_app" style={{color:'white',margin:19}} onTouchTap={this.clearLogin.bind(this)}/>
               </span>
@@ -165,7 +156,7 @@ export default class MainAppBar extends React.Component {
             <ListItem primaryText="Topics" leftIcon={<ActionViewmodule />}
               onTouchTap={this.handleTopics.bind(this)}/>
 
-           <ListItem primaryText="Change Password" leftIcon={<ActionFingerprint />} containerElement={<Link to="/my-account/change-password" />}/>
+           
            <ListItem primaryText="link with twitter" leftIcon={<LinkIcon/>} onTouchTap={this.linkwithTwitter.bind(this)}/>
 
 

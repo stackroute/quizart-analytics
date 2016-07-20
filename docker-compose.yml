@@ -36,16 +36,6 @@ services:
         - microservice-mesh-base
       environment:
         MONGO_URL: 'mongodb://localhost:27017/boilerplate-production'
-  microservice-analytics:
-      container_name: microservice-analytics
-      build: microservices/microservice-analytics
-      image: boilerplate/analytics
-      network_mode: host
-      restart: always
-      depends_on:
-        - microservice-mesh-base
-      environment:
-        MONGO_URL: 'mongodb://localhost:27017/boilerplate-production'
   microservice-topic:
       container_name: microservice-topic
       build: microservices/microservice-topic
@@ -151,15 +141,6 @@ services:
           MONGO_HOST: localhost
           MONGO_PORT: 27017
           MONGO_DB_NAME: quizRT4
-  microservice-like-topic:
-    container_name: microservice-like-topic
-    build: microservices/likesTopic
-    image: boilerplate/microservice-like-topic:0.1.0
-    network_mode: host
-    restart: always
-    depends_on:
-      - db
-      - microservice-mesh-base
   microservice-delete-liked-topic:
     container_name: microservice-delete-liked-topic
     build: microservices/delLikedTopic

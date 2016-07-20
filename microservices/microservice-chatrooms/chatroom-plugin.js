@@ -86,15 +86,23 @@ exports = module.exports = function(options) {
           }
       ],function(err,retrievedGroupsList){
         if(err) {return respond(err);}
-        // console.log("Inside Plugin retrievedGroupsList:",retrievedGroupsList[0].groups);
-            return Groups.aggregate([
-                { $match:
-                  {topicid:{$in:retrievedGroupsList[0].groups}}
-                }
-            ],function(err,groupData){
-                if(err) {return respond(err); }
-                return respond(null,{response:'success',groups:groupData})
-            });
+        console.log("Inside Plugin retrievedGroupsList:",retrievedGroupsList);
+        console.log("Inside Plugin retrievedGroupsList:",typeof(retrievedGroupsList));
+        if(retrievedGroupsList.length>0){
+          return Groups.aggregate([
+              { $match:
+                {topicid:{$in:retrievedGroupsList[0].groups}}
+              }
+          ],function(err,groupData){
+              if(err) {return respond(err); }
+              return respond(null,{response:'success',groups:groupData})
+          });
+
+        }
+        else{
+          console.log("You are not part of any group");
+          return respond(null,{response:'success',groups:null})
+          }
       });
   });
 
@@ -150,6 +158,7 @@ exports = module.exports = function(options) {
     return Friend.find(
       {subject:{$all:msg.ids},"relation":"friends"},function(err,retrievedRoomId){
         if(err) {return respond(err); }
+        console.log("Inside join private room id, the retrieved room id is",retrievedRoomId);
         return respond(null,{response:'success',roomId:retrievedRoomId})
     });
   });
