@@ -2,7 +2,7 @@
 import QuizWar from './quizwar';
 import Cookie from 'react-cookie';
 import TournamentSection from './tournamentsection';
-// import MostPopularSection from './mostpopular';
+import MostPopularSection from './mostpopular';
 // import MyFavoriteSection from './myfavoritetopics';
 
 // import MainAppBar from '../../components/MainAppBar';
@@ -98,6 +98,7 @@ var Dashboard = React.createClass({
       <div>
           <QuizWar />
           <TournamentSection/>
+          <MostPopularSection/>
       </div>
     );
   }

@@ -2,7 +2,7 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
-import SubTopicContainer from '../SubTopics/SubTopicContainer';
+import SubTopicContainer0 from '../SubTopics0/SubTopicContainer0';
 
 var baseurl='/';
 
@@ -28,11 +28,52 @@ const cardHeader={
   textAlign:'left',
 };
 
-var MostPopularSection = React.createClass({
+// const style = {
+//   margin: 20,
+//   textAlign: 'center',
+// };
+//
+// const stylebtn={
+//   float:'right',
+// };
 
-    getInitialState:function(){
-        return{topics:[]}
-    },
+const card={
+  textAlign:'left',
+  fontSize: 20,
+  marginLeft:20,
+  width:'80%',
+};
+
+var topicsData =[
+  {
+    _id:'Cricket-World-Cup',
+    topicName: "Cricket World Cup",
+    subtitle: "Let's play quiz",
+    avatarimg: 'http://res.cloudinary.com/quizrt-social/image/upload/v1468998004/movie_uyfbt8.png',
+    img: 'http://res.cloudinary.com/quizrt-social/image/upload/v1468998004/movie_uyfbt8.png',
+    category: "Cricket"
+  },
+
+  {
+  _id:'Bollywood-Movies',
+  topicName: "Bollywood Movies",
+  subtitle: "Let's play quiz",
+  avatarimg: 'http://res.cloudinary.com/quizrt-social/image/upload/v1468997804/wolrd_cup_aarqtf.png',
+  img: 'http://res.cloudinary.com/quizrt-social/image/upload/v1468997804/wolrd_cup_aarqtf.png',
+  category: "Movies"
+
+},
+{
+  _id:'Cartoons',
+  topicName: "Cartoons",
+  subtitle: "Let's play quiz",
+  avatarimg: 'http://res.cloudinary.com/quizrt-social/image/upload/v1468997864/cm_dy_ikhtrz.png',
+  img: 'http://res.cloudinary.com/quizrt-social/image/upload/v1468997864/cm_dy_ikhtrz.png',
+  category: "Entertainment"
+}
+];
+
+var MostPopularSection = React.createClass({
 
 
 contextTypes :{
@@ -44,23 +85,6 @@ handleTopics : function(){
   this.context.router.push('/topics');
 },
 
-  componentDidMount:function(){
-    $.ajax({
-      url: baseurl+'topics/mostPopular',
-      dataType:'json',
-      success: function(data){
-        console.log('got success---------------------');
-        console.log(JSON.stringify(data));
-        this.setState({topics:data})
-        console.log('------------------------'+data+'----------------------');
-      }.bind(this),
-      error:function(err){
-        console.log(err);
-        console.log('error');
-      }
-    })
-  },
-
   render: function () {
     return (
       <div>
@@ -68,10 +92,9 @@ handleTopics : function(){
           <Card>
           <h1 style={tour_header}>Most Popular topics</h1>
 
-          <SubTopicContainer {...this.props} topics ={this.state.topics}   />
+          <SubTopicContainer0 {...this.props} topics ={topicsData}   />
             <FlatButton label="See More" style={stylebtn}
               onTouchTap={this.handleTopics.bind(this)}/>
-
           </Card>
         </Paper>
       </div>
