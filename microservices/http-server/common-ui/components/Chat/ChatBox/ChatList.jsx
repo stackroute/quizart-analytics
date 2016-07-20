@@ -20,12 +20,12 @@ export default class ChatList extends React.Component{
   render(){
     var createList = function(list){
       console.log("list from ChatBoxAll is",list);
-      console.log("list from ChatBoxAll is",list.sentby);
+      console.log("list from ChatBoxAll is",list.sentBy);
           return <li>
           <Chip
           style={styles.chip}
           >
-          <p style={{padding:0,margin:0,border:0}}>Sent By {list.sentby} </p>
+          <p style={{padding:0,margin:0,border:0}}>Sent By {list.sentBy} </p>
           {list.text}
           </Chip></li>
         };

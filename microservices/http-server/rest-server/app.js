@@ -36,7 +36,7 @@ schedular();
 
 var env = process.env.NODE_ENV || 'dev';
 
-console.log('env is: ' + env);
+// console.log('env is: ' + env);
 
 app.use(express.static(__dirname + '/../common-ui'));
 
@@ -45,7 +45,7 @@ if(env.trim() === 'dev') {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, jwt");
     res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH");
-    console.log("inside server checking env",env);
+    // console.log("inside server checking env",env);
     next();
   });
 };
@@ -65,7 +65,7 @@ app.post('/api/generateuuid/uuid',function(req,res){
   subscriber.subscribe(req.body.message.content);
   console.log("Inside uuid generator in app.js ,the req body is",req.body);
   console.log("Inside uuid generator in app.js ,the req body stringified is",JSON.stringify(req.body));
-  publisher.publish('uuidgenerator',JSON.stringify(req.body));
+  publisher.publish('uuidgenerator2',JSON.stringify(req.body));
   subscriber.on('message',function(channel,message){
     var message1=JSON.parse(message);
     // console.log('channel'+":"+channel);
@@ -140,8 +140,8 @@ app.get('/api/auth/success/google',function(req,res){
               };
                 mesh.act('role:profile,cmd:create',userObj,function(err,response){
                     if(err) { return res.status(500).json(err); }
-                    if(response.response !== 'success') { res.redirect('http://192.168.99.102:8001/#/authsuccess/'+tokenresponse.token); }
-                    res.redirect('http://192.168.99.102:8001/#/authsuccess/'+tokenresponse.token);
+                    if(response.response !== 'success') { res.redirect('http://192.168.99.100:8001/#/authsuccess/'+tokenresponse.token); }
+                    res.redirect('http://192.168.99.100:8001/#/authsuccess/'+tokenresponse.token);
                 });
             }
           });

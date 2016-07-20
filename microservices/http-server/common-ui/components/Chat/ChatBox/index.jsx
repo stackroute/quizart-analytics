@@ -227,6 +227,7 @@ export default class ChatBox extends React.Component{
         <div >
           {this.state.view==="chatbox" ?
               <ChatBoxAll friendid={this.state.FriendId} groupid = {this.state.GroupId} socket={this.state.socket}/> :
+              this.state.view ==="changename" ?<ChangeGroupName GroupData={this.state.GroupData} close={this.closeChangeGroup.bind(this)}/>:
               this.state.view==="groupinfo" ? <GroupInfo GroupData={this.state.GroupData}/> : null
           }
 
