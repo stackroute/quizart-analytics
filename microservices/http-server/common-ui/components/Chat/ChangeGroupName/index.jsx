@@ -11,6 +11,7 @@ import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import Subheader from 'material-ui/Subheader';
 import Avatar from 'material-ui/Avatar';
 import RaisedButton from 'material-ui/RaisedButton';
+import restUrl from '../../../restUrl';
 
 
 const style={
@@ -33,14 +34,21 @@ export default class changeName extends React.Component{
   }
 
   changeName(){
-    var url = "http://localhost:8080/groups/"+this.props.GroupData.id;
+    // console.log("Inside chage group name",this.props.GroupData);
+    // var url = "http://localhost:8080/groups/"+this.props.GroupData.id;
+    var groupData = {
+            groupname : this.state.newGroupName ,
+            groupid : this.props.GroupData.topicid,
+          };
     $.ajax({
-      url: url,
+      url: restUrl + '/api/v1/leavegroup/changename',
       dataType: 'json',
       type: 'PUT',
-      data : {groupname : this.state.newGroupName ,
-              users : this.props.GroupData.users,
-              }
+      data : JSON.stringify(groupData),
+      success : function(data){
+        // console.log("====Inside Change Group",data);``
+        // this.setState({GroupData: this.state.GroupData.concat(data.groupdata)});
+      }.bind(this),
     });
     this.props.close(this.state.newGroupName);
   }

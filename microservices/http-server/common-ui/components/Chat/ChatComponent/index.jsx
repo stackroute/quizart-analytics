@@ -17,17 +17,17 @@ export default class ChatComponent extends React.Component{
   constructor(props) {
     super(props);
     this.state ={view:'OnlineList'}
-    console.log("===Inside Chat Component, Initial View : ",this.state.view);
+    // console.log("===Inside Chat Component, Initial View : ",this.state.view);
   }
 
  openChatBox(name,FriendId,GroupData,groupFlag) {
-   console.log("===Inside Chat Component, Chat Box being opened for: ",name);
+  //  console.log("===Inside Chat Component, Chat Box being opened for: ",name);
    var GroupId = null;
    if(groupFlag){
      GroupId = GroupData.topicid;
    }
-   console.log("====Inside Chat Component, the group id selected is====",GroupId);
-   console.log("====Inside Chat Component, the friend id selected is====",FriendId);
+  //  console.log("====Inside Chat Component, the group id selected is====",GroupId);
+  //  console.log("====Inside Chat Component, the friend id selected is====",FriendId);
    this.setState({SelectedName:name , SelectedFriendId:FriendId , SelectedGroupData: GroupData , SelectedGroupId:GroupId,groupFlag:groupFlag,view:'ChatBox'});
  }
  closeChatBox(text){

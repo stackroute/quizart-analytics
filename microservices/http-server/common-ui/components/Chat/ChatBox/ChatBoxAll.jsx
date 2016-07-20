@@ -56,19 +56,19 @@ export default class ChatBoxAll extends React.Component {
         channelId : channelid
       },function(){
 
-        console.log("Inside the chatboxall, channel ild recived from express is==",outerThis.state.channelId);
+        // console.log("Inside the chatboxall, channel ild recived from express is==",outerThis.state.channelId);
       })
     });
     this.props.socket.on('retrievedHistory',function(historymsgserver){
-      console.log(historymsgserver);
-      console.log("Message received as history is ",historymsgserver.text);
+      // console.log(historymsgserver);
+      // console.log("Message received as history is ",historymsgserver.text);
         if(historymsgserver.text){
           this.setState({messages : this.state.messages.concat(historymsgserver.text)});
       }
     }.bind(this));
     this.props.socket.on('received_msg',function(msgserver){
-      console.log("Message received is ",msgserver.text);
-      console.log("Message received and is sent by",msgserver.sentBy);
+      // console.log("Message received is ",msgserver.text);
+      // console.log("Message received and is sent by",msgserver.sentBy);
       this.setState({messages : this.state.messages.concat([{text : msgserver.text, sentBy: msgserver.sentBy}])});
     }.bind(this));
   }
@@ -79,16 +79,16 @@ export default class ChatBoxAll extends React.Component {
 
   retrieveHistory(e){
     e.preventDefault();
-    console.log("inside retrieve Historuy method");
+    // console.log("inside retrieve Historuy method");
     this.setState({pagecount : this.state.pagecount+1});
-    console.log("Message Count:",this.state.pagecount);
+    // console.log("Message Count:",this.state.pagecount);
     this.props.socket.emit('retrieveHistory',this.state.channelId);
   }
 
   submitForm(e){
     e.preventDefault();
     this.props.socket.emit('chat_message',{msg:this.state.msg,user:username,topicid:this.state.channelId});
-    console.log("Chat message you sent",this.state.msg);
+    // console.log("Chat message you sent",this.state.msg);
     this.setState({msg : ''});
   }
 

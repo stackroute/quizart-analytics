@@ -24,6 +24,7 @@ import TextField from 'material-ui/TextField';
 import AutoComplete from 'material-ui/AutoComplete';
 import CreateGroupDialog from './CreateGroupDialog';
 import base64 from 'base-64';
+import restUrl from '../../../restUrl';
 
   const style ={
     margin: 5,
@@ -71,6 +72,31 @@ import base64 from 'base-64';
     })
   }
 
+  uploadFile(e){
+          var fd = new FormData();
+      // var fd1 = this.refs.file.getDOMNode(this);
+       fd.append( 'file', this.refs.file.files[0] );
+       //console.log(this.refs.file.value);
+       //console.log(this.refs.button.value);
+
+
+       $.ajax({
+           url: restUrl+'/api/uploadfile',
+          // url:"http://quizrt2:8001/topics",
+           data: fd,
+           processData: false,
+           contentType: false,
+           type: 'POST',
+           success: function(data) {
+             console.log('success');
+           },
+           error: function() {
+             console.error('error while uploading file');
+           },
+         });
+         e.preventDefault()
+        }
+
 
   deleteUser(index){
     if(index===0){
@@ -108,6 +134,7 @@ import base64 from 'base-64';
               </form>
             </div>
           </div>
+
 
             <div className="row" >
                 <div className="col-lg-11 col-md-11 col-sm-11 col-xs-11" style={style}>

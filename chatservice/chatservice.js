@@ -8,7 +8,7 @@ var MsgObj = {};
 
 console.log("Running...");
 
-subscriber.subscribe('uuidgenerator2');
+subscriber.subscribe('ChatService2');
 
 subscriber.on('message',function(channel,message){
       console.log("Subscribed to "+channel);
@@ -118,7 +118,7 @@ subscriber.on('message',function(channel,message){
                         console.log("Inside Else loop");
                         // MsgObj[topicId].count = MsgObj[topicId].count+1;
                         // MsgObj[topicId][MsgObj[topicId].count] = updateMsgObj;
-                        arr.unshift(updateMsgObj);
+                        arr.push(updateMsgObj);
                         MsgObj[topicId] = arr;
                         console.log("===after appending new message into MsgObj is ",MsgObj);
                         console.log("===after appending new message into MsgObj specific to topic is ",MsgObj[topicId]);

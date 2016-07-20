@@ -90,20 +90,20 @@ export default class ChatBox extends React.Component{
   }
 
   confirmLeave(){
-    console.log("Inside Leave Group");
-    console.log("The group id to be leaved is",this.props.SelectedGroupId);
+    // console.log("Inside Leave Group");
+    // console.log("The group id to be leaved is",this.props.SelectedGroupId);
     var leavegroupdata = {
       gid : this.props.SelectedGroupId,
       userid: username
     };
-    console.log("Leave group data sent to express is",leavegroupdata);
+    // console.log("Leave group data sent to express is",leavegroupdata);
     $.ajax({
       url: restUrl + '/api/v1/leavegroup/',
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify(leavegroupdata),
       success : function(data){
-        console.log("=====inside success of leave group");
+        // console.log("=====inside success of leave group");
         this.setState({dialogOpen: false});
       }.bind(this)
     });

@@ -51,7 +51,7 @@ exports = module.exports = function(socket) {
             content : channelid[0],
             command: 'retrieveHistory'
           };
-        publisher.publish('uuidgenerator2',JSON.stringify({message:message}));
+        publisher.publish('ChatService1',JSON.stringify({message:message}));
       });
 
       socket.on('chat_message', function(msg){
@@ -63,6 +63,6 @@ exports = module.exports = function(socket) {
               command: 'sendMessage',
               sentBy: msg.user
             };
-            publisher.publish('uuidgenerator2',JSON.stringify({message:message}));
+            publisher.publish('ChatService1',JSON.stringify({message:message}));
       });
   };

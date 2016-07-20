@@ -100,7 +100,7 @@ exports = module.exports = function(options) {
 
         }
         else{
-          console.log("You are not part of any group");
+          // console.log("You are not part of any group");
           return respond(null,{response:'success',groups:null})
           }
       });
@@ -143,6 +143,16 @@ exports = module.exports = function(options) {
           if(err) {return respond(err); }
           return respond(null,{response:'success',updatedgroup:updatedGroup})
         });
+  });
+
+  this.add('role:chat,cmd:changegroupname',function(msg,respond){
+    // console.log("Inside change group name plugin msg is",msg);
+      // return Friend.update(
+      //   {subject:msg.gid},//give group id i.e.,topic id of group
+      //   {$pull:{object:msg.userid}},function(err,updatedGroup){
+      //     if(err) {return respond(err); }
+      //     return respond(null,{response:'success',updatedgroup:updatedGroup})
+      //   });
   });
 
   this.add('role:chat,cmd:creategroup',function(msg,respond){

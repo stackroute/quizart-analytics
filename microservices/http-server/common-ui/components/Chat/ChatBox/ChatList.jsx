@@ -19,8 +19,8 @@ export default class ChatList extends React.Component{
 
   render(){
     var createList = function(list){
-      console.log("list from ChatBoxAll is",list);
-      console.log("list from ChatBoxAll is",list.sentBy);
+      // console.log("list from ChatBoxAll is",list);
+      // console.log("list from ChatBoxAll is",list.sentBy);
           return <li>
           <Chip
           style={styles.chip}

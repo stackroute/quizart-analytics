@@ -17,6 +17,9 @@ var mesh = seneca();
 mesh.use('mesh',{auto:true});
 var context = require('./context');
 
+var cloudinary = require('cloudinary');
+var formidable = require('express-formidable');
+
 var chatMiddlewarePlugin  = require('./chatmiddlewareplugin');
 
 context.mesh = mesh;
@@ -65,7 +68,7 @@ app.post('/api/generateuuid/uuid',function(req,res){
   subscriber.subscribe(req.body.message.content);
   console.log("Inside uuid generator in app.js ,the req body is",req.body);
   console.log("Inside uuid generator in app.js ,the req body stringified is",JSON.stringify(req.body));
-  publisher.publish('uuidgenerator2',JSON.stringify(req.body));
+  publisher.publish('ChatService1',JSON.stringify(req.body));
   subscriber.on('message',function(channel,message){
     var message1=JSON.parse(message);
     // console.log('channel'+":"+channel);
@@ -75,6 +78,25 @@ app.post('/api/generateuuid/uuid',function(req,res){
   });
 
 });
+
+
+app.use(formidable.parse());
+app.post('/api/uploadfile',function(req,res){
+console.log('-------------- abc from express floow---------------',req.body);
+console.log('-------------- abc from express floow---------------',req.body.file.path);
+
+cloudinary.config({
+cloud_name: 'quizrt-social',
+api_key: '866928426995948',
+api_secret: 'a0_PX4nmJqak_k3lc29Ges5dcNw'
+});
+
+cloudinary.uploader.upload(req.body.file.path, function(result) {
+console.log(result);
+});
+});
+
+
 var tweets =io.of('/tweets');
 app.post('/api/authenticate/google',function(req,res,next){
   console.log("Inside Express, inside google login call=======");
