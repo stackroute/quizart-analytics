@@ -113,8 +113,8 @@ export default class QuizPlay extends React.Component{
   componentDidMount(){
     console.log('QuizPlay props: ' + JSON.stringify(this.props));
       var username = JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub;
-      console.log('\n\n===========Cookie says username as: '+username+" "+this.context.socket+":socket");
-      console.log('context: '+this.context.socket);
+      // console.log('\n\n===========Cookie says username as: '+username+" "+this.context.socket+":socket");
+      // console.log('context: '+this.context.socket);
       //console.log('props1: '+this.props.params.id);
       var that = this;
         this.context.socket.on('newQuestion',function(data){
@@ -205,11 +205,11 @@ export default class QuizPlay extends React.Component{
   }
     onClick(value,e){
 
-      console.log("===================seconds when clicked===============",this.state.seconds);
+      // console.log("===================seconds when clicked===============",this.state.seconds);
       const resSeconds = this.state.seconds;
-      console.log("===============Time==================",resSeconds);
+      // console.log("===============Time==================",resSeconds);
       var res = (10-resSeconds);
-      console.log("response time",res);
+      // console.log("response time",res);
       this.analyseData(value,res);
       this.setState({answered:true});
       this.setState({enabled:false});
@@ -217,16 +217,16 @@ export default class QuizPlay extends React.Component{
         answer: value
       }
       this.changeOptionColor(socketObj.answer,deepOrange500);
-      console.log('Sending answer to server as '+ value)
+      // console.log('Sending answer to server as '+ value)
       this.context.socket.emit('myAnswer',socketObj);
       switch(value){
       }
     }
 
     analyseData(value,res){
-      console.log("======================================response time=================================",res);
-
-      console.log("======================================value=================================",value);
+      // console.log("======================================response time=================================",res);
+      //
+      // console.log("======================================value=================================",value);
       var analyticsData = {
         userId:JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub,
         tournamentId: "1234",
