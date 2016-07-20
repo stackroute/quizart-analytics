@@ -27,10 +27,8 @@ subscriber.on('message',function(channel,message){
         });
         console.log("Generated UUID is ",uuid);
         var publishMsg ={
-          message : { content: uuid, command : 'generateUUID' },
-          details : message1.details
+          content: uuid, command : 'generateUUID' , details : message1.details
         }
-        console.log("Type of topic id in generate UUId is ",typeof(message1.message.content));
         publisher.publish(message1.message.content,JSON.stringify(publishMsg));
       }
 
@@ -164,7 +162,7 @@ subscriber.on('message',function(channel,message){
                   obj = JSON.parse(data);
                   //Parse the data in file, and save it in Obj
                   console.log("Parsed file data to retrive history:",obj);
-                  var arr1 = [obj];
+                  var arr1 = obj;
                   //Convert into Array
                   console.log("The array after concating is arr1",arr1);
                   var history={

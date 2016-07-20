@@ -51,7 +51,7 @@ loadDataFromSever(){
   componentDidMount(){
 
           var index = Math.floor(Math.random() * 3) + 0;
-          term =  terms[index];
+          var term =  terms[index];
           console.log("=====================track term is",term);
           this.loadDataFromSever();
           socket.emit('creatstream',{token:localStorage.authToken,term:term});

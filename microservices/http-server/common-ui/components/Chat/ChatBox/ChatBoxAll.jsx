@@ -49,7 +49,7 @@ export default class ChatBoxAll extends React.Component {
 
   componentDidMount(){
     var outerThis = this ;
-    console.log("Inside component did mount of chatbox all");
+    // console.log("Inside component did mount of chatbox all");
     this.props.socket.emit('create_room',ids);
     this.props.socket.on('channelId',function(channelid){
       outerThis.setState({

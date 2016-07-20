@@ -165,7 +165,7 @@ export default class OnlineList extends React.Component{
           data : JSON.stringify(requestMsg),
           success : function(data){
               console.log("Response for the ajax req to generateuuid is",data.response);
-              topicid = data.result.message.content;
+              topicid = data.result.content;
               console.log("The Topic id retrived is ",topicid);
               var groupDataPost ={
                   groupname:groupInfo.groupname,
@@ -260,8 +260,6 @@ export default class OnlineList extends React.Component{
                       <Menu>
                         <MenuItem primaryText="New Group" leftIcon={<FontIcon className="muidocs-icon-social-group_add" />}
                         onTouchTap={this.createGroup.bind(this)}/>
-                        <MenuItem primaryText="Settings" leftIcon={<FontIcon className="muidocs-icon-action-settings"/>}/>
-                        <MenuItem primaryText="Sign out" leftIcon={<FontIcon className="muidocs-icon-action-power_settings_new"/>}/>
                       </Menu>
                       </Popover>
                     </div>
