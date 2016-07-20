@@ -74,14 +74,6 @@ export default class Profile extends React.Component{
     }
   }
 
-  // handleUserName(event) {
-  //   if(event.target.value != this.state.Profile.username){
-  //   return{
-  //     username: 'UserName cannot be changed'
-  //   }
-  // }
-  // this.setState({username: event.target.value});
-  // };
 
   handleName(event) {
     this.setState({name: event.target.value});
@@ -125,7 +117,6 @@ export default class Profile extends React.Component{
         });
 
         request.done(function(data) {
-          // console.log(JSON.stringify(data));
           this.setState({openSuccess: true});
         }.bind(this));
         request.fail(function() {
@@ -210,10 +201,6 @@ export default class Profile extends React.Component{
         //   }
 
   componentDidMount(){
-    console.log("props.username======",this.props.username);
-
-    console.log("uid",this.state.uid);
-    console.log("Inside ajax call of did mount in Profile====");
 
     var request = $.ajax({
     url: restUrl + '/api/v1/profile/'+this.state.uid,
@@ -221,9 +208,6 @@ export default class Profile extends React.Component{
     contentType: 'application/json',
     });
     request.done(function(data) {
-    console.log("Inside Success of Ajx in User profile===entire data is ",JSON.stringify(data));
-    console.log("Inside Success of Ajx in User profile===entire data is ",data);
-    console.log("Inside Success of Ajx in User profile===arr[0] is ",data[0]);
     this.setState({arr: data});
     }.bind(this));
     request.fail(function() {
@@ -270,10 +254,7 @@ export default class Profile extends React.Component{
     ];
 
 
-    console.log("arr[0]",this.state.arr);
-    // this.state.Profile.username.value.split("@")[0]
-    // var profile = this.state.arr[0];
-    // console.log(profile);
+
     if(this.state.arr === [] || this.state.arr == null || this.state.arr[0] == undefined)
     { return (<div><p>Loading...........</p></div>) }
     else{
@@ -384,12 +365,9 @@ export default class Profile extends React.Component{
           <br/>
           <CardMedia>
             <div className="row">
-              <div className="col-xs-5 col-sm-5 col-md-5 col-lg-7" style={styles} >
+              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={styles} >
                 <h2>Create your Own Tournament</h2>
                 <RaisedButton label="Start Here" secondary={true}/>
-              </div>
-              <div className="col-xs-2 col-sm-2 col-md-2 col-lg-2" style={styles}>
-                  <img style={styles} src="http://lorempixel.com/100/100/technics" />
               </div>
             </div>
           </CardMedia>
