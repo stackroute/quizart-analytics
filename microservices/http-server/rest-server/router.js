@@ -13,6 +13,7 @@ router.use('/topic', require('./api/topic/topic.router'));
 router.use('/leavegroup', require('./api/leavegroup/leavegroup.router'));
 router.use('/timeline', require('./api/timeline/timeline.router'));
 router.use('/auth', require('./api/auth/twitter.router'));
+router.use('/analytics', require('./api/analytics/analytics.router'));
 
 
 exports = module.exports = router;

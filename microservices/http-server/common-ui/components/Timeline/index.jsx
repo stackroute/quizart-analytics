@@ -6,7 +6,7 @@ var terms = ['QuizRT','QuizRTSocail','@Stackroute'];
 export default class Timeline extends React.Component{
   constructor (props){
      super(props);
-     this.state = {tweets:[]};
+     this.state = {tweets:[],flag:'loading'};
 
   }
 
@@ -33,16 +33,17 @@ loadDataFromSever(){
                console.log("=======retrievedPosts=======",data);
                if(data instanceof Array){
                   console.log("=====tweets====",data);
-                  this.setState({tweets:data})
+                  this.setState({tweets:data,flag:'loaded'})
                }
                else {
-                   this.setState({tweets:data.statuses});
+                   this.setState({tweets:data.statuses,flag:'loaded'});
                }
 
     }.bind(this));
 
       request.fail(function(xhr, status, err) {
       console.error("api/v1/timeline/gettweet/", status, err.toString());
+      setTimeout(loadDataFromSever(),20000);
     }.bind(this));
 
 
@@ -89,7 +90,7 @@ loadDataFromSever(){
 
   render() {
 
-
+     console.log("state===",this.state.flag);
      var createPost = this.state.tweets.map(function(data) {
 
          return (<Tweet data = {data}/>);
@@ -97,11 +98,13 @@ loadDataFromSever(){
     return (
       <div>
         <CommentForm newPost = {this.handlePost.bind(this)}/>
-        <div style = {{marginLeft:0}}>
+         {this.state.flag ==='loading'?<div className="loader">Loading...</div>:null}
+        <div style = {{marginTop:5}}>
             {
               createPost
             }
-        </div>
+       </div>
+
       </div>
     )
   }

@@ -7,6 +7,7 @@ import TextField from 'material-ui/TextField';
 import EachTopic from '../AbtTopic';
 import ChatComponent from '../Chat/ChatComponent';
 import SubTopicContainer from '../SubTopics/SubTopicContainer';
+import TournamentsSubContainer from '../SubTournaments/TournamentsSubContainer';
 import ProfilePage from '../Profile';
 import Timeline from '../Timeline';
 
@@ -128,12 +129,19 @@ export default class TabsMobile extends React.Component {
 
             {this.props.page.toString()=="Profile"?
             <div>
-              <ProfilePage/>
+              <ProfilePage username = {this.state.username}/>
               <Timeline/>
             </div>
             :
-             this.props.page.toString()=="Topics"?<SubTopicContainer topics ={this.props.topics} fun={this.handleCheck}/>:
-             this.props.page.toString()=="Home"?<Dashboard />:
+             this.props.page.toString()=="Topics"?
+              <SubTopicContainer topics ={this.props.topics} fun={this.handleCheck}/>
+              :
+              this.props.page.toString()=="Tournament"?
+               <TournamentsSubContainer tournament ={this.props.tournament}/>
+               :
+             this.props.page.toString()=="Home"?
+              <Dashboard />
+              :
              this.props.page.toString()=="TopicPage"?
              <div>
              <EachTopic id={this.props.id}/>
