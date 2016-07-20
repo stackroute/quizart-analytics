@@ -202,6 +202,9 @@ services:
     restart: always
     depends_on:
       - microservice-mesh-base
+    environment:
+      REDIRECT_HOST: quizart
+      REDIRECT_PORT: 8001
   db:
     container_name: mongo
     image: mvertes/alpine-mongo
