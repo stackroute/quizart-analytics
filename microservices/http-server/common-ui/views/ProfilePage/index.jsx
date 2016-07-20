@@ -27,7 +27,7 @@ export default class HomePage extends React.Component {
                 <MainAppBar/>
                 <MediaQuery query='(max-device-width: 800px)'>
                   <MediaQuery query='(max-width: 800px)'>
-                    <TabsMobile page="Profile"/>
+                    <TabsMobile page="Profile" username={this.props.params.username}/>
                   </MediaQuery>
                 </MediaQuery>
 
