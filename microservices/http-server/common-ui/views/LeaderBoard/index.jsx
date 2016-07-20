@@ -1,107 +1,59 @@
 import React from 'react';
-import Avatar from 'material-ui/Avatar';
-import ListItem from 'material-ui/List/ListItem';
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import {PropTypes} from 'react';
-
-import restUrl from '../../restUrl';
+import Inline from './Inline';
+import MainAppBar from '../../components/MainAppBar';
+import ChatDrawer from '../../components/Chat/ChatDrawer';
+import AbtTopic from '../../components/AbtTopic';
+import MediaQuery from 'react-responsive';
+import TabsMobile from '../../components/Tabs';
 
 export default class LeaderBoard extends React.Component {
-  constructor(props){
-    super(props);
-    console.log('Inside LeaderBoard constructor: '+this.props.params.id);
-    this.state = {
-      rows:[]
+  constructor() {
+    super();
+  }
+
+  render() {
+    var style = {
+      paddingRight:0,
     };
-  }
 
-  handleProfile(userId){
-    this.context.router.push(
-      '/profilePage/'+userId
-    );
-  }
-
-  static get contextTypes(){
-    return {
-      router: PropTypes.object.isRequired
-    }
-  }
-
-  componentDidMount() {
-    var request = $.ajax({
-      url: restUrl + '/api/v1/leaderboard/'+this.props.params.id,
-      type: 'GET',
-    });
-    request.done(function(data) {
-      console.log('Inside gameplay');
-      console.log(JSON.stringify(data));
-      console.log(Object.keys(data));
-      console.log(JSON.stringify(data.leaderboard));
-      data.leaderboard.sort(
-        function(a, b) {
-            return b.score - a.score;
-        }
-      )
-      this.setState({rows:data.leaderboard});
-    }.bind(this));
-    request.fail(function() {
-      console.error('LeaderBoard error');
-    }.bind(this));
-  }
-
-  render(){
-    console.log("state data: "+JSON.stringify(this.state.rows));
-    const style = {margin: 5, marginLeft: 0, marginRight: 0, left: 0};
-    var row = [];
-    for (var i = 0; i < this.state.rows.length; i++) {
-      row.push(
-        <TableRow>
-          <TableRowColumn>{i+1}</TableRowColumn>
-          <TableRowColumn>
-            <ListItem
-              disabled={true}
-              leftAvatar={
-                <Avatar
-                  src="https://s31.postimg.org/qgg34o597/nature.jpg"
-                  size={30}
-                  style={style}
-                />
-              }
-            >
-            <div onClick={this.handleProfile.bind(this, this.state.rows[i].userId)}>{this.state.rows[i].userId}</div>
-            </ListItem>
-
-          </TableRowColumn>
-          <TableRowColumn>{this.state.rows[i].score}</TableRowColumn>
-        </TableRow>
-      );
+    var bodyContainer = {
+      padding: "16px",
+      paddingTop: "80px",
     }
     return (
-      <Card>
-        <CardText>
-          <Table
-            selectable={false}
-            multiSelectable={false}
-          >
-            <TableHeader
-              displaySelectAll={false}
-              adjustForCheckbox={false}
-            >
-              <TableRow>
-                <TableHeaderColumn>Rank</TableHeaderColumn>
-                <TableHeaderColumn>Player</TableHeaderColumn>
-                <TableHeaderColumn>Score</TableHeaderColumn>
-              </TableRow>
-            </TableHeader>
-            <TableBody
-              displayRowCheckbox={false}
-            >
-              {row}
-            </TableBody>
-          </Table>
-        </CardText>
-      </Card>
-    );
+      <div>
+        <MainAppBar/>
+        <MediaQuery query='(max-device-width: 800px)'>
+          <MediaQuery query='(max-width: 800px)'>
+          <TabsMobile page="CreateTournament"/>
+          </MediaQuery>
+        </MediaQuery>
+
+        <MediaQuery query='(min-device-width: 800px)'>
+          <MediaQuery query='(min-width: 800px)'>
+            <div className="container-fluid" >
+              <div className="row" >
+                <div style={{width: "100%"}} >
+                  <div className="row" >
+                    <div className="col-md-12 col-sm-12 col-xs-12 col-lg-12" style={bodyContainer}>
+                      <div className="row">
+                          <div className="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-lg-offset-1" >
+                            <Inline params={this.props.params}/>
+                          </div>
+                          <div className="col-xs-1 col-sm-1 col-md-1 col-lg-1"  style={{paddingTop:20}}>
+                            <ChatDrawer/>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </MediaQuery>
+        </MediaQuery>
+        </div>
+
+    )
   }
 }

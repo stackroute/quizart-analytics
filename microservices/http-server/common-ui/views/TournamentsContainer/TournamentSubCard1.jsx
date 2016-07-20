@@ -131,6 +131,9 @@ class TournamentsSubCard1 extends React.Component {
         break;
       }
     }
+    if(currentLevel == -1) {
+      currentLevel = levels.length-1;
+    }
     return currentLevel;
   }
 
@@ -264,22 +267,16 @@ class TournamentsSubCard1 extends React.Component {
 
     <CardActions>
       <div className="col-xs col-md col-lg col-sm">
+      <div>
         <div>
-          {active ? (
-            <div>
-              <div>
-                <RaisedButton
-                  style={btnFontColor}
-                  label={'Leaderboard'}
-                  secondary={true}
-                  onClick={this.handleLeaderboard}
-                />
-              </div>
-            </div>
-          ) : (
-            <div></div>
-          )}
+          <RaisedButton
+            style={btnFontColor}
+            label={'Leaderboard'}
+            secondary={true}
+            onClick={this.handleLeaderboard}
+          />
         </div>
+      </div>
       </div>
     </CardActions>
 
@@ -288,4 +285,4 @@ class TournamentsSubCard1 extends React.Component {
 );
 }
 }
-export default TournamentsSubCard;
+export default TournamentsSubCard1;

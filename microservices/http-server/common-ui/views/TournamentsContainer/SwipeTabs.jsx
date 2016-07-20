@@ -34,6 +34,9 @@ currentLevel: function(retrievedTournament) {
       break;
     }
   }
+  if(currentLevel==-1) {
+    currentLevel = levels.length-1;
+  }
   return currentLevel;
 },
 render: function(){

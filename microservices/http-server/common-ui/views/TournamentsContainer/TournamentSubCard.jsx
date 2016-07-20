@@ -95,7 +95,7 @@ class TournamentsSubCard extends React.Component {
   }
 
   handleLeaderboard = () => {
-    this.context.router.push('/board/'+this.props.tournament._id+"/true");
+    this.context.router.push('/tournamentboard/'+this.props.tournament._id);
   }
 
   handleNext = () => {
@@ -110,6 +110,7 @@ class TournamentsSubCard extends React.Component {
         console.log('PUT success' + JSON.stringify(data));
         this.setState({
           finished: true,
+          label: 'Registered',
         });
       }.bind(this));
       request.fail(function() {
@@ -130,6 +131,9 @@ class TournamentsSubCard extends React.Component {
         currentLevel = i;
         break;
       }
+    }
+    if(currentLevel == -1) {
+      currentLevel = levels.length-1;
     }
     return currentLevel;
   }

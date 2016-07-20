@@ -92,8 +92,9 @@ export default class QuizPlay extends React.Component{
       option0Color: grey100,
       option1Color: grey100,
       option2Color: grey100,
-      option3Color: grey100
-
+      option3Color: grey100,
+      rows: [],
+      inline: [],
     };
     console.log('QuizPlay props: ' + JSON.stringify(this.props));
   }
@@ -142,6 +143,76 @@ export default class QuizPlay extends React.Component{
         this.context.socket.on('inlineLeaderBoard',function(data){
           console.log('Inline leaderboard is: ' + JSON.stringify(data));
           that.setState({leaderboard:data.leaderboard});
+          var arr = [];
+
+          var keys = Object.keys(that.state.leaderboard) ;
+          var inline = [];
+          for(var i=0;i<keys.length;i++) {
+            var style = {
+              height: 'auto',
+              margin: '0 auto',
+              padding: 10,
+              position: 'relative',
+              width: 100
+            };
+            if(username==keys[i]) {
+              style = {
+                height: 'auto',
+                margin: '0 auto',
+                padding: 10,
+                position: 'relative',
+                width: 100,
+                background: 'orange',
+              };
+            }
+            inline.push(
+              {
+                score: data.leaderboard[keys[i]],
+                userId: keys[i],
+                style: style,
+              }
+            )
+          }
+          inline.sort(
+            function(a, b) {
+                return b.score - a.score;
+            }
+          );
+          that.setState({names:keys, inline: inline});
+
+
+
+          for(var i=0;i<data.leaderboard.length;i++) {
+            var style4 = {
+              height: 'auto',
+              margin: '0 auto',
+              padding: 10,
+              position: 'relative',
+              width: 100
+            }
+            if(username==this.state.names[i]) {
+              style4 = {
+                height: 'auto',
+                margin: '0 auto',
+                padding: 10,
+                position: 'relative',
+                width: 100,
+                background: 'orange'
+              }
+            }
+            arr.push(
+              <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
+                <div style={style4}>
+                  <Paper style={style} zDepth={2} >
+                    <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
+                    <div>{this.state.names[i]} </div>
+                    <div> {this.state.leaderboard[keys[i]]}</div>
+                  </Paper>
+                </div>
+              </div>
+            )
+          }
+          that.setState({rows:arr});
         })
 
         console.log('Before playGame emit\n'+(JSON.stringify(this.props.params)));
@@ -167,7 +238,40 @@ export default class QuizPlay extends React.Component{
              user1 = keys[0];
              user2 = keys[1];
              user3 = keys[2];
-             that.setState({names:keys});
+             user3 = keys[3];
+             var inline = [];
+             for(var i=0;i<keys.length;i++) {
+               var style = {
+                 height: 'auto',
+                 margin: '0 auto',
+                 padding: 10,
+                 position: 'relative',
+                 width: 100
+               };
+               if(username==keys[i]) {
+                 style = {
+                   height: 'auto',
+                   margin: '0 auto',
+                   padding: 10,
+                   position: 'relative',
+                   width: 100,
+                   background: 'orange',
+                 };
+               }
+               inline.push(
+                 {
+                   score: obj.answer.leaderboard[keys[i]],
+                   userId: keys[i],
+                   style: style,
+                 }
+               )
+             }
+             inline.sort(
+               function(a, b) {
+                   return b.score - a.score;
+               }
+             );
+             that.setState({names:keys, inline: inline});
              username1 = user1.match(/^([^@]*)@/)[1];
              username2 = user2.match(/^([^@]*)@/)[1];
              username3 = user3.match(/^([^@]*)@/)[1];
@@ -178,8 +282,39 @@ export default class QuizPlay extends React.Component{
 
              console.log('Keys are: '+ keys);
 
-
-
+             var arr = [];
+             //var keys = Object.keys(that.state.leaderboard);
+             for(var i=0;i<obj.answer.leaderboard.length;i++) {
+               var style4 = {
+                 height: 'auto',
+                 margin: '0 auto',
+                 padding: 10,
+                 position: 'relative',
+                 width: 100
+               }
+               if(username==this.state.names[i]) {
+                 style4 = {
+                   height: 'auto',
+                   margin: '0 auto',
+                   padding: 10,
+                   position: 'relative',
+                   width: 100,
+                   background: 'orange'
+                 }
+               }
+               arr.push(
+                 <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
+                   <div style={this.state.inline.style[3]}>
+                     <Paper style={style} zDepth={2} >
+                       <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
+                       <div>{this.state.inline.userId[3]} </div>
+                       <div> {this.state.inline.score[3]}</div>
+                     </Paper>
+                   </div>
+                 </div>
+               )
+             }
+             that.setState({rows:arr});
         })
         this.context.socket.on('leaderboard',function(msg){
            alert(' Your game has ended: '+msg.id);
@@ -273,56 +408,44 @@ export default class QuizPlay extends React.Component{
             <div className="container-fluid">
               <div>
                 <div className='row'>
-                  <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
-                    <div style={{
-                      height: 'auto',
-                      margin: '0 auto',
-                      padding: 10,
-                      position: 'relative',
-                      width: 100
-                    }}>
+                  <div className='col-lg-3 col-xs-3 col-md-3 col-sm-3'>
+                    <div style={this.state.inline[0].style}>
                       <Paper style={style} zDepth={2} >
                         <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
-                        <div>{this.state.names[0]} </div>
-                        <div> {this.state.leaderboard[user1]}</div>
+                        <div>{this.state.inline[0].userId} </div>
+                        <div> {this.state.inline[0].score}</div>
                       </Paper>
                     </div>
                   </div>
-                  <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
-                    <div style={{
-                      height: 'auto',
-                      margin: '0 auto',
-                      padding: 10,
-                      position: 'relative',
-                      width: 100
-                    }}>
+                  <div className='col-lg-3 col-xs-3 col-md-3 col-sm-3'>
+                    <div style={this.state.inline[1].style}>
                       <Paper style={style} zDepth={2} >
                         <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
-                        <div>{this.state.names[1]} </div>
-                        <div> {this.state.leaderboard[user2]}</div>
+                        <div>{this.state.inline[1].userId} </div>
+                        <div> {this.state.inline[1].score}</div>
                       </Paper>
                     </div>
                   </div>
-                  <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
-                    <div style={{
-                      height: 'auto',
-                      margin: '0 auto',
-                      padding: 10,
-                      position: 'relative',
-                      width: 100
-                    }}>
+                  <div className='col-lg-3 col-xs-3 col-md-3 col-sm-3'>
+                    <div style={this.state.inline[2].style}>
                       <Paper style={style} zDepth={2} >
                         <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
-                        <div>{this.state.names[2]} </div>
-                        <div> {this.state.leaderboard[user3]}</div>
+                        <div>{this.state.inline[2].userId} </div>
+                        <div> {this.state.inline[2].score}</div>
+                      </Paper>
+                    </div>
+                  </div>
+                  <div className='col-lg-3 col-xs-3 col-md-3 col-sm-3'>
+                    <div style={this.state.inline[3].style}>
+                      <Paper style={style} zDepth={2} >
+                        <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
+                        <div>{this.state.inline[3].userId} </div>
+                        <div> {this.state.inline[3].score}</div>
                       </Paper>
                     </div>
                   </div>
                 </div>
                 <div>
-                  <div className='row'>
-                    <h6>{this.state.serverId}</h6>
-                  </div>
                   <div className='row'>
                     <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
 

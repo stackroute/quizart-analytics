@@ -10,7 +10,7 @@ var cronJob = function() {
       console.log('Count is: '+count);
       console.log('\n\n');
       count++;
-        mesh.act('role:tournaments,cmd:retrieveAll', function(err, response) {
+        mesh.act('role:tournaments,cmd:retrieveActive', function(err, response) {
           if(err) { console.error('===== ERR: ', err, ' ====='); return; }
           if(response.response !== 'success') { return; }
           var tournaments = response.entity;
@@ -25,6 +25,9 @@ var cronJob = function() {
                 currentLevel = j;
                 break;
               }
+            }
+            if(currentLevel == -1) {
+              currentLevel = tournaments[i].levels.length-1;
             }
             console.log('Current Level is: '+currentLevel);
             var endDate = new Date(tournaments[i].levels[currentLevel].tourEndDate).getTime();

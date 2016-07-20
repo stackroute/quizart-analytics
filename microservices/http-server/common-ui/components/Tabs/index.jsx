@@ -10,6 +10,9 @@ import SubTopicContainer from '../SubTopics/SubTopicContainer';
 import ProfilePage from '../Profile';
 import Dashboard from '../dashboard';
 import CreateStepper from '../../views/CreateTournament';
+import Board from '../../views/TournamentLeaderBoard';
+import Inline from '../../views/LeaderBoard';
+import Tournaments from '../../views/TournamentsContainer';
 
 var bodyContainer = {
   // padding: "16px",
@@ -134,6 +137,9 @@ export default class TabsMobile extends React.Component {
             </div>
             :
             this.props.page.toString()=="CreateTournament"?<CreateStepper/>:
+            this.props.page.toString()=="LeaderBoard"?<Board/>:
+            this.props.page.toString()=="LeaderBoard"?<Inline/>:
+            this.props.page.toString()=="Tournaments"?<Tournaments/>:
              this.props.page.toString()=="Topics"?<SubTopicContainer topics ={this.props.topics} fun={this.handleCheck}/>:
              this.props.page.toString()=="Home"?<Dashboard />:
              this.props.page.toString()=="TopicPage"?<EachTopic id={this.props.id}/>:null}

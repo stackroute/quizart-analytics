@@ -13,6 +13,14 @@ export default class CreateTournament extends React.Component {
   }
 
   render() {
+    var style = {
+      paddingRight:0,
+    };
+
+    var bodyContainer = {
+      padding: "16px",
+      paddingTop: "80px",
+    }
     return (
       <div>
         <MainAppBar/>

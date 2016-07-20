@@ -1,109 +1,59 @@
 import React from 'react';
-import Paper from 'material-ui/Paper';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
-import TournamentSubCard from './TournamentSubCard';
-import TournamentSubCard1 from './TournamentSubCard1';
-
-import restUrl from '../../restUrl';
-
-const style = {
-  marginLeft:0,
-  marginTop:20,
-  marginBottom:20,
-  marginRight:0,
-};
-
-const tour_header={
-  margin:20,
-  textAlign:'center',
-  paddingTop:20,
-}
+import Tournaments from './Tournaments';
+import MainAppBar from '../../components/MainAppBar';
+import ChatDrawer from '../../components/Chat/ChatDrawer';
+import AbtTopic from '../../components/AbtTopic';
+import MediaQuery from 'react-responsive';
+import TabsMobile from '../../components/Tabs';
 
 export default class TournamentsContainer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      activeTournament: [],
-      completedTournament: [],
-    };
-  }
-
-  componentDidMount(){
-    var request = $.ajax({
-      url: restUrl + '/api/v1/tournaments',
-      type: 'GET',
-    });
-    request.done(function(data) {
-      console.log(JSON.stringify(data));
-      var active = [];
-      var completed = [];
-      for(var i=0;i<data.length;i++) {
-        if(data[i].isComplete=='true') {
-          active.push(data[i]);
-        }
-      }
-      for(var i=0;i<data.length;i++) {
-        var levels = data[i].levels;
-        var currentLevel = -1;
-        for(var j=0;j<levels.length;j++) {
-          if(levels[j].active=='yes') {
-            currentLevel = i;
-            break;
-          }
-        }
-        if(currentLevel==-1) {
-          currentLevel = levels.length;
-        }
-        if(currentLevel>0) {
-          completed.push(data[i]);
-        }
-      }
-      this.setState({
-        activeTournament: active,
-        completedTournament: completed,
-      });
-    }.bind(this));
-    request.fail(function() {
-      console.error('TournamentsContainer error');
-    }.bind(this));
+  constructor() {
+    super();
   }
 
   render() {
-    var activeTournaments = [];
-    var completedTournaments = [];
-    for (var i = 0; i < this.state.activeTournament.length; i++) {
-      activeTournaments.push(
-        <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6" style={{paddingTop: '16px', paddingBottom: '16px'}}>
-          <TournamentSubCard tournament={this.state.activeTournament[i]}/>
-        </div>
-      );
-    }
-    for (var i = 0; i < this.state.completedTournament.length; i++) {
-      completedTournaments.push(
-        <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6" style={{paddingTop: '16px', paddingBottom: '16px'}}>
-          <TournamentSubCard1 tournament={this.state.completedTournament[i]}/>
-        </div>
-      );
+    var style = {
+      paddingRight:0,
+    };
+
+    var bodyContainer = {
+      padding: "16px",
+      paddingTop: "80px",
     }
     return (
       <div>
-        <div>
-          <Paper style={style} zDepth={2} >
-            <Card>
-            <h1 style={tour_header}>Active Tournaments</h1>
-              {activeTournaments}
-            </Card>
-          </Paper>
+        <MainAppBar/>
+        <MediaQuery query='(max-device-width: 800px)'>
+          <MediaQuery query='(max-width: 800px)'>
+          <TabsMobile page="CreateTournament"/>
+          </MediaQuery>
+        </MediaQuery>
+
+        <MediaQuery query='(min-device-width: 800px)'>
+          <MediaQuery query='(min-width: 800px)'>
+            <div className="container-fluid" >
+              <div className="row" >
+                <div style={{width: "100%"}} >
+                  <div className="row" >
+                    <div className="col-md-12 col-sm-12 col-xs-12 col-lg-12" style={bodyContainer}>
+                      <div className="row">
+                          <div className="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-lg-offset-1" >
+                            <Tournaments/>
+                          </div>
+                          <div className="col-xs-1 col-sm-1 col-md-1 col-lg-1"  style={{paddingTop:20}}>
+                            <ChatDrawer/>
+                          </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </MediaQuery>
+        </MediaQuery>
         </div>
-        <div>
-          <Paper style={style} zDepth={2} >
-            <Card>
-            <h1 style={tour_header}>Completed Tournaments</h1>
-              {completedTournaments}
-            </Card>
-          </Paper>
-        </div>
-      </div>
+
     )
   }
 }
