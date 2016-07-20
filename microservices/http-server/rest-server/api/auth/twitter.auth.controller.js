@@ -52,7 +52,7 @@ controller.getAccessToken =   function(req,res){
 
      if(error) {
 	         console.log(error);
-           res.redirect('http://192.168.99.102:8001/#/authsuccess/'+"error");
+           res.redirect('http://192.168.99.100:8001/#/authsuccess/'+"error");
 	     }
     else {
 
@@ -63,20 +63,20 @@ controller.getAccessToken =   function(req,res){
 
     twitterAuth.verifyCredentials(accessToken, accessTokenSecret, function(err, user) {
       if (err)
-          res.redirect('http://192.168.99.102:8001/#/twitterauthsuccess/'+"error");
+          res.redirect('http://192.168.99.100:8001/#/twitterauthsuccess/'+"error");
        else{
          console.log("=====user-details====",user);
          mesh.act('role:timelineservice,cmd:createAuth',{username:username,key:accessToken,secret:accessTokenSecret,userId:user.id},function(err,response){
               if(err){
-                  res.redirect('http://192.168.99.102:8001/#/twitterauthsuccess/'+"error");
+                  res.redirect('http://192.168.99.100:8001/#/twitterauthsuccess/'+"error");
                }
               else {
                 mesh.act('role:jwt,cmd:createAuthToken',{username:username,key:accessToken,secret:accessTokenSecret,userId:user.id},function(err,response){
                      if(err){
-                        res.redirect('http://192.168.99.102:8001/#/twitterauthsuccess/'+"error");
+                        res.redirect('http://192.168.99.100:8001/#/twitterauthsuccess/'+"error");
                       }
                      else {
-                        res.redirect('http://192.168.99.102:8001/#/twitterauthsuccess/'+response.token);
+                        res.redirect('http://192.168.99.100:8001/#/twitterauthsuccess/'+response.token);
                     }
                });
 
