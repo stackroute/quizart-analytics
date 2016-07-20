@@ -109,4 +109,3 @@ loadDataFromSever(){
     )
   }
 }
->>>>>>> 7c2ddae08adb7e1306f02e89308db4d707303688

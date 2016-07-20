@@ -376,7 +376,7 @@ export default class Profile extends React.Component{
           <br/>
           <div className="row">
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={style1}>
-            <h3>Followed Topics</h3>
+            <h3>Popular Topics</h3>
             </div>
             <div className="row">
             <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3" style={styles}>
