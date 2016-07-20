@@ -33,7 +33,7 @@ var Dashboard = React.createClass({
     //     console.log('error aaya');
     //   }
     // })
-
+    if(!localStorage.authToken) {
     var request =  $.ajax({
        url: "api/v1/timeline/twitter/createAuthToken",
        contentType: 'application/json',
@@ -51,8 +51,8 @@ var Dashboard = React.createClass({
          request.fail(function(xhr, status, err) {
          console.error("api/v1/timeline/twitter/createAuthToken", status, err.toString());
        }.bind(this));
-
-  },
+   }
+},
 
   handleCheck:function(_id,topic){
     var username = Cookie.load("username");

@@ -1,7 +1,8 @@
 import React from 'react';
 import CommentForm from  './CommentForm';
 import Tweet from 'react-tweet';
-var socket = io('/tweets');
+var socket = io.connect('/tweets');
+var terms = ['QuizRT','QuizRTSocail','@Stackroute'];
 export default class Timeline extends React.Component{
   constructor (props){
      super(props);
@@ -16,7 +17,7 @@ loadDataFromSever(){
     console.log("====user timeline");
   }
  else {
-    id ="SYTYCDGrandFinale";
+    id ="QuizRT";
    console.log("topic timeline");
  }
  var request =  $.ajax({
@@ -35,7 +36,7 @@ loadDataFromSever(){
                   this.setState({tweets:data})
                }
                else {
-                  this.setState({tweets:data.statuses});
+                   this.setState({tweets:data.statuses});
                }
 
     }.bind(this));
@@ -48,16 +49,20 @@ loadDataFromSever(){
 }
 
   componentDidMount(){
+
+          var index = Math.floor(Math.random() * 3) + 0;
+          term =  terms[index];
+          console.log("=====================track term is",term);
           this.loadDataFromSever();
-          // socket.emit("createStream",{id:this.props.hashtag,localStorage.authToken})
+          socket.emit('creatstream',{token:localStorage.authToken,term:term});
           console.log("=====token",localStorage.authToken);
           var  that = this;
-           socket.on('tweetData', function getTweet (tweet) {
+           socket.on('tweetdata', function getTweet (tweet) {
            console.log("============tweet ",tweet);
           if(tweet.user.id!="undefined"){
              console.log("====username====",tweet.user.name);
              that.setState({tweets:[tweet].concat(that.state.tweets)});
-         }
+          }
 });
 
 }
