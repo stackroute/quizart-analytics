@@ -156,7 +156,7 @@ export default class MainAppBar extends React.Component {
             <ListItem primaryText="Topics" leftIcon={<ActionViewmodule />}
               onTouchTap={this.handleTopics.bind(this)}/>
 
-           
+
            <ListItem primaryText="link with twitter" leftIcon={<LinkIcon/>} onTouchTap={this.linkwithTwitter.bind(this)}/>
 
 

@@ -11,6 +11,7 @@ import IconMenu from 'material-ui/IconMenu';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
+import {Link} from 'react-router';
 
 import restUrl from '../../restUrl'
 
@@ -367,7 +368,7 @@ export default class Profile extends React.Component{
             <div className="row">
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={styles} >
                 <h2>Create your Own Tournament</h2>
-                <RaisedButton label="Start Here" secondary={true}/>
+                <RaisedButton label="Start Here" secondary={true} containerElement={<Link to="/create" />}/>
               </div>
             </div>
           </CardMedia>
