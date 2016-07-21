@@ -7,7 +7,9 @@ module.exports = function(){
         console.log('\n Topic to fetch random questions on is:  '+msg.topicId+'\n')
         var collection = db.collection('questionBank');
         collection.count({topicId:msg.topicId},function(err,res){
-          var r = Math.floor(Math.random() * res);
+          var min = 1, max = res-1;
+          var r = Math.floor((Math.random() * max) + min);
+          //var r = Math.floor(Math.random() * res);
           console.log("number of records "+res+", number of records will be skip -- "+r);
           collection.find({'topicId':msg.topicId}).limit(msg.noOfQuestions).skip(r).toArray(function(err, documents) {
             if(err) return respond(err);

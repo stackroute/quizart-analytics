@@ -2,7 +2,7 @@ import React from 'react';
 import CommentForm from  './CommentForm';
 import Tweet from 'react-tweet';
 var socket = io.connect('/tweets');
-var terms = ['QuizRT','QuizRTSocail','@Stackroute'];
+//var terms = ['QuizRT','QuizRTSocail','@Stackroute'];
 export default class Timeline extends React.Component{
   constructor (props){
      super(props);
@@ -11,7 +11,7 @@ export default class Timeline extends React.Component{
   }
 
 loadDataFromSever(){
-  var id;
+  var id;  // id can be passed while calling component
   if(this.props.user!=undefined){
     id ="user";
     console.log("====user timeline");
@@ -29,10 +29,10 @@ loadDataFromSever(){
   });
 
   request.done(function(data) {
-                console.log("=====id===",id);
-               console.log("=======retrievedPosts=======",data);
+              //console.log("=====id===",id);
+            //   console.log("=======retrievedPosts=======",data);
                if(data instanceof Array){
-                  console.log("=====tweets====",data);
+                //  console.log("=====tweets====",data);
                   this.setState({tweets:data,flag:'loaded'})
                }
                else {
@@ -51,17 +51,17 @@ loadDataFromSever(){
 
   componentDidMount(){
 
-          var index = Math.floor(Math.random() * 3) + 0;
-          var term =  terms[index];
-          console.log("=====================track term is",term);
+          //var index = Math.floor(Math.random() * 3) + 0;
+          var term =  "QuizRT"
+        //  console.log("=====================track term is",term);
           this.loadDataFromSever();
           socket.emit('creatstream',{token:localStorage.authToken,term:term});
-          console.log("=====token",localStorage.authToken);
+        //  console.log("=====token",localStorage.authToken);
           var  that = this;
            socket.on('tweetdata', function getTweet (tweet) {
-           console.log("============tweet ",tweet);
+          // console.log("============tweet ",tweet);
           if(tweet.user.id!="undefined"){
-             console.log("====username====",tweet.user.name);
+            // console.log("====username====",tweet.user.name);
              that.setState({tweets:[tweet].concat(that.state.tweets)});
           }
 });
@@ -80,7 +80,7 @@ loadDataFromSever(){
      });
 
      request.done(function(data) {
-     console.log("=========tweeted: "+JSON.stringify(data)+"========");
+    // console.log("=========tweeted: "+JSON.stringify(data)+"========");
 
        }.bind(this));
         request.fail( function(err) {
@@ -90,7 +90,7 @@ loadDataFromSever(){
 
   render() {
 
-     console.log("state===",this.state.flag);
+     //console.log("state===",this.state.flag);
      var createPost = this.state.tweets.map(function(data) {
 
          return (<Tweet data = {data}/>);
@@ -98,6 +98,7 @@ loadDataFromSever(){
     return (
       <div>
         <CommentForm newPost = {this.handlePost.bind(this)}/>
+          {localStorage.authToken?null:<p>Link with Twitter...</p>}
          {this.state.flag ==='loading'?<div className="loader">Loading...</div>:null}
         <div style = {{marginTop:5}}>
             {

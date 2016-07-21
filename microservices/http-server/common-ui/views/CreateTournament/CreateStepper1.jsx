@@ -44,7 +44,7 @@ export default class CreateStepper extends React.Component {
         this.setState({firstChange: false});
       }
     } else if(stepIndex == 1) {
-      if(!this.state.level || !this.state.instructions || !this.state.prize) {
+      if(!this.state.topics || !this.state.games || !this.state.level || !this.state.instructions || !this.state.prize) {
         return;
       } else {
         this.setState({firstChange: false});
@@ -77,7 +77,7 @@ export default class CreateStepper extends React.Component {
         var time1 = this.state.tourEndTime[i];
         levels.push(
           {
-            active: 'no',
+            active: false,
             tourStartDate: new Date(date.getFullYear(),date.getMonth(),date.getDate(),time.getHours(),time.getMinutes(),time.getSeconds(),time.getMilliseconds()),
             tourEndDate: new Date(date1.getFullYear(),date1.getMonth(),date1.getDate(),time1.getHours(),time1.getMinutes(),time1.getSeconds(),time1.getMilliseconds()),
             registeredPlayers: [],
@@ -167,8 +167,8 @@ export default class CreateStepper extends React.Component {
   };
 
   handleImgUrl(event) {
-    this.setState({imgUrl: event.target.value, firstChange: true});
-    /*var fd = new FormData();
+    //this.setState({imgUrl: event.target.value, firstChange: true});
+    var fd = new FormData();
     fd.append( 'file', this.refs.file.files[0] );
 
     $.ajax({
@@ -185,12 +185,12 @@ export default class CreateStepper extends React.Component {
         console.error('error while uploading file');
       },
     });
-    e.preventDefault()*/
+    e.preventDefault()
   };
 
   handleAvatarUrl(event) {
-    this.setState({avatarUrl: event.target.value, firstChange: true});
-    /*var fd = new FormData();
+    //this.setState({avatarUrl: event.target.value, firstChange: true});
+    var fd = new FormData();
     fd.append( 'file', this.refs.file.files[0] );
 
     $.ajax({
@@ -207,7 +207,7 @@ export default class CreateStepper extends React.Component {
         console.error('error while uploading file');
       },
     });
-    e.preventDefault()*/
+    e.preventDefault()
   };
 
   handleTopics(event) {
@@ -354,34 +354,49 @@ export default class CreateStepper extends React.Component {
               </div>
             </div>
             <div className="row">
-               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                 <TextField fullWidth={true}
-                   hintText="Image Url"
-                   floatingLabelText="Image Url"
-                   value={this.state.imgUrl}
-                   onChange={this.handleImgUrl.bind(this)}
-                   errorText={!this.state.firstChange ? '' : (this.state.imgUrl=='' ? 'This field is required' : '')}
-                   errorStyle={{textAlign: 'left'}}
-                 />
-               </div>
+              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <FlatButton label="Main imag" labelPosition="before">
+                  <input type="file" ref="file" accept="image/*" onClick={this.handleImgUrl.bind(this)} />
+                </FlatButton>
+              </div>
             </div>
             <div className="row">
-               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                 <TextField fullWidth={true}
-                   hintText="Avatar Url"
-                   floatingLabelText="Avatar Url"
-                   value={this.state.avatarUrl}
-                   onChange={this.handleAvatarUrl.bind(this)}
-                   errorText={!this.state.firstChange ? '' : (this.state.avatarUrl=='' ? 'This field is required' : '')}
-                   errorStyle={{textAlign: 'left'}}
-                 />
-               </div>
-             </div>
+              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <FlatButton label="Avatar Image" labelPosition="before">
+                  <input type="file" ref="file" accept="image/*" onClick={this.handleAvatarUrl.bind(this)} />
+                </FlatButton>
+              </div>
+            </div>
           </div>
         );
       case 1:
         return (
           <div>
+            <div className="row">
+              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <TextField fullWidth={true}
+                  hintText="Topics"
+                  floatingLabelText="Topics"
+                  value={this.state.topics}
+                  onChange={this.handleTopics.bind(this)}
+                  errorText={!this.state.firstChange ? '' : (this.state.topics=='' ? 'This field is required' : '')}
+                  errorStyle={{textAlign: 'left'}}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <TextField fullWidth={true}
+                  hintText="Players Per Game"
+                  floatingLabelText="Players Per Game"
+                  type="number" min="2" max="1000" step="2"
+                  value={this.state.games}
+                  onChange={this.handleGames.bind(this)}
+                  errorText={!this.state.firstChange ? '' : (this.state.games=='' ? 'This field is required' : '')}
+                  errorStyle={{textAlign: 'left'}}
+                />
+              </div>
+            </div>
             <div className="row">
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <TextField fullWidth={true}

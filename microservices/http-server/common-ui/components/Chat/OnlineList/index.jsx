@@ -99,31 +99,6 @@ export default class OnlineList extends React.Component{
       outerThis.props.openChatBox(name,friendid,temp,groupflag);
     }
 
-
-    // handleTouchTap(name) {
-    //   console.log("===Inside Onlinelist ,selected "+name+" to open chat box");
-    //   var temp;
-    //   var groupflag = false;
-    //   var friendid;
-    //   var outerThis=this;
-    //
-    //   this.state.GroupData.map(function(g){
-    //     if(g.groupname===name){
-    //       console.log("inside online list, inside the group name loop");
-    //         temp = g;
-    //         groupflag = true;
-    //     }
-    //     else{
-    //       console.log("inside online list, inside the friend name loop");
-    //       outerThis.state.OnlineUsers.map(function(u){
-    //         if(u.name===name){friendid=u.username;}
-    //       });
-    //     }
-    //   });
-    //   console.log("Inside Online list,data sent to open chat box===",name,friendid,temp,groupflag);
-    //   outerThis.props.openChatBox(name,friendid,temp,groupflag);
-    // }
-
     popoverOpen(event) {
       event.preventDefault();
       this.setState({
@@ -155,7 +130,7 @@ export default class OnlineList extends React.Component{
         message : {content: uuid, command : 'generateUUID'},
         details : {groupname :groupInfo.groupname}
       };
-      console.log("Request Message is ",requestMsg);
+      // console.log("Request Message is ",requestMsg);
 
       var topicid ;
       $.ajax({
@@ -164,16 +139,16 @@ export default class OnlineList extends React.Component{
           type : 'POST',
           data : JSON.stringify(requestMsg),
           success : function(data){
-              console.log("Response for the ajax req to generateuuid is",data.response);
+              // console.log("Response for the ajax req to generateuuid is",data.response);
               topicid = data.result.content;
-              console.log("The Topic id retrived is ",topicid);
+              // console.log("The Topic id retrived is ",topicid);
               var groupDataPost ={
                   groupname:groupInfo.groupname,
                   groupavatar:"http://lorempixel.com/100/100",
                   topicid:topicid,
                   members:groupInfo.users
               };
-              console.log("inside success of ajax after retrieving the UUID, the groupdata to be posted is ",groupDataPost);
+              // console.log("inside success of ajax after retrieving the UUID, the groupdata to be posted is ",groupDataPost);
               this.postGroupNameDB({"groupInfo":groupDataPost})
           }.bind(this),
           error : function(xhr,status,err){
@@ -183,17 +158,17 @@ export default class OnlineList extends React.Component{
     }
 
     postGroupNameDB(groupInfo){
-      console.log("inside post group to DB the received data is ",groupInfo);
+      // console.log("inside post group to DB the received data is ",groupInfo);
       var groupDataPost = groupInfo.groupInfo;
-      console.log("inside post group to DB the data to be posted is ",groupDataPost);
+      // console.log("inside post group to DB the data to be posted is ",groupDataPost);
       $.ajax({
         url: restUrl + '/api/v1/groupslist/addgroup',
         contentType: 'application/json',
         type: 'POST',
         data: JSON.stringify(groupDataPost),
         success : function(data){
-          console.log("=====inside Post group");
-          console.log("====Inside Post group ",data.groupdata);
+          // console.log("=====inside Post group");
+          // console.log("====Inside Post group ",data.groupdata);
           this.setState({GroupData: this.state.GroupData.concat(data.groupdata)});
         }.bind(this),
         error: function(xhr, status, err) {
@@ -226,7 +201,7 @@ export default class OnlineList extends React.Component{
     render(){
 
       var outerThis = this;
-      console.log("=======Inside Onlinelist group data after getting groups list== ",this.state.GroupData);
+      // console.log("=======Inside Onlinelist group data after getting groups list== ",this.state.GroupData);
       return(
             <div style={{height:'100vh', overflowY:'auto'}}>
 

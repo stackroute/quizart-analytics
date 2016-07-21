@@ -7,7 +7,6 @@ import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
-
 import {blue300, red500, greenA200} from 'material-ui/styles/colors';
 import Divider from 'material-ui/Divider';
 import {List, ListItem} from 'material-ui/List';
@@ -78,16 +77,10 @@ export default class ChatDrawer extends React.Component{
 
                 <div style={this.state.isOpen==='open'?chatDrawerOpen:chatDrawerClose}>
                   <ChatComponent onHandleClose={this.handleClose.bind(this)}/>
-                 </div>
+                </div>
 
 
             </div>
           )
       }
 }
-
-//
-// <div style={this.state.isOpen?chatDrawerOpen:chatDrawerClose}>
-//   {this.state.view=="OnlineList"?<OnlineList onChatDrawerClose={this.handleClose.bind(this)}
-//                                   openChatBox={this.openChatBox.bind(this)} />:<ChatBoxAll  openOnlineList={this.displayOnlineList.bind(this)} />}
-// </div>

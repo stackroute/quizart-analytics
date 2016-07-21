@@ -77,7 +77,7 @@ const avatarstyle={
 }
 
 
-class TournamentsSubCard extends React.Component {
+class TournamentsSubCard1 extends React.Component {
 
   constructor(props){
     super(props);
@@ -110,7 +110,6 @@ class TournamentsSubCard extends React.Component {
         console.log('PUT success' + JSON.stringify(data));
         this.setState({
           finished: true,
-          label: 'Registered',
         });
       }.bind(this));
       request.fail(function() {
@@ -269,27 +268,14 @@ class TournamentsSubCard extends React.Component {
     <CardActions>
       <div className="col-xs col-md col-lg col-sm">
       <div>
-        {finished ? (
-          <div>
-            <RaisedButton
-              style={btnFontColor}
-              label={this.state.label}
-              primary={true}
-              disabled={true}
-            />
-          </div>
-        ) : (
-          <div>
-            <div>
-              <RaisedButton
-                style={btnFontColor}
-                label={this.state.label}
-                secondary={true}
-                onClick={this.handleNext}
-              />
-            </div>
-          </div>
-        )}
+        <div>
+          <RaisedButton
+            style={btnFontColor}
+            label={'Leaderboard'}
+            secondary={true}
+            onClick={this.handleLeaderboard}
+          />
+        </div>
       </div>
       </div>
     </CardActions>
@@ -299,4 +285,4 @@ class TournamentsSubCard extends React.Component {
 );
 }
 }
-export default TournamentsSubCard;
+export default TournamentsSubCard1;

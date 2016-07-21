@@ -11,18 +11,18 @@ var redirectPort = process.env.REDIRECT_PORT || 8001;
 
 controller.getRequestToken = function(req,res){
 
-    console.log("====getRequestTokenrequest request came=====");
+  //  console.log("====getRequestTokenrequest request came=====");
     var username = req.claims.sub;
-    console.log("===username===",username);
+  //  console.log("===username===",username);
     twitterAuth.getRequestToken(function(error, requestToken, requestTokenSecret, results){
      	if (error) {
-        	      console.log("Error getting OAuth request token : " + error);
+        	    //  console.log("Error getting OAuth request token : " + error);
                 res.send(error);
   	   } else {
   	          _requestToken =  requestToken;
               _requestTokenSecret =requestTokenSecret;
                //res.send("https://api.twitter.com/oauth/authenticate?oauth_token=" +requestToken);
-               console.log("===request token====",requestToken);
+            //   console.log("===request token====",requestToken);
                requestTokenQueue[requestToken] = {username:username,secret: _requestTokenSecret, time:Date.now()};
                res.status(201).json({url:"https://api.twitter.com/oauth/authenticate?oauth_token=" +requestToken});
            }

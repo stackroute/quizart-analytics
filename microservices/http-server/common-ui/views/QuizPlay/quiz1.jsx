@@ -13,7 +13,6 @@ import CircularProgress from 'material-ui/CircularProgress';
 import cookie from 'react-cookie';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import base64 from 'base-64';
-import restUrl from '../../restUrl'
 
 const optionStyle = {
   margin:12,
@@ -59,7 +58,7 @@ const style = {
 };
 
 
-var user1,user2,user3,user4,username1,username2,username3,username4;
+var user1,user2,user3,username1,username2,username3;
 // class SampleNextArrow extends React.Component{
 //   render(){
 //     return(
@@ -89,13 +88,13 @@ export default class QuizPlay extends React.Component{
       score:[],
       names:[],
       seconds:0,
-      // seconds2:0,
       progress: 10,
       option0Color: grey100,
       option1Color: grey100,
       option2Color: grey100,
       option3Color: grey100,
       rows: [],
+      inline: [],
     };
     console.log('QuizPlay props: ' + JSON.stringify(this.props));
   }
@@ -113,8 +112,8 @@ export default class QuizPlay extends React.Component{
   componentDidMount(){
     console.log('QuizPlay props: ' + JSON.stringify(this.props));
       var username = JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub;
-      // console.log('\n\n===========Cookie says username as: '+username+" "+this.context.socket+":socket");
-      // console.log('context: '+this.context.socket);
+      console.log('\n\n===========Cookie says username as: '+username+" "+this.context.socket+":socket");
+      console.log('context: '+this.context.socket);
       //console.log('props1: '+this.props.params.id);
       var that = this;
         this.context.socket.on('newQuestion',function(data){
@@ -130,7 +129,6 @@ export default class QuizPlay extends React.Component{
             that.setState({seconds:seconds--});
            },1000)
           that.setState({ques:data.msg})
-          // console.log("===============ques================",data.msg);
           if(that.state.waiting)
             that.setState({waiting:false})
           that.setState({enabled:true});
@@ -146,12 +144,44 @@ export default class QuizPlay extends React.Component{
           console.log('Inline leaderboard is: ' + JSON.stringify(data));
           that.setState({leaderboard:data.leaderboard});
           var arr = [];
-          var keys = Object.keys(that.state.leaderboard);
-          user1 = keys[0];
-          user2 = keys[1];
-          user3 = keys[2];
-          user4 = keys[3];
-          that.setState({names:keys});
+
+          var keys = Object.keys(that.state.leaderboard) ;
+          var inline = [];
+          for(var i=0;i<keys.length;i++) {
+            var style = {
+              height: 'auto',
+              margin: '0 auto',
+              padding: 10,
+              position: 'relative',
+              width: 100
+            };
+            if(username==keys[i]) {
+              style = {
+                height: 'auto',
+                margin: '0 auto',
+                padding: 10,
+                position: 'relative',
+                width: 100,
+                background: 'orange',
+              };
+            }
+            inline.push(
+              {
+                score: data.leaderboard[keys[i]],
+                userId: keys[i],
+                style: style,
+              }
+            )
+          }
+          inline.sort(
+            function(a, b) {
+                return b.score - a.score;
+            }
+          );
+          that.setState({names:keys, inline: inline});
+
+
+
           for(var i=0;i<data.leaderboard.length;i++) {
             var style4 = {
               height: 'auto',
@@ -208,8 +238,40 @@ export default class QuizPlay extends React.Component{
              user1 = keys[0];
              user2 = keys[1];
              user3 = keys[2];
-             user4 = keys[3];
-             that.setState({names:keys});
+             user3 = keys[3];
+             var inline = [];
+             for(var i=0;i<keys.length;i++) {
+               var style = {
+                 height: 'auto',
+                 margin: '0 auto',
+                 padding: 10,
+                 position: 'relative',
+                 width: 100
+               };
+               if(username==keys[i]) {
+                 style = {
+                   height: 'auto',
+                   margin: '0 auto',
+                   padding: 10,
+                   position: 'relative',
+                   width: 100,
+                   background: 'orange',
+                 };
+               }
+               inline.push(
+                 {
+                   score: obj.answer.leaderboard[keys[i]],
+                   userId: keys[i],
+                   style: style,
+                 }
+               )
+             }
+             inline.sort(
+               function(a, b) {
+                   return b.score - a.score;
+               }
+             );
+             that.setState({names:keys, inline: inline});
              username1 = user1.match(/^([^@]*)@/)[1];
              username2 = user2.match(/^([^@]*)@/)[1];
              username3 = user3.match(/^([^@]*)@/)[1];
@@ -242,11 +304,11 @@ export default class QuizPlay extends React.Component{
                }
                arr.push(
                  <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
-                   <div style={style4}>
+                   <div style={this.state.inline.style[3]}>
                      <Paper style={style} zDepth={2} >
                        <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
-                       <div>{this.state.names[i]} </div>
-                       <div> {this.state.leaderboard[keys[i]]}</div>
+                       <div>{this.state.inline.userId[3]} </div>
+                       <div> {this.state.inline.score[3]}</div>
                      </Paper>
                    </div>
                  </div>
@@ -279,50 +341,16 @@ export default class QuizPlay extends React.Component{
   }
   }
     onClick(value,e){
-
-      // console.log("===================seconds when clicked===============",this.state.seconds);
-      const resSeconds = this.state.seconds;
-      // console.log("===============Time==================",resSeconds);
-      var res = (10-resSeconds);
-      // console.log("response time",res);
-      this.analyseData(value,res);
       this.setState({answered:true});
       this.setState({enabled:false});
       var socketObj ={
         answer: value
       }
       this.changeOptionColor(socketObj.answer,deepOrange500);
-      // console.log('Sending answer to server as '+ value)
+      console.log('Sending answer to server as '+ value)
       this.context.socket.emit('myAnswer',socketObj);
       switch(value){
       }
-    }
-
-    analyseData(value,res){
-      // console.log("======================================response time=================================",res);
-      //
-      // console.log("======================================value=================================",value);
-      var analyticsData = {
-        userId:JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub,
-        tournamentId: "1234",
-        questionId:this.state.ques._Id,
-        selectedOptionId:value,
-        responseTime:res
-      }
-
-      var request = $.ajax({
-      url: restUrl + '/api/v1/analytics',
-      type: 'POST',
-      data: JSON.stringify(analyticsData),
-      contentType: 'application/json',
-      });
-
-      request.done(function(data) {
-        console.log(JSON.stringify(data));
-      }.bind(this));
-      request.fail(function() {
-          console.log("Error");
-        }.bind(this));
     }
 
   render(){
@@ -369,6 +397,7 @@ export default class QuizPlay extends React.Component{
             <div style={Style1}>
             <div>
             <h2>Waiting for the opponents</h2>
+            <h6>{this.state.serverId}</h6>
           </div>
           <div style={Style2}>
               <CircularProgress size={1.8}  />
@@ -389,8 +418,8 @@ export default class QuizPlay extends React.Component{
                     }}>
                       <Paper style={style} zDepth={2} >
                         <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
-                        <div>{this.state.names[0]} </div>
-                        <div> {this.state.leaderboard[user1]}</div>
+                        <div>{this.state.inline[0].userId} </div>
+                        <div> {this.state.inline[0].score}</div>
                       </Paper>
                     </div>
                   </div>
@@ -404,8 +433,8 @@ export default class QuizPlay extends React.Component{
                     }}>
                       <Paper style={style} zDepth={2} >
                         <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
-                        <div>{this.state.names[1]} </div>
-                        <div> {this.state.leaderboard[user2]}</div>
+                        <div>{this.state.inline[1].userId} </div>
+                        <div> {this.state.inline[1].score}</div>
                       </Paper>
                     </div>
                   </div>
@@ -419,8 +448,8 @@ export default class QuizPlay extends React.Component{
                     }}>
                       <Paper style={style} zDepth={2} >
                         <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
-                        <div>{this.state.names[2]} </div>
-                        <div> {this.state.leaderboard[user3]}</div>
+                        <div>{this.state.inline[2].userId} </div>
+                        <div> {this.state.inline[2].score}</div>
                       </Paper>
                     </div>
                   </div>
@@ -434,16 +463,13 @@ export default class QuizPlay extends React.Component{
                     }}>
                       <Paper style={style} zDepth={2} >
                         <Avatar src="https://s31.postimg.org/qgg34o597/nature.jpg" />
-                        <div>{this.state.names[3]} </div>
-                        <div> {this.state.leaderboard[user4]}</div>
+                        <div>{this.state.inline[3].userId} </div>
+                        <div> {this.state.inline[3].score}</div>
                       </Paper>
                     </div>
                   </div>
                 </div>
                 <div>
-                  <div className='row'>
-                    <h6>{this.state.serverId}</h6>
-                  </div>
                   <div className='row'>
                     <div className='col-lg-4 col-xs-4 col-md-4 col-sm-4'>
 

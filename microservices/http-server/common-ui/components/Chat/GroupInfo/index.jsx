@@ -23,8 +23,8 @@ constructor(props){
 
 componentDidMount(){
   var outerThis=this;
-  console.log(typeof(this.props.GroupData));
-  console.log(this.props.GroupData);
+  // console.log(typeof(this.props.GroupData));
+  // console.log(this.props.GroupData);
   // console.log(this.props.UserData);
 
   $.ajax({
@@ -33,9 +33,9 @@ componentDidMount(){
     contentType: 'application/json',
     cache: false,
     success : function(data){
-      console.log("=====inside Group info success method");
-      console.log("====Inside Group info retrieved group members ",data.data);
-      console.log("====Inside client groups",data.data[0]);
+      // console.log("=====inside Group info success method");
+      // console.log("====Inside Group info retrieved group members ",data.data);
+      // console.log("====Inside client groups",data.data[0]);
       this.setState({userInfo: data.data});
     }.bind(this)
   });

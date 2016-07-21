@@ -46,7 +46,6 @@ export default class SignUPComponent extends React.Component{
     var username = this.state.formInput.username;
     var name = this.state.formInput.name;
     var router = this.context.router;
-    // var bcrypt = require('bcryptjs');
     var x = this;
 
             var data = {
