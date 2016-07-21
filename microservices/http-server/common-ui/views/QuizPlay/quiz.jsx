@@ -147,7 +147,7 @@ export default class QuizPlay extends React.Component{
           user1 = keys[0];
           user2 = keys[1];
           user3 = keys[2];
-          user3 = keys[3];
+          user4 = keys[3];
           that.setState({names:keys});
           for(var i=0;i<data.leaderboard.length;i++) {
             var style4 = {
@@ -205,7 +205,7 @@ export default class QuizPlay extends React.Component{
              user1 = keys[0];
              user2 = keys[1];
              user3 = keys[2];
-             user3 = keys[3];
+             user4 = keys[3];
              that.setState({names:keys});
              username1 = user1.match(/^([^@]*)@/)[1];
              username2 = user2.match(/^([^@]*)@/)[1];

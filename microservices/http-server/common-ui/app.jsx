@@ -20,7 +20,7 @@ import SignUP from './views/SignUP';
 import AuthSuccess from './views/AuthSuccess';
 import cookie from 'react-cookie';
 import LeaderBoard from './views/LeaderBoard';
-import TournamentLeaderBoard from './views/LeaderBoard';
+import TournamentLeaderBoard from './views/TournamentLeaderBoard';
 import ContextComponent from './context';
 import CreateTournament from './views/CreateTournament';
 import TournamentsContainer from './views/TournamentsContainer';

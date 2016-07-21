@@ -34,7 +34,7 @@ var cronJob = function() {
             if(date>endDate) {
               mesh.act('role:tournaments,cmd:updateWinners',{id:tournaments[i]._id}, function(err, response) {
                 if(err) { console.error('===== ERR: ', err, ' ====='); return; }
-                if(response.response !== 'success') { return; }
+                //if(response.response !== 'success') { return; }
                 console.log('Step 2 completed');
                 if(!response.entity.isComplete) {
                   mesh.act('role:tournaments,cmd:registerPlayersHigherLevels',{id:response.entity._id}, function(err, response) {

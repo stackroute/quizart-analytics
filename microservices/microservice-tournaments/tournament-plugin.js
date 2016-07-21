@@ -85,11 +85,19 @@ exports = module.exports = function(options) {
           break;
         }
       }
-      var leaderboard = retrievedTournament.levels[currentLevel-1].leaderboard;
-      for(var i=0;i<leaderboard.legth/2;i++) {
-        retrievedTournament.levels[currentLevel].registeredPlayers.push(leaderboard[i].userId);
-      }
 
+      var leaderboard = retrievedTournament.levels[currentLevel-1].leaderboard;
+      console.log('registerPlayersHigherLevels'+JSON.stringify(retrievedTournament));
+      console.log(leaderboard);
+      var arr = [];
+      for(var i=0;i<leaderboard.length/2;i++) {
+        console.log('registerPlayersHigherLevels'+leaderboard[i]);
+        arr.push(leaderboard[i].userId);
+        //retrievedTournament.levels[currentLevel].registeredPlayers.push(leaderboard[i].userId);
+      }
+      console.log('Arr: ' + arr );
+      retrievedTournament.levels[currentLevel].registeredPlayers = arr;
+      console.log('registerPlayersHigherLevels'+JSON.stringify(retrievedTournament));
       Tournament.update(
          { _id: retrievedTournament._id },
          { $set: retrievedTournament },
