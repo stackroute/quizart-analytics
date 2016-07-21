@@ -11,7 +11,7 @@ injectTapEventPlugin();
 import LoginView from './views/LoginView'; //Login Form of Sagar
 import DashboardView from './views/DashboardView';
 import ChangePasswordView from './views/MyAccount/ChangePasswordView';
-import Topics from './views/allTopics/alltopics';
+import Topics from './views/allTopics/allTopics';
 import Tournaments from './views/allTournaments/alltournaments';
 import EachTopicsPage from './views/EachTopicsPage';
 import Quiz from './views/QuizPlay';
