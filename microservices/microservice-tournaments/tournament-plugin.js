@@ -92,11 +92,8 @@ exports = module.exports = function(options) {
       var arr = [];
       for(var i=0;i<leaderboard.length/2;i++) {
         console.log('registerPlayersHigherLevels'+leaderboard[i]);
-        arr.push(leaderboard[i].userId);
-        //retrievedTournament.levels[currentLevel].registeredPlayers.push(leaderboard[i].userId);
+        retrievedTournament.levels[currentLevel].registeredPlayers.push({userId: leaderboard[i].userId});
       }
-      console.log('Arr: ' + arr );
-      retrievedTournament.levels[currentLevel].registeredPlayers = arr;
       console.log('registerPlayersHigherLevels'+JSON.stringify(retrievedTournament));
       Tournament.update(
          { _id: retrievedTournament._id },
