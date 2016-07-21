@@ -1,13 +1,12 @@
 import React from 'react';
-import CreatePage from './CreatePage';
-import CreateStepper from './CreateStepper';
+import Board from './Board';
 import MainAppBar from '../../components/MainAppBar';
 import ChatDrawer from '../../components/Chat/ChatDrawer';
 import AbtTopic from '../../components/AbtTopic';
 import MediaQuery from 'react-responsive';
 import TabsMobile from '../../components/Tabs';
 
-export default class CreateTournament extends React.Component {
+export default class TournamentLeaderBoard extends React.Component {
   constructor() {
     super();
   }
@@ -39,7 +38,7 @@ export default class CreateTournament extends React.Component {
                     <div className="col-md-12 col-sm-12 col-xs-12 col-lg-12" style={bodyContainer}>
                       <div className="row">
                           <div className="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-lg-offset-1" >
-                            <CreateStepper/>
+                            <Board params={this.props.params}/>
                           </div>
                           <div className="col-xs-1 col-sm-1 col-md-1 col-lg-1"  style={{paddingTop:20}}>
                             <ChatDrawer/>

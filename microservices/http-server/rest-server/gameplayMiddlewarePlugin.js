@@ -1,4 +1,3 @@
-
 module.exports = function(options){
   var self = this;
   self.username = options.username;
@@ -53,8 +52,15 @@ module.exports = function(options){
       self.socket.emit('newQuestion',{msg:msg.question});
       done(null,{answer:'QuestionReceived'})
     })
+    .add('gameId:'+gameId+',role:broadcast,action:inlineLeaderBoard',function(msg,done){
+      // // console.log('\n=====RECEIVED QUESTION: '+ msg.question + ' with game id: '+gameId+'=====\n');
+
+      self.socket.emit('inlineLeaderBoard',{leaderboard:msg.leaderboard});
+      done(null,{answer:'InlineLeaderBoard Sent'})
+    })
     .add('gameId:'+gameId+',role:broadcast,action:leaderboard',function(msg,leaderboardCallback){
-      self.socket.emit('leaderboard',msg.id);
+      console.log('\n\nInside gameplayMiddlewarePlugin: '+JSON.stringify(msg));
+      self.socket.emit('leaderboard',msg);
       leaderboardCallback(null,{answer:'received leaderboard'});
     })
     .use('entity')
@@ -101,5 +107,13 @@ module.exports = function(options){
       console.log('\n Game manager responded : '+response.respondToQuestion+'\n');
     })
   })
+
+
+  var myVar = setInterval(myTimer, 1000);
+  var responseClient = require('seneca')();
+  responseClient.use('redis-transport');
+  function myTimer() {
+
+  }
 
 }

@@ -19,7 +19,7 @@ exports = module.exports = function(options) {
     });
   });
 
-  const Tournament = connection.model('Tournament', require('./tournament.schema'));
+  const Tournament = connection.model('Knockout', require('./tournament.schema'));
 
   this.add('role:tournaments,cmd:dangerouslyDeleteAllTournaments', function(msg, respond) {
     return Tournament.remove({}, function(err) {
@@ -43,6 +43,13 @@ exports = module.exports = function(options) {
   });
 
   this.add('role:tournaments,cmd:retrieveAll', function(msg, respond) {
+    Tournament.find({}, function (err, retrievedTournament) {
+      if(err) { return respond(err); }
+      return respond(null, {response: 'success', entity: retrievedTournament});
+    });
+  });
+
+  this.add('role:tournaments,cmd:retrieveActive', function(msg, respond) {
     Tournament.find({isComplete: false}, function (err, retrievedTournament) {
       if(err) { return respond(err); }
       return respond(null, {response: 'success', entity: retrievedTournament});
@@ -53,70 +60,141 @@ exports = module.exports = function(options) {
     Tournament.findById(msg.id, function (err, retrievedTournament) {
       if(err) { return respond(err); }
       retrievedTournament.levels[0].registeredPlayers.push({userId: msg.userId});
-      retrievedTournament.save(function (err) {
-        if(err) {
-            console.error('ERROR!');
-        }
-      });
-      return respond(null, {response: 'success', entity: retrievedTournament});
+      Tournament.update(
+         { _id: retrievedTournament._id },
+         { $set: retrievedTournament },
+         function(err,res) {
+           if(err) {
+             console.error('ERROR: ', err);
+             return;
+           }
+           return respond(null, {response: 'success', entity: retrievedTournament});
+         }
+      );
     });
   });
 
   this.add('role:tournaments,cmd:registerPlayersHigherLevels', function(msg, respond) {
     Tournament.findById(msg.id, function (err, retrievedTournament) {
       if(err) { return respond(err); }
-      var currentLevel = retrievedTournament.currentLevel-1;
-      retrievedTournament.levels[currentLevel].registeredPlayers = retrievedTournament.levels[currentLevel-1].levelWinners;
-      retrievedTournament.save(function (err) {
-        if(err) {
-            console.error('ERROR!');
+      var levels = retrievedTournament.levels;
+      var currentLevel = -1;
+      for(var i=0;i<levels.length;i++) {
+        if(levels[i].active=='yes') {
+          currentLevel = i;
+          break;
         }
-      });
-      return respond(null, {response: 'success', entity: retrievedTournament});
+      }
+
+      var leaderboard = retrievedTournament.levels[currentLevel-1].leaderboard;
+      console.log('registerPlayersHigherLevels'+JSON.stringify(retrievedTournament));
+      console.log(leaderboard);
+      var arr = [];
+      for(var i=0;i<leaderboard.length/2;i++) {
+        console.log('registerPlayersHigherLevels'+leaderboard[i]);
+        arr.push(leaderboard[i].userId);
+        //retrievedTournament.levels[currentLevel].registeredPlayers.push(leaderboard[i].userId);
+      }
+      console.log('Arr: ' + arr );
+      retrievedTournament.levels[currentLevel].registeredPlayers = arr;
+      console.log('registerPlayersHigherLevels'+JSON.stringify(retrievedTournament));
+      Tournament.update(
+         { _id: retrievedTournament._id },
+         { $set: retrievedTournament },
+         function(err,res) {
+           if(err) {
+             console.error('ERROR: ', err);
+             return;
+           }
+           return respond(null, {response: 'success', entity: retrievedTournament});
+         }
+      );
     });
   });
 
   this.add('role:tournaments,cmd:updateWinners', function(msg, respond) {
     Tournament.findById(msg.id, function (err, retrievedTournament) {
       if(err) { return respond(err); }
-      var currentLevel = retrievedTournament.currentLevel-1;
-      retrievedTournament.levels[currentLevel].gamePlayedPlayers.sort(
-        function(a, b) {
-            return b.score - a.score;
+      var levels = retrievedTournament.levels;
+      var currentLevel = -1;
+      for(var i=0;i<levels.length;i++) {
+        if(levels[i].active=='yes') {
+          currentLevel = i;
+          break;
         }
-      )
-      for(var i=0;i<(retrievedTournament.levels[currentLevel].gamePlayedPlayers.length*(retrievedTournament.eliminationPercentagePerGame/100));i++) {
-        retrievedTournament.levels[currentLevel].levelWinners.push({userId: retrievedTournament.levels[currentLevel].gamePlayedPlayers[i].userId});
-      }
-      if(retrievedTournament.currentLevel==retrievedTournament.noOfLevels) {
-        retrievedTournament.isComplete = true;
-      } else {
-        retrievedTournament.currentLevel+=1;
       }
 
-      retrievedTournament.save(function (err) {
-        if(err) {
-            console.error('ERROR!');
+      console.log('currentLevel  is: '+currentLevel);
+      console.log('currentLevel  is: '+JSON.stringify(retrievedTournament));
+      for(var i=0;i<retrievedTournament.levels[currentLevel].games.length;i++) {
+        var arr = retrievedTournament.levels[currentLevel].games[i];
+        for(var j=0;j<arr.length;j++) {
+          retrievedTournament.levels[currentLevel].leaderboard.push(arr[j]);
         }
-      });
-      return respond(null, {response: 'success', entity: retrievedTournament});
+      }
+      retrievedTournament.levels[currentLevel].leaderboard.sort(
+        function(a, b) {
+          return b.score - a.score;
+        }
+      )
+      if((currentLevel+1)==retrievedTournament.noOfLevels) {
+        retrievedTournament.isComplete = true;
+        retrievedTournament.levels[currentLevel].active='no';
+      } else {
+        retrievedTournament.levels[currentLevel+1].active='yes';
+        retrievedTournament.levels[currentLevel].active='no';
+      }
+
+      Tournament.update(
+         { _id: retrievedTournament._id },
+         { $set: retrievedTournament },
+         function(err,res) {
+           if(err) {
+             console.error('ERROR: ', err);
+             return;
+           }
+           return respond(null, {response: 'success', entity: retrievedTournament});
+         }
+      );
     });
   });
 
   this.add('role:tournaments,cmd:updateTournamentLeaderboard', function(msg, respond) {
     Tournament.findById(msg.id, function (err, retrievedTournament) {
       if(err) { return respond(err); }
-      var currentLevel = retrievedTournament.currentLevel-1;
-      var leaderboard = msg.leaderboard;
-      for(var i=0;i<leaderboard.length;i++) {
-        retrievedTournament.levels[currentLevel].gamePlayedPlayers.push(leaderboard[i]);
-      }
-      retrievedTournament.save(function (err) {
-        if(err) {
-            console.error('ERROR!');
+      var levels = retrievedTournament.levels;
+      var currentLevel = -1;
+      for(var i=0;i<levels.length;i++) {
+        if(levels[i].active=='yes') {
+          currentLevel = i;
+          break;
         }
-      });
-      return respond(null, {response: 'success', entity: retrievedTournament});
+      }
+      console.log('Level is: '+currentLevel);
+      console.log(JSON.stringify(msg.leaderboard));
+      console.log(JSON.stringify(retrievedTournament));
+      var leaderboard = msg.leaderboard;
+      var games  = retrievedTournament.levels[currentLevel].games;
+      games.push(leaderboard);
+      retrievedTournament.levels[currentLevel].games = games;
+      console.log(JSON.stringify(retrievedTournament));
+      /**retrievedTournament.save(function (err) {
+        if(err) {
+            console.error('ERROR: ', err);
+        }
+      });*/
+
+      Tournament.update(
+         { _id: retrievedTournament._id },
+         { $set: retrievedTournament },
+         function(err,res) {
+           if(err) {
+             console.error('ERROR: ', err);
+             return;
+           }
+           return respond(null, {response: 'success', entity: retrievedTournament});
+         }
+      );
     });
   });
 

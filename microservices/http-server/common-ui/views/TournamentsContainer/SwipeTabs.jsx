@@ -25,8 +25,22 @@ getInitialState: function(){
 handleChange: function(value){
   this.setState({slideIndex:value});
 },
+currentLevel: function(retrievedTournament) {
+  var levels = retrievedTournament.levels;
+  var currentLevel = -1;
+  for(var i=0;i<levels.length;i++) {
+    if(levels[i].active=='yes') {
+      currentLevel = i;
+      break;
+    }
+  }
+  if(currentLevel==-1) {
+    currentLevel = levels.length-1;
+  }
+  return currentLevel;
+},
 render: function(){
-  var currentLevel = this.props.tournament.currentLevel-1;
+  var currentLevel = this.currentLevel(this.props.tournament);
 return (
   <div>
     <Tabs
