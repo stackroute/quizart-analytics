@@ -6,6 +6,9 @@ var twitterAuth = new twitterAPI(twitterConfig);
 var controller = {}
 var requestTokenQueue = {};
 
+var redirectHost = process.env.REDIRECT_HOST || '192.168.99.100';
+var redirectPort = process.env.REDIRECT_PORT || 8001;
+
 controller.getRequestToken = function(req,res){
 
     console.log("====getRequestTokenrequest request came=====");
@@ -52,7 +55,7 @@ controller.getAccessToken =   function(req,res){
 
      if(error) {
 	         console.log(error);
-           res.redirect('http://192.168.99.100:8001/#/authsuccess/'+"error");
+           res.redirect('http://'+redirectHost+':'+redirectPort+'/#/authsuccess/'+"error");
 	     }
     else {
 
@@ -63,20 +66,20 @@ controller.getAccessToken =   function(req,res){
 
     twitterAuth.verifyCredentials(accessToken, accessTokenSecret, function(err, user) {
       if (err)
-          res.redirect('http://192.168.99.100:8001/#/twitterauthsuccess/'+"error");
+          res.redirect('http://'+redirectHost+':'+redirectPort+'/#/twitterauthsuccess/'+"error");
        else{
          console.log("=====user-details====",user);
          mesh.act('role:timelineservice,cmd:createAuth',{username:username,key:accessToken,secret:accessTokenSecret,userId:user.id},function(err,response){
               if(err){
-                  res.redirect('http://192.168.99.100:8001/#/twitterauthsuccess/'+"error");
+                  res.redirect('http://'+redirectHost+':'+redirectPort+'/#/twitterauthsuccess/'+"error");
                }
               else {
                 mesh.act('role:jwt,cmd:createAuthToken',{username:username,key:accessToken,secret:accessTokenSecret,userId:user.id},function(err,response){
                      if(err){
-                        res.redirect('http://192.168.99.100:8001/#/twitterauthsuccess/'+"error");
+                        res.redirect('http://'+redirectHost+':'+redirectPort+'/#/twitterauthsuccess/'+"error");
                       }
                      else {
-                        res.redirect('http://192.168.99.100:8001/#/twitterauthsuccess/'+response.token);
+                        res.redirect('http://'+redirectHost+':'+redirectPort+'/#/twitterauthsuccess/'+response.token);
                     }
                });
 
