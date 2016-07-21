@@ -76,11 +76,9 @@ export default class TabsMobile extends React.Component {
     var likedTopic = this.state.topics;
     var result = $.grep(likedTopic, function(e){ return e._id == topic._id; });
     if (result.length == 0) {
-  // not found
     topic.topicFollowers = topic.topicFollowers+1;
     newtopics = likedTopic.concat([topic]);
     } else if (result.length == 1) {
-  // access the foo property using result[0].foo
   var result = $.grep(likedTopic, function(e){ return e._id != topic._id; });
   newtopics = result;
   console.log('this topic u already liked');

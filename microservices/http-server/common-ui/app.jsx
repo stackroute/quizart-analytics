@@ -9,18 +9,15 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
 import LoginView from './views/LoginView'; //Login Form of Sagar
-import LoginForm from './views/Login';
 import DashboardView from './views/DashboardView';
 import ChangePasswordView from './views/MyAccount/ChangePasswordView';
-import Topics from './views/allTopics/allTopics';
+import Topics from './views/allTopics/alltopics';
 import Tournaments from './views/allTournaments/alltournaments';
 import EachTopicsPage from './views/EachTopicsPage';
 import Quiz from './views/QuizPlay';
-import SignUP from './views/SignUP';
+import SignUP from './views/SignUp';
 import AuthSuccess from './views/AuthSuccess';
 import TwitterAuthSuccess from './views/TwitterAuthSuccess';
-
-import cookie from 'react-cookie';
 import LeaderBoard from './views/LeaderBoard';
 import ContextComponent from './context';
 import CreateTournament from './views/CreateTournament';
@@ -43,8 +40,6 @@ const handleLoginEnter = function(nextState, replace) {
     });
   }
 };
-
-
 
 const clearLogin = function(nextState, replace) {
   delete localStorage.token;

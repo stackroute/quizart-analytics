@@ -62,8 +62,8 @@ import restUrl from '../../../restUrl';
   }
 
   handleSubmit(){
-    console.log("======Inside Add group client, selected users ,",this.state.selectedusers);
-    console.log("=======InsideAdd group client, username is === ", this.state.username);
+    // console.log("======Inside Add group client, selected users ,",this.state.selectedusers);
+    // console.log("=======InsideAdd group client, username is === ", this.state.username);
     this.setState({selectedusers:this.state.selectedusers.push(this.state.username)})
     this.props.addGroup(this.state.groupName,this.state.selectedusers);
     this.props.close;

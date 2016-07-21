@@ -2,7 +2,6 @@ import React from 'react';
 import MainAppBar from '../../components/MainAppBar';
 import Dashboard from '../../components/dashboard';
 import NavBar from '../../components/NavBar';
-// import TabsMobile from '../../components/Tabs';
 import MediaQuery from 'react-responsive';
 import ChatDrawer from '../../components/Chat/ChatDrawer';
 import SubTopicContainer from '../../components/SubTopics/SubTopicContainer';

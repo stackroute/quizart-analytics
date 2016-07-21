@@ -4,8 +4,16 @@ exports = module.exports = function(socket) {
   var mesh = context.mesh;
   var self = this;
 
-  var subscriber = require('redis').createClient(6379, '172.23.238.253');
-  var publisher = require('redis').createClient(6379, '172.23.238.253');
+  var REDIS_HOST = process.env.REDIS_HOST || '172.23.238.253';
+  var port = process.env.PORT || '6379';
+  var REDIS_PORT = process.env.REDIS_PORT || port;
+
+
+  const subscriber=require('redis').createClient(REDIS_PORT,REDIS_HOST);
+  const publisher=require('redis').createClient(REDIS_PORT,REDIS_HOST);
+
+  // var subscriber = require('redis').createClient(6379, '172.23.238.253');
+  // var publisher = require('redis').createClient(6379, '172.23.238.253');
 
   self.socket = socket;
 
@@ -51,7 +59,7 @@ exports = module.exports = function(socket) {
             content : channelid[0],
             command: 'retrieveHistory'
           };
-        publisher.publish('ChatService1',JSON.stringify({message:message}));
+        publisher.publish('ChatService2',JSON.stringify({message:message}));
       });
 
       socket.on('chat_message', function(msg){
@@ -63,6 +71,6 @@ exports = module.exports = function(socket) {
               command: 'sendMessage',
               sentBy: msg.user
             };
-            publisher.publish('ChatService1',JSON.stringify({message:message}));
+            publisher.publish('ChatService2',JSON.stringify({message:message}));
       });
   };

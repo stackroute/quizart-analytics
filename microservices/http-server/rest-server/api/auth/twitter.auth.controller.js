@@ -6,20 +6,24 @@ var twitterAuth = new twitterAPI(twitterConfig);
 var controller = {}
 var requestTokenQueue = {};
 
+var redirectHost = process.env.REDIRECT_HOST || "localhost";
+var port = process.env.PORT || '8001';
+var redirectPort = process.env.REDIRECT_PORT || port;
+
 controller.getRequestToken = function(req,res){
 
-    console.log("====getRequestTokenrequest request came=====");
+  //  console.log("====getRequestTokenrequest request came=====");
     var username = req.claims.sub;
-    console.log("===username===",username);
+  //  console.log("===username===",username);
     twitterAuth.getRequestToken(function(error, requestToken, requestTokenSecret, results){
      	if (error) {
-        	      console.log("Error getting OAuth request token : " + error);
+        	    //  console.log("Error getting OAuth request token : " + error);
                 res.send(error);
   	   } else {
   	          _requestToken =  requestToken;
               _requestTokenSecret =requestTokenSecret;
                //res.send("https://api.twitter.com/oauth/authenticate?oauth_token=" +requestToken);
-               console.log("===request token====",requestToken);
+            //   console.log("===request token====",requestToken);
                requestTokenQueue[requestToken] = {username:username,secret: _requestTokenSecret, time:Date.now()};
                res.status(201).json({url:"https://api.twitter.com/oauth/authenticate?oauth_token=" +requestToken});
            }
@@ -52,7 +56,7 @@ controller.getAccessToken =   function(req,res){
 
      if(error) {
 	         console.log(error);
-           res.redirect('http://192.168.99.100:8001/#/authsuccess/'+"error");
+           res.redirect('http://'+redirectHost+':'+redirectPort+'/#/authsuccess/'+"error");
 	     }
     else {
 
@@ -63,20 +67,20 @@ controller.getAccessToken =   function(req,res){
 
     twitterAuth.verifyCredentials(accessToken, accessTokenSecret, function(err, user) {
       if (err)
-          res.redirect('http://192.168.99.100:8001/#/twitterauthsuccess/'+"error");
+          res.redirect('http://'+redirectHost+':'+redirectPort+'/#/authsuccess/'+"error");
        else{
          console.log("=====user-details====",user);
          mesh.act('role:timelineservice,cmd:createAuth',{username:username,key:accessToken,secret:accessTokenSecret,userId:user.id},function(err,response){
               if(err){
-                  res.redirect('http://192.168.99.100:8001/#/twitterauthsuccess/'+"error");
+                  res.redirect('http://'+redirectHost+':'+redirectPort+'/#/authsuccess/'+"error");
                }
               else {
                 mesh.act('role:jwt,cmd:createAuthToken',{username:username,key:accessToken,secret:accessTokenSecret,userId:user.id},function(err,response){
                      if(err){
-                        res.redirect('http://192.168.99.100:8001/#/twitterauthsuccess/'+"error");
+                        res.redirect('http://'+redirectHost+':'+redirectPort+'/#/authsuccess/'+"error");
                       }
                      else {
-                        res.redirect('http://192.168.99.100:8001/#/twitterauthsuccess/'+response.token);
+                        res.redirect('http://'+redirectHost+':'+redirectPort+'/#/authsuccess/'+response.token);
                     }
                });
 
