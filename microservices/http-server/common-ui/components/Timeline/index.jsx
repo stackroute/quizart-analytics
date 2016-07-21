@@ -98,6 +98,7 @@ loadDataFromSever(){
     return (
       <div>
         <CommentForm newPost = {this.handlePost.bind(this)}/>
+          {localStorage.authToken?null:<p>Link with Twitter...</p>}
          {this.state.flag ==='loading'?<div className="loader">Loading...</div>:null}
         <div style = {{marginTop:5}}>
             {

@@ -44,6 +44,7 @@ const handleLoginEnter = function(nextState, replace) {
 
 const clearLogin = function(nextState, replace) {
   delete localStorage.token;
+  delete localStorage.authToken;
 };
 
 ReactDOM.render(

@@ -31,10 +31,11 @@ import ActionHome from 'material-ui/svg-icons/action/home';
 import ActionFingerprint from 'material-ui/svg-icons/action/fingerprint';
 import LinkIcon from 'material-ui/svg-icons/content/link';
 
-
+var username ;
 export default class MainAppBar extends React.Component {
   constructor() {
     super();
+    username = (JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub);
     this.state = {dropDown: false, open: false,appbarContainer: {
     	position: 'fixed',
     	width: '100%',
@@ -143,7 +144,7 @@ export default class MainAppBar extends React.Component {
           onRequestChange={(open) => this.setState({open})}
         >
           <div style={{width: '100%', textAlign: 'center'}}>
-            <Avatar size={200} style={{margin: '30px 0 30px'}}>A</Avatar>
+            <Avatar size={200} style={{margin: '30px 0 30px'}}>{username.charAt(0)}</Avatar>
           </div>
           <Divider />
           <List>
