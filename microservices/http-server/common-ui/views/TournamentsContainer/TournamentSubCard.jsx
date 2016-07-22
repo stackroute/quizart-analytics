@@ -193,7 +193,22 @@ class TournamentsSubCard extends React.Component {
           this.setState({label:'Register', finished: false});
         }
       } else {
-        console.log('Coming here1');
+        if(alreadyRegistered) {
+          this.setState({label:'Registered', finished: true});
+        } else {
+          this.setState({label:'Not Registered', finished: true});
+        }
+      }
+      if(date.getTime()>tourStartDate.getTime() && date.getTime()<tourEndDate.getTime() && date.getTime()<regEndDate.getTime()) {
+        if(alreadyRegistered) {
+          if(alreadyPlayedGame) {
+            this.setState({label:'Game Completed', finished: true});
+          } else {
+            this.setState({label:'Play', finished: false});
+          }
+        } else {
+          this.setState({label:'Register', finished: false});
+        }
       }
     } else {
       if(date.getTime()<tourStartDate.getTime()) {
