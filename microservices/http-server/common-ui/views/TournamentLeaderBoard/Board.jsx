@@ -98,7 +98,7 @@ export default class Board extends React.Component {
       <div>
         <Paper style={style} zDepth={2} >
           <Card>
-            <h1 style={tour_header}>Game LeaderBoard</h1>
+            <h1 style={tour_header}>Tournament LeaderBoard</h1>
             <Card>
               <CardText>
                 <Table
