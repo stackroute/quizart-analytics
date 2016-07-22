@@ -12,6 +12,7 @@ export default class Timeline extends React.Component{
 
 loadDataFromSever(){
   var id;  // id can be passed while calling component
+  var that = this;
   if(this.props.user!=undefined){
     id ="user";
     console.log("====user timeline");
@@ -43,7 +44,7 @@ loadDataFromSever(){
 
       request.fail(function(xhr, status, err) {
       console.error("api/v1/timeline/gettweet/", status, err.toString());
-      setTimeout(loadDataFromSever(),20000);
+      setTimeout(that.loadDataFromSever(),20000);
     }.bind(this));
 
 

@@ -2,7 +2,7 @@ import React from 'react';
 import MainAppBar from '../../components/MainAppBar';
 import Dashboard from '../../components/dashboard';
 import NavBar from '../../components/NavBar';
-// import TabsMobile from '../../components/Tabs';
+import TabsMobile from '../../components/Tabs';
 import MediaQuery from 'react-responsive';
 import ChatDrawer from '../../components/Chat/ChatDrawer';
 
@@ -25,7 +25,7 @@ export default class DashboardView extends React.Component {
                 <MainAppBar/>
                 <MediaQuery query='(max-device-width: 800px)'>
                   <MediaQuery query='(max-width: 800px)'>
-                    <Dashboard style={bodyContainer}/>
+                    <TabsMobile page="Home" />
                   </MediaQuery>
                 </MediaQuery>
 

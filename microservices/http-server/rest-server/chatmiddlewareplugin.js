@@ -3,7 +3,7 @@ exports = module.exports = function(socket) {
   var context = require('./context');
   var mesh = context.mesh;
   var self = this;
-
+  //
   var REDIS_HOST = process.env.REDIS_HOST || '172.23.238.253';
   var port = process.env.PORT || '6379';
   var REDIS_PORT = process.env.REDIS_PORT || port;

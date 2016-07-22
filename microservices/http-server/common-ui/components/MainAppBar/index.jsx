@@ -144,7 +144,7 @@ export default class MainAppBar extends React.Component {
           onRequestChange={(open) => this.setState({open})}
         >
           <div style={{width: '100%', textAlign: 'center'}}>
-            <Avatar size={200} style={{margin: '30px 0 30px'}}>{username.charAt(0)}</Avatar>
+            <Avatar size={200} style={{margin: '30px 0 30px'}}>{username.charAt(0).toString().toUpperCase()}</Avatar>
           </div>
           <Divider />
           <List>

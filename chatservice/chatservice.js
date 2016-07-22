@@ -9,6 +9,8 @@ var REDIS_PORT = process.env.REDIS_PORT || port;
 const subscriber=redis.createClient(REDIS_PORT,REDIS_HOST);
 const publisher=redis.createClient(REDIS_PORT,REDIS_HOST);
 
+// var subscriber = require('redis').createClient(6379, '172.23.238.253');
+// var publisher = require('redis').createClient(6379, '172.23.238.253');
 
 
 var MsgObj = {};

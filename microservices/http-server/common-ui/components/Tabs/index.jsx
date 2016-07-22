@@ -22,6 +22,7 @@ var bodyContainer = {
 
 }
 
+
 const styles = {
   headline: {
     fontSize: 24,
@@ -148,7 +149,7 @@ export default class TabsMobile extends React.Component {
              this.props.page.toString()=="CreateTournament"?<CreateStepper/>
              :
              this.props.page.toString()=="Home"?
-              <Dashboard />
+              <Dashboard style={bodyContainer}/>
               :
              this.props.page.toString()=="TopicPage"?
              <div>
