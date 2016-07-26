@@ -6,11 +6,10 @@ var twitterAuth = new twitterAPI(twitterConfig);
 var controller = {}
 var requestTokenQueue = {};
 
-// var redirectHost = process.env.REDIRECT_HOST || '192.168.99.100';
-// var redirectPort = process.env.REDIRECT_PORT || 8001;
+var redirectHost = process.env.REDIRECT_HOST || '192.168.99.100';
+var redirectPort = process.env.REDIRECT_PORT || 8001;
 
-var redirectPort = 8001;
-var redirectHost = "192.168.99.101";
+
 controller.getRequestToken = function(req,res){
 
   //  console.log("====getRequestTokenrequest request came=====");

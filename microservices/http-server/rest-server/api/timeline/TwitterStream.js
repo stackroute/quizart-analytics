@@ -14,6 +14,7 @@ var getTwitterStream = function(socket){
     var _stream;
     var count=0;
     var count1=0;
+    var that = this;
      var startStream = function(client){
        console.log("======stream start called====term is",term);
         client.stream('statuses/filter', {track:'#'+term.trim()},function(stream) {
@@ -26,7 +27,7 @@ var getTwitterStream = function(socket){
                 stream.on('error', function(error) {
                   console.log("=========stream error");
                   console.log(error);
-                 setTimeout(startStream(client),timeinterval)
+                 setTimeout(that.startStream(client),timeinterval)
             });
          });
        };

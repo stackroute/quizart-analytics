@@ -178,6 +178,10 @@ services:
         PORT: 8001
         REDIS_HOST: localhost
         REDIS_PORT: 6379
+        TWITTER_CONSUMER_SECRET : ''
+        TWITTER_CONSUMER_KEY : ''
+        GOOGLE_CLIENT_ID : ''
+        GOOGLE_CLIENT_SECRET : ''
         NAME: Westeros
   http-server1:
       container_name: http-server1
@@ -193,6 +197,10 @@ services:
         PORT: 8002
         REDIS_HOST: localhost
         REDIS_PORT: 6379
+        TWITTER_CONSUMER_SECRET : ''
+        TWITTER_CONSUMER_KEY : ''
+        GOOGLE_CLIENT_ID : ''
+        GOOGLE_CLIENT_SECRET : ''
         NAME: Beyond the wall
   http-server2:
       container_name: http-server2
@@ -208,6 +216,10 @@ services:
         PORT: 8003
         REDIS_HOST: localhost
         REDIS_PORT: 6379
+        TWITTER_CONSUMER_SECRET : ''
+        TWITTER_CONSUMER_KEY : ''
+        GOOGLE_CLIENT_ID : ''
+        GOOGLE_CLIENT_SECRET : ''
         NAME: Kings Landing
   db:
       container_name: mongo

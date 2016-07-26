@@ -2,8 +2,9 @@ import React from 'react';
 import CommentForm from  './CommentForm';
 import Tweet from './Tweet/Tweet';
 var socket = io.connect('/tweets');
+var connectionAttempt=0;
 //var terms = ['QuizRT','QuizRTSocail','@Stackroute'];
-var count = 1;
+// var count = 1;
 export default class Timeline extends React.Component{
   constructor (props){
      super(props);
@@ -34,7 +35,7 @@ loadDataFromSever(){
               //console.log("=====id===",id);
             //   console.log("=======retrievedPosts=======",data);
                if(data instanceof Array){
-                //  console.log("=====tweets====",data);
+                  console.log("=====tweets====",data);
                   this.setState({tweets:data,flag:'loaded'})
                }
                else {
@@ -45,9 +46,9 @@ loadDataFromSever(){
 
       request.fail(function(xhr, status, err) {
       console.error("api/v1/timeline/gettweet/", status, err.toString());
-      if(count<4){
+      if(connectionAttempt<3){
       setTimeout(that.loadDataFromSever(),20000);
-      count++;
+      connectionAttempt++;
      }
     }.bind(this));
 
