@@ -1,7 +1,8 @@
 import React from 'react';
 import CommentForm from  './CommentForm';
-import Tweet from 'react-tweet';
+import Tweet from './Tweet/Tweet';
 var socket = io.connect('/tweets');
+var connectionAttempt=0;
 //var terms = ['QuizRT','QuizRTSocail','@Stackroute'];
 export default class Timeline extends React.Component{
   constructor (props){
@@ -12,6 +13,7 @@ export default class Timeline extends React.Component{
 
 loadDataFromSever(){
   var id;  // id can be passed while calling component
+  var that = this;
   if(this.props.user!=undefined){
     id ="user";
     console.log("====user timeline");
@@ -32,7 +34,7 @@ loadDataFromSever(){
               //console.log("=====id===",id);
             //   console.log("=======retrievedPosts=======",data);
                if(data instanceof Array){
-                //  console.log("=====tweets====",data);
+                  console.log("=====tweets====",data);
                   this.setState({tweets:data,flag:'loaded'})
                }
                else {
@@ -43,7 +45,10 @@ loadDataFromSever(){
 
       request.fail(function(xhr, status, err) {
       console.error("api/v1/timeline/gettweet/", status, err.toString());
-      setTimeout(loadDataFromSever(),20000);
+      if(connectionAttempt<3){
+      setTimeout(that.loadDataFromSever(),20000);
+      connectionAttempt++;
+     }
     }.bind(this));
 
 

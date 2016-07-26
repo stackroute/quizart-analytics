@@ -63,11 +63,11 @@ var twitterAuthConfig  ={};
         twitterAuthConfig.access_token_secret= claims.secret;
            if(req.param("id")==="user"){
               console.log("===twitter user id====",claims.userId);
-              params = {user_id:"+/"+claims.userId/"+",count:10};
+              params = {user_id:"+/"+claims.userId/"+",count:20};
               endpoint='statuses/user_timeline';
            }
           else {
-            params = {q:"#"+req.param("id"),count:10};
+            params = {q:"#"+req.param("id"),count:20};
             endpoint='search/tweets';
             console.log("=====topic timeline=====");
            }
