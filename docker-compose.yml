@@ -176,6 +176,8 @@ services:
         REDIRECT_HOST: quizart.stackroute.in
         REDIRECT_PORT: 80
         PORT: 8001
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
         NAME: Westeros
   http-server1:
       container_name: http-server1
@@ -189,6 +191,8 @@ services:
         REDIRECT_HOST: quizart.stackroute.in
         REDIRECT_PORT: 80
         PORT: 8002
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
         NAME: Beyond the wall
   http-server2:
       container_name: http-server2
@@ -202,6 +206,8 @@ services:
         REDIRECT_HOST: quizart.stackroute.in
         REDIRECT_PORT: 80
         PORT: 8003
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
         NAME: Kings Landing
   db:
       container_name: mongo

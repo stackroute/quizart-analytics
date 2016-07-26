@@ -2,8 +2,8 @@ const redis=require('redis');
 const fs = require('fs');
 
 var REDIS_HOST = process.env.REDIS_HOST || '172.23.238.253';
-var port = process.env.PORT || '6379';
-var REDIS_PORT = process.env.REDIS_PORT || port;
+// var port = process.env.PORT || '6379';
+var REDIS_PORT = process.env.REDIS_PORT || '6379';
 
 
 const subscriber=redis.createClient(REDIS_PORT,REDIS_HOST);

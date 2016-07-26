@@ -5,8 +5,8 @@ exports = module.exports = function(socket) {
   var self = this;
   //
   var REDIS_HOST = process.env.REDIS_HOST || '172.23.238.253';
-  var port = process.env.PORT || '6379';
-  var REDIS_PORT = process.env.REDIS_PORT || port;
+  // var port = process.env.PORT || '6379';
+  var REDIS_PORT = process.env.REDIS_PORT || '6379';
 
 
   const subscriber=require('redis').createClient(REDIS_PORT,REDIS_HOST);

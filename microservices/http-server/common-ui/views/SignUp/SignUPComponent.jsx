@@ -53,14 +53,14 @@ export default class SignUPComponent extends React.Component{
               name: name,
               password : pass
             }
-            console.log("Inside Client",data);
+            // console.log("Inside Client",data);
             $.ajax({
               type : 'POST',
               data :  JSON.stringify(data),
               contentType : 'application/json',
               url : restUrl + '/api/v1/signup',
               success: (function(data) {
-                console.log("inside signup ajax call");
+                // console.log("inside signup ajax call");
                 if(data['success'] == false){
                   this.setState({$invalid :true});
                   router.push('/SignUP');

@@ -65,7 +65,7 @@ export default class LoginForm extends React.Component {
       request.done(function(data) {
         localStorage.token = data.token;
         var username = (JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub);
-        console.log("==========Inside Loginform checking token====,",username);
+        // console.log("==========Inside Loginform checking token====,",username);
         this.context.router.push('/');
       }.bind(this));
       request.fail(function() {

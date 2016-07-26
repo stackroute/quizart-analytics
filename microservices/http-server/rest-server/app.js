@@ -15,6 +15,8 @@ var oauth2Client = new OAuth2(googlecredentials.CLIENT_ID, googlecredentials.CLI
 var redirectHost = process.env.REDIRECT_HOST || "localhost";
 var port = process.env.PORT || '8001';
 var redirectPort = process.env.REDIRECT_PORT || port;
+// var redirectPort = 8001;
+// var redirectHost = "192.168.99.101";
 var name = process.env.NAME || "default";
 var mesh = seneca();
 mesh.use('mesh',{auto:true});
