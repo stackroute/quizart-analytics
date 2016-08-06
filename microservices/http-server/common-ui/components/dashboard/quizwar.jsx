@@ -27,7 +27,12 @@ var QuizWar=React.createClass({
     var condition = false;
     var id = 'dummyId';
     var data = {isTournament:true, id:'dummy'};
-    this.context.router.push('/quiz/false');
+    this.context.router.push('/quiz/false/dummy');
+    /* this.context.router.push({
+      pathname: '/quiz',
+      query: data,
+      state: data
+    }); */
   },
 
   render:function (){

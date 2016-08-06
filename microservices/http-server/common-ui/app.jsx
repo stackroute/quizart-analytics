@@ -63,7 +63,7 @@ ReactDOM.render(
       <Route path="/topics" component={Topics} onEnter={verifyLogin} />
       <Route path="/tournaments" component={Tournaments} onEnter={verifyLogin} />
       <Route path="/eachTopic" component={EachTopicsPage} onEnter={verifyLogin} />
-      <Route name="quiz" path="/quiz" component={Quiz} />
+      <Route name="quiz" path="/quiz/:isTournament/:knockoutId" component={Quiz} />
       <Route name="leaderboard" path="/board/:id" component={LeaderBoard} />
       <Route path="my-account/change-password" component={ChangePasswordView} onEnter={verifyLogin} />
       <Route path="/create" component={CreateTournament} onEnter={verifyLogin}/>

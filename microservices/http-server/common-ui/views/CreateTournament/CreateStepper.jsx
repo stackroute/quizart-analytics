@@ -10,6 +10,7 @@ import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
 import Slider from 'material-ui/Slider';
+import TimePicker from 'material-ui/TimePicker';
 
 import restUrl from '../../restUrl';
 
@@ -22,7 +23,8 @@ export default class CreateStepper extends React.Component {
       error: false,
       title: "", subTitle: "", desc: "", imgUrl: "http://lorempixel.com/600/337/nature/", avatarUrl: "http://lorempixel.com/600/337/nature/",
       topics: "", games: "", level: "", instructions: "", prize: "",
-      regEndDate: "", tourStartDate: "", tourEndDate:"",registeredPlayers: [], gamePlayedPlayers: []
+      regEndDate: "", regEndTime: "", tourStartDate: "", tourStartTime: "", tourEndDate:"", tourEndTime:"",
+      registeredPlayers: [], gamePlayedPlayers: []
     };
   }
 
@@ -45,9 +47,9 @@ export default class CreateStepper extends React.Component {
       description: this.state.desc,
       instructions: this.state.instructions,
       prizes: this.state.prize,
-      regEndDate: this.state.regEndDate,
-      tourStartDate: this.state.tourStartDate,
-      tourEndDate:this.state.tourEndDate,
+      regEndDate: new Date(this.state.regEndDate+"T"+this.state.regEndTime),
+      tourStartDate: new Date(this.state.tourStartDate+"T"+this.state.tourStartTime),
+      tourEndDate: new Date(this.state.tourEndDate+"T"+this.state.tourEndTime),
       topics: this.state.topics,
       playersPerGame: this.state.games,
       level: this.state.level,
@@ -123,12 +125,24 @@ export default class CreateStepper extends React.Component {
     this.setState({regEndDate: date});
   };
 
+  handleRegEndTime(event, time) {
+    this.setState({regEndTime: time});
+  };
+
   handleTourStartDate(event, date) {
     this.setState({tourStartDate: date});
   };
 
+  handleTourStartTime(event, time) {
+    this.setState({tourStartTime: time});
+  };
+
   handleTourEndDate(event, date) {
     this.setState({tourEndDate: date});
+  };
+
+  handleTourEndTime(event, time) {
+    this.setState({tourEndTime: time});
   };
 
   getStepContent(stepIndex) {
@@ -262,27 +276,42 @@ export default class CreateStepper extends React.Component {
         return (
           <div>
           <div className="row">
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
               <DatePicker hintText="Registration End Date" shouldDisableDate={this.disableWeekends.bind(this)} style={dateStyle}
-              fullWidth={true}
-              value={this.state.regEndDate}
-              onChange={this.handleRegEndDate.bind(this)}/>
+                fullWidth={true}
+                value={this.state.regEndDate}
+                onChange={this.handleRegEndDate.bind(this)}/>
+            </div>
+            <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+              <TimePicker hintText="Registration End Time" style={dateStyle} fullWidth={true}
+                value={this.state.regEndTime} onChange={this.handleRegEndTime.bind(this)} format="24hr" hintText="24hr Format"
+              />
             </div>
           </div>
           <div className="row">
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
               <DatePicker hintText="Tournament Start Date" shouldDisableDate={this.disableWeekends.bind(this)} style={dateStyle}
-              fullWidth={true}
-              value={this.state.tourStartDate}
-              onChange={this.handleTourStartDate.bind(this)}/>
+                fullWidth={true}
+                value={this.state.tourStartDate}
+                onChange={this.handleTourStartDate.bind(this)}/>
+            </div>
+            <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+              <TimePicker hintText="Tournament Start Time" style={dateStyle} fullWidth={true}
+                value={this.state.tourStartTime} onChange={this.handleTourStartTime.bind(this)} format="24hr" hintText="24hr Format"
+              />
             </div>
           </div>
           <div className="row">
-            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
               <DatePicker hintText="Tournament End Date" shouldDisableDate={this.disableWeekends.bind(this)} style={dateStyle}
-              fullWidth={true}
-              value={this.state.tourEndDate}
-              onChange={this.handleTourEndDate.bind(this)}/>
+                fullWidth={true}
+                value={this.state.tourEndDate}
+                onChange={this.handleTourEndDate.bind(this)}/>
+            </div>
+            <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+              <TimePicker hintText="Tournament End Time" style={dateStyle} fullWidth={true}
+                value={this.state.tourEndTime} onChange={this.handleTourEndTime.bind(this)} format="24hr" hintText="24hr Format"
+              />
             </div>
           </div>
           </div>

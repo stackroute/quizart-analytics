@@ -88,12 +88,6 @@ class TournamentsSubCard extends React.Component {
     };
   }
 
-  static get contextTypes(){
-    return {
-      router: PropTypes.object.isRequired,
-    }
-  }
-
   handleNext = () => {
     if(this.state.label==='Register') {
       var request = $.ajax({
@@ -115,14 +109,12 @@ class TournamentsSubCard extends React.Component {
       }.bind(this));
     } else if(this.state.label==='Play') {
       var data = {isTournament:true, id:this.props.tournament._id};
-      this.context.router.push('/quiz');
-      this.props.router.push({
+      this.context.router.push('/quiz/true/'+this.props.tournament._id);
+      /*this.context.router.push({
         pathname: '/quiz',
-        state: {
-          qsparam: this.state.value,
-          qsparam: this.state.value
-        }
-      });
+        query: data,
+        state: data
+      });*/
     }
   };
 

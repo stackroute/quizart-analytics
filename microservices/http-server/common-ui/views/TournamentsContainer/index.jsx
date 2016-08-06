@@ -11,6 +11,12 @@ export default class TournamentsContainer extends React.Component {
     };
   }
 
+  static get contextTypes(){
+    return {
+      router: PropTypes.object.isRequired,
+    }
+  }
+
   componentDidMount(){
     var request = $.ajax({
       url: restUrl + '/api/v1/tournaments',

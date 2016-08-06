@@ -95,7 +95,7 @@ export default class QuizPlay extends React.Component{
       option3Color: grey100
 
     };
-    console.log('Quiz: ' + JSON.stringify(this.props.params));
+    console.log('QuizPlay props: ' + JSON.stringify(this.props));
   }
   static get contextTypes(){
     return {
@@ -109,6 +109,7 @@ export default class QuizPlay extends React.Component{
     }
 
   componentDidMount(){
+    console.log('QuizPlay props: ' + JSON.stringify(this.props));
       var username = JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub;
       console.log('\n\n===========Cookie says username as: '+username+" "+this.context.socket+":socket");
       console.log('context: '+this.context.socket);
