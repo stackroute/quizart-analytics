@@ -1,1 +1,1 @@
-exports = module.exports = 'http://quizrt1:8001'
+exports = module.exports = ''
