@@ -39,8 +39,8 @@ context.authorizeMiddleware = function(req, res, next) {
   });
 };
 
-var schedular = require('./schedular');
-schedular();
+/*var schedular = require('./schedular');
+schedular();*/
 
 var env = process.env.NODE_ENV || 'dev';
 

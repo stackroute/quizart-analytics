@@ -73,7 +73,7 @@ const style_fav={
     float:'right',
 }
 const style_followers={
-    width:'12%',
+    width:'5%',
     marginTop:15,
     marginBottom:10,
     float:'right',
@@ -145,18 +145,17 @@ componentDidMount:function(){
       <CardTitle subtitle="Don't limit your Challenges, Challenge your Limits." subtitleColor="white" />
       </div>
      }>
-      <img src={this.props.topic.img} />
+      <img src={this.props.topic.topicIcon} />
     </CardMedia>
     <CardActions className="row">
-     <center>
-      <div className="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+      <div className="col-md-5 col-xs-5 col-lg-5 col-sm-5">
+        <RaisedButton label="Play" secondary={true} style={BtnStyle} onClick={this.handleClike.bind(this,this.props.topic._id)} />
+      </div>
+      <div className="col-md-5 col-xs-5 col-lg-5 col-sm-5">
         <RaisedButton label="Details" secondary={true} style={BtnStyle} onClick={this.handleDetails.bind(this,this.props.topic._id)} />
       </div>
-     </center>
      </CardActions>
-
     </Card>
-
    );
 }
 });

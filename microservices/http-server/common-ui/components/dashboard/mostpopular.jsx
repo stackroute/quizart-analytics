@@ -48,27 +48,22 @@ var topicsData =[
   {
     _id:'Cricket-World-Cup',
     topicName: "Cricket World Cup",
-    subtitle: "Let's play quiz",
-    avatarimg: 'http://res.cloudinary.com/quizrt-social/image/upload/v1468998004/movie_uyfbt8.png',
-    img: 'http://res.cloudinary.com/quizrt-social/image/upload/v1468998004/movie_uyfbt8.png',
+    topicDescription: "Let's play quiz",
+    topicIcon: 'http://res.cloudinary.com/quizrt-social/image/upload/v1468998004/movie_uyfbt8.png',
     category: "Cricket"
   },
-
   {
   _id:'Bollywood-Movies',
   topicName: "Bollywood Movies",
-  subtitle: "Let's play quiz",
-  avatarimg: 'http://res.cloudinary.com/quizrt-social/image/upload/v1468997804/wolrd_cup_aarqtf.png',
-  img: 'http://res.cloudinary.com/quizrt-social/image/upload/v1468997804/wolrd_cup_aarqtf.png',
+  topicDescription: "Let's play quiz",
+  topicIcon: 'http://res.cloudinary.com/quizrt-social/image/upload/v1468997804/wolrd_cup_aarqtf.png',
   category: "Movies"
-
 },
 {
   _id:'Cartoons',
   topicName: "Cartoons",
-  subtitle: "Let's play quiz",
-  avatarimg: 'http://res.cloudinary.com/quizrt-social/image/upload/v1468997864/cm_dy_ikhtrz.png',
-  img: 'http://res.cloudinary.com/quizrt-social/image/upload/v1468997864/cm_dy_ikhtrz.png',
+  topicDescription: "Let's play quiz",
+  topicIcon: 'http://res.cloudinary.com/quizrt-social/image/upload/v1468997864/cm_dy_ikhtrz.png',
   category: "Entertainment"
 }
 ];
