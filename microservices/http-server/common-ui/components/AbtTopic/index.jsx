@@ -226,10 +226,19 @@ const style_players={
               <img src="http://covermyfb.com/media/covers/thumb/7117-cartoon-joker.jpg" style={cover}/>
                       <GridTile
                         key='d'
-                        title='Details'
-                        subtitle={<div>You are about to play a Cartoon Quiz Game!The most awesome CARTOONS packed into ONE game!</div>}
-                        style={{height:140,width:'25%',float:'left',position:'absolute'}}
+                        title='Topic Category'
+                        subtitle={this.state.arr[0].topicCategory}
+                        style={{height:140,width:'25%',float:'left',position:'absolute',marginLeft:40}}
                       ></GridTile>
+
+                      <GridTile
+                        key='e'
+                        title='Details'
+                        subtitle={<div>You are about to play a Cartoon Quiz Game!Thfixede most awesome CARTOONS packed into ONE game!</div>}
+                        style={{height:140,width:'25%',float:'right',position:'absolute',marginLeft:820}}
+                      ></GridTile>
+
+                      
                       
             <center>
                     
