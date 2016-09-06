@@ -42,10 +42,8 @@ export default class Badges extends React.Component {
 render() {
   var badges = this.state.details.map(function (d) {
             return (
-              <div className="col-lg-1">
-              <label>bharath</label>
+              
                 <Avatar src={d.img} size={50}/>
-                </div>
             );
         });
   return (
