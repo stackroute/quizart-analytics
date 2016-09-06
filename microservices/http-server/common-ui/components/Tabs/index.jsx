@@ -15,14 +15,11 @@ import CreateStepper from '../../views/CreateTournament';
 import Board from '../../views/TournamentLeaderBoard';
 import Inline from '../../views/LeaderBoard';
 import Tournaments from '../../views/TournamentsContainer';
-
 var bodyContainer = {
   // padding: "16px",
   paddingTop: "64px",
-
+  marginTop:"0px"
 }
-
-
 const styles = {
   headline: {
     fontSize: 24,
@@ -40,10 +37,8 @@ const styles = {
       paddingTop : 10,
   }
 };
-
 var socket = io();
 export default class TabsMobile extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -58,23 +53,19 @@ export default class TabsMobile extends React.Component {
       this.setState({focusmsg : focusm});
     }.bind(this));
   }
-
   handleChat(e){
     this.setState({msg: e.target.value});
   }
-
   submitForm(e){
     e.preventDefault();
     socket.emit('chat message', this.state.msg);
     this.setState({msg : ''});
   }
-
   handleChange(value){
     this.setState({
       slideIndex: value,
     });
   };
-
   handleCheck(_id,topic){
     var username = Cookie.load("username");
     var newtopics;
@@ -112,25 +103,12 @@ export default class TabsMobile extends React.Component {
         }
       })
  }
-
-
   render() {
     return (
       <div>
-        <Tabs
-          onChange={this.handleChange.bind(this)}
-          value={this.state.slideIndex}
-          style={bodyContainer}
-        >
-          <Tab label={this.props.page.toString()} value={0} />
-          <Tab label="Chat" value={1} />
-        </Tabs>
-        <SwipeableViews
-          index={this.state.slideIndex}
-          onChangeIndex={this.handleChange.bind(this)}
-        >
+        <Tabs style={bodyContainer}>
+        <Tab label="Profile" >
           <div className="container-fluid" style={{height:'80vh' , overflow:'auto'}}>
-
             {this.props.page.toString()=="Profile"?
             <div>
               <ProfilePage username = {this.props.username}/>
@@ -154,17 +132,20 @@ export default class TabsMobile extends React.Component {
              this.props.page.toString()=="TopicPage"?
              <div>
              <EachTopic id={this.props.id}/>
-             <Timeline/>
+             
              </div>
              :null}
           </div>
+          </Tab>
+          <Tab label="Twitter" >
           <div style={styles.slide}>
                 <div style={{height:'70vh' , overflow:'auto'}}>
-                    <ChatComponent />
+                  { /* <ChatComponent />*/}
+                   <Timeline user ="user" hashtag ="QuizRTSocial"/>
                 </div>
           </div>
-        </SwipeableViews>
-
+          </Tab>
+          </Tabs>
       </div>
     );
   }
