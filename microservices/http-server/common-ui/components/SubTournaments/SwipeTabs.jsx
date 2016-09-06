@@ -12,8 +12,9 @@ const styles = {
     fontWeight: 400,
   },
   slide: {
+    textAlign: "center",
     padding: 15,
-    height:100
+    height:70
   },
   date:{
     paddingTop:10,
@@ -31,7 +32,9 @@ handleChange: function(value){
 },
 render: function(){
 
+  //return <small>This is the Swipe Tabs component.</small>
 return (
+
   <div>
     <Tabs
       onChange={this.handleChange}
@@ -45,16 +48,15 @@ return (
       index={this.state.slideIndex}
       onChangeIndex={this.handleChange}
     >
-        <div style={styles.slide}>{this.props.TabContent.description}
-          <div style={styles.date}>Start Date:{this.props.TabContent.startDate}</div>
-          <div style={styles.date}>End Date:{this.props.TabContent.endDate}</div>
+        <div style={styles.slide}>
+          {this.props.tournament.description}
         </div>
 
       <div style={styles.slide}>
-        {this.props.TabContent.rules}
+        <strong> This is Tournament Instruction </strong>
       </div>
       <div style={styles.slide}>
-      {this.props.TabContent.prizes}
+        <strong> $1000 </strong>
       </div>
     </SwipeableViews>
   </div>

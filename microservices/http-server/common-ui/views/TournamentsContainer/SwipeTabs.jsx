@@ -11,6 +11,7 @@ const styles = {
     fontWeight: 400,
   },
   slide: {
+    textAlign: 'center',
     padding: 10,
     height:100
   },
@@ -25,22 +26,22 @@ getInitialState: function(){
 handleChange: function(value){
   this.setState({slideIndex:value});
 },
-currentLevel: function(retrievedTournament) {
-  var levels = retrievedTournament.levels;
-  var currentLevel = -1;
-  for(var i=0;i<levels.length;i++) {
-    if(levels[i].active=='yes') {
-      currentLevel = i;
-      break;
-    }
-  }
-  if(currentLevel==-1) {
-    currentLevel = levels.length-1;
-  }
-  return currentLevel;
-},
+// currentLevel: function(retrievedTournament) {
+//   var levels = retrievedTournament.levels;
+//   var currentLevel = -1;
+//   for(var i=0;i<levels.length;i++) {
+//     if(levels[i].active=='yes') {
+//       currentLevel = i;
+//       break;
+//     }
+//   }
+//   if(currentLevel==-1) {
+//     currentLevel = levels.length-1;
+//   }
+//   return currentLevel;
+// },
 render: function(){
-  var currentLevel = this.currentLevel(this.props.tournament);
+  //var currentLevel = this.currentLevel(this.props.tournament);
 return (
   <div>
     <Tabs
@@ -55,17 +56,19 @@ return (
       index={this.state.slideIndex}
       onChangeIndex={this.handleChange}
     >
-        <div style={styles.slide}>{
-            this.props.tournament.description+"\n"}<br/>{'Start Date: '+
-            this.props.tournament.levels[currentLevel].tourStartDate+"\n"}<br/>{'End Date: '+
-            this.props.tournament.levels[currentLevel].tourEndDate
-          }</div>
+        <div style={styles.slide}>
+          {this.props.tournament.description+"\n"} 
+          </div>
 
       <div style={styles.slide}>
-        {this.props.tournament.instructions}
+       {this.props.tournament.instructions}
       </div>
       <div style={styles.slide}>
-      {this.props.tournament.prizes}
+      <center>
+       1st Place : {this.props.tournament.prizes[0].position1}<br />
+       2nd Place : {this.props.tournament.prizes[1].position2}<br />
+       3rd Place : {this.props.tournament.prizes[2].position3}
+       </center>
       </div>
     </SwipeableViews>
   </div>
