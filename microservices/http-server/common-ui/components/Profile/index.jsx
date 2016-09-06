@@ -399,8 +399,9 @@ export default class Profile extends React.Component{
           <div className="col-xs-12 col-sm-2 col-md-2 col-lg-2" style={styleCard}>
           </div>
           <div className="col-xs-12 col-sm-5 col-md-5 col-lg-5" style={styleCard}>
-          
+          <div className="row">
           <Badges/>
+          </div>
           </div>
           </div>
           <br/>
