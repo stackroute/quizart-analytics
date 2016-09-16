@@ -32,6 +32,16 @@ services:
       - microservice-mesh-base
     environment:
       MONGO_URL: 'mongodb://localhost:27017/boilerplate-production'
+  microservice-analytics:
+    container_name: microservice-analytics
+    build: microservices/microservice-analytics
+    image: boilerplate/analytics
+    network_mode: host
+    restart: always
+    depends_on:
+        - microservice-mesh-base
+    environment:
+      MONGO_URL: 'mongodb://localhost:27017/analytics'
   microservice-accounts:
     container_name: microservice-accounts
     build: microservices/microservice-accounts

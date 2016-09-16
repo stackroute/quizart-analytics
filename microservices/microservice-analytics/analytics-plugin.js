@@ -38,4 +38,15 @@ exports = module.exports = function(options) {
       return respond(null, {response: 'success'});
     });
   });
+
+   this.add('role:analytics,cmd:favouritetopics', function(msg, respond) {
+        //  console.log("msg===="+msg+"=====");
+       return  userAnalytics.create(msg,function(err,newpost){
+            if(err){
+                     return respond(err);
+                }
+             else return respond(null,{response:'success',entity:newpost});
+    });
+  });
 };
+

@@ -1,5 +1,5 @@
 {
-  "name": "account-microservice",
+  "name": "account-mvicroservice",
   "version": "0.1.0",
   "description": "Authentication account entity",
   "main": "analytics-plugin.js",
@@ -13,7 +13,7 @@
     "entity",
     "mongodb"
   ],
-  "author": "Sagar Patke <sagarpatke@gmail.com>",
+  "author": "Etukuri Bharath <etukuri.bharath123@gmail.com>, Paras Choudhary<choudharyparas60@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "grunt": "^1.0.1",

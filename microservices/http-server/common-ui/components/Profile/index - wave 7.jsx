@@ -11,30 +11,14 @@ import IconMenu from 'material-ui/IconMenu';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
-import LinearProgress from 'material-ui/LinearProgress';
-import Paper from 'material-ui/paper'
 import {Link} from 'react-router';
 
-import restUrl from '../../restUrl';
-
-import Badges from './../BadgesCard/index.jsx';
-import FavoriteTopics from './../FavoriteTopics/index.jsx';
-import ProfileAnalytics from './../ProfileAnalytics/index.jsx';
-import WinsVsLoss from './../WinsVsLoss/index.jsx';
-
-
-
-
-const card3={
-  height:'300%',
-marginLeft:180,
-marginRight:350
-};
+import restUrl from '../../restUrl'
 
 const style1 = {
   height: 90,
   width: 90,
-  margin: 0,
+  margin: 5,
   textAlign: 'center',
   display: 'inline-block',
 };
@@ -45,7 +29,7 @@ const stylePopular = {
 
 const style = {
   borderLeft : 2,
-  borderRight : 0,
+  borderRight : 2,
   borderTop : 0,
   borderBottom : 0,
   borderStyle : 'solid',
@@ -57,15 +41,12 @@ const style = {
 const styles = {
   textAlign : 'center',
   color : 'grey',
+  borderRadius : 20,
+  marginLeft : 20,
 };
 
 const styleCard = {
-  borderRadius : 5,
-  padding : 3,
-  textAlign:'center',
-  marginTop:-230,
-  float:'right'
-
+  borderRadius : 20,
 };
 
 export default class Profile extends React.Component{
@@ -279,43 +260,36 @@ export default class Profile extends React.Component{
 
 
 
-
     if(this.state.arr === [] || this.state.arr == null || this.state.arr[0] == undefined)
     { return (<div><p>Loading...........</p></div>) }
     else{
       return(
         <div>
-          <img src='http://www.melanze.co.in/wp-content/uploads/2016/03/photography-quiz-hd-background-9-hd-wallpapers-1080x300.jpg' width="100%"/>
-                <center> 
-                 <Avatar size={200} style={{margin: '-120px 0px 10px 0px'}}
-                   src="http://icons.iconarchive.com/icons/designbolts/free-male-avatars/128/Male-Avatar-Cool-Sunglasses-icon.png"
+        <Card>
+            <div className="row">
+              <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                <div style={{textAlign: 'center'}}>
+                  <Avatar size={70} style={{margin: '30px 0 30px'}}
+                   src={this.state.arr[0].useravatar}
                  />
-                </center>
-                 <RaisedButton
-                    primary={true}
-                   style={{margin: '-115px 0px 10px 0px',float:'right'}}
-                    icon={<FontIcon style={{cursor:'pointer'}} className="muidocs-icon-image-edit"/>}
-                    onTouchTap={this.handleOpen}
-                    />
-                <center>
-                    <h1>{this.state.arr[0].name.split(' ')[0]}</h1>
-                    <h1>{this.state.arr[0].name.split(' ')[1]}</h1>
-
-                        <h4>{this.state.arr[0].category}</h4>
-                      <h4>{this.state.arr[0].age},
-                     {this.state.arr[0].country}
-                
-                </h4>
-                
-              </center>
-              <div className="row">
+                </div>
+              </div>
               <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4" >
-               </div>
+                <h2>{this.state.arr[0].name}</h2>
+                <h5>{this.state.arr[0].category}</h5>
+                <h5>{this.state.arr[0].age},{this.state.arr[0].country}</h5>
+              </div>
               <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4" >
                 {
                   ((this.state.Profile.username)===(this.state.uid)) ? (
                     <div>
-                    
+                    <RaisedButton
+                    label="Edit Profile"
+                    primary={true}
+                    style={{marginTop: 50}}
+                    icon={<FontIcon style={{cursor:'pointer'}} className="muidocs-icon-image-edit"/>}
+                    onTouchTap={this.handleOpen}
+                    />
                     <Dialog
                       title="Edit Profile"
                       actions={actions}
@@ -336,28 +310,28 @@ export default class Profile extends React.Component{
                       hintText="Name"
                       floatingLabelText="Name"
                       fullWidth={true}
-                      defaultValue={this.state.arr[0].name}
+                      value={this.state.name}
                       onChange={this.handleName.bind(this)}
                     /><br />
                       <TextField
                         hintText="Avatar Image"
                         floatingLabelText="Avatar Image"
                         fullWidth={true}
-                        defaultValue={this.state.useravatar}
+                        value={this.state.useravatar}
                         onChange={this.handleImg.bind(this)}
                       /><br />
                       <TextField
                         hintText="Age"
                         floatingLabelText="Age"
                         fullWidth={true}
-                        defaultValue={this.state.arr[0].age}
+                        value={this.state.age}
                         onChange={this.handleAge.bind(this)}
                       /><br />
                       <TextField
                         hintText="Country"
                         floatingLabelText="Country"
                         fullWidth={true}
-                        defaultValue={this.state.arr[0].country}
+                        value={this.state.country}
                         onChange={this.handleCounry.bind(this)}
                       /><br />
                       </div>
@@ -373,6 +347,7 @@ export default class Profile extends React.Component{
                         onTouchTap={this.addFriend.bind(this)}
                     />
                   )
+
                 }
                 <Dialog
                   title="Unsuccessful"
@@ -391,27 +366,69 @@ export default class Profile extends React.Component{
               </div>
             </div>
             <br/>
+          <Divider />
+          <br/>
+          <CardMedia>
+            <div className="row">
+              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={styles} >
+                <h2>Create your Own Tournament</h2>
+                <RaisedButton label="Start Here" secondary={true} containerElement={<Link to="/create" />}/>
+              </div>
+            </div>
+          </CardMedia>
+          <br/>
+          <Divider />
+          <br/>
           <div className="row">
-          <div className="col-xs-12 col-sm-5 col-md-5 col-lg-5" style={styleCard}>
-              <ProfileAnalytics userid={this.props.username}/>
+            <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12" style={style1}>
+            <h3>Popular Topics</h3>
+            </div>
+            <div className="row">
+            <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3" style={styles}>
+              <CardMedia >
+                <img style={styleCard} src="http://lorempixel.com/100/100/animals/"/>
+                <h4>Animals</h4>
+              </CardMedia>
+            </div>
+            <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3" style={styles}>
+              <CardMedia>
+                <img style={styleCard} src="http://lorempixel.com/100/100/food/" />
+                <h4>Food</h4>
+              </CardMedia>
+            </div>
+            <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3" style={styles}>
+              <CardMedia>
+                <img style={styleCard} src="http://lorempixel.com/100/100/city/" />
+                <h4>City</h4>
+              </CardMedia>
+           </div>
+            </div>
+            <br/>
+            <Divider />
           </div>
-          <div className="col-xs-12 col-sm-2 col-md-2 col-lg-2" style={styleCard}>
-          </div>
-          <div className="col-xs-12 col-sm-5 col-md-5 col-lg-5" style={styleCard}>
-          
-          <Badges/>
-          </div>
-          </div>
+
           <br/>
-          <br/>
-          <center>
-            <WinsVsLoss/>
-          </center>
-        <br/>
-          
-          <div style={{textAlign:'center'}}>
-          <FavoriteTopics userid={this.props.username}/>
+          <Divider/>
+
+          <div className="row">
+
+          <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3 col-lg-offset-1" style={styles}>
+          <h4>Games</h4>
+          <h2>{this.state.arr[0].totalgames}</h2>
           </div>
+          <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4" style={style}>
+          <h4>Followers</h4>
+          <h2>{this.state.arr[0].followers}</h2>
+          </div>
+          <div className="col-xs-3 col-sm-3 col-md-3 col-lg-3" style={styles}>
+          <h4>Following</h4>
+          <h2>{this.state.arr[0].following}</h2>
+          </div>
+          <Divider />
+          </div>
+
+          <Divider/>
+        </Card>
         </div>
       );
 

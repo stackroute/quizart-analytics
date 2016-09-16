@@ -19,7 +19,7 @@ import Tournaments from '../../views/TournamentsContainer';
 var bodyContainer = {
   // padding: "16px",
   paddingTop: "64px",
-  marginTop:"0px"
+
 }
 
 
@@ -33,6 +33,11 @@ const styles = {
   slide: {
     padding: 30,
     overflow:'hidden',
+  },
+  formStyle :{
+      position : 'fixed',
+      bottom : 0,
+      paddingTop : 10,
   }
 };
 
@@ -111,14 +116,25 @@ export default class TabsMobile extends React.Component {
 
   render() {
     return (
-      <div className="container-fluid">
-        <Tabs style={bodyContainer}>
-        <Tab label="Profile" >
-          <div style={{height:'80vh'}}>
+      <div>
+        <Tabs
+          onChange={this.handleChange.bind(this)}
+          value={this.state.slideIndex}
+          style={bodyContainer}
+        >
+          <Tab label={this.props.page.toString()} value={0} />
+          <Tab label="Chat" value={1} />
+        </Tabs>
+        <SwipeableViews
+          index={this.state.slideIndex}
+          onChangeIndex={this.handleChange.bind(this)}
+        >
+          <div className="container-fluid" style={{height:'80vh' , overflow:'auto'}}>
 
             {this.props.page.toString()=="Profile"?
             <div>
               <ProfilePage username = {this.props.username}/>
+              <Timeline/>
             </div>
             :
            this.props.page.toString()=="Topics"?
@@ -142,16 +158,12 @@ export default class TabsMobile extends React.Component {
              </div>
              :null}
           </div>
-          </Tab>
-          <Tab label="Feeds" >
           <div style={styles.slide}>
                 <div style={{height:'70vh' , overflow:'auto'}}>
-                  { /* <ChatComponent />*/}
-                   <Timeline user ="user" hashtag ="QuizRTSocial"/>
+                    <ChatComponent />
                 </div>
           </div>
-          </Tab>
-          </Tabs>
+        </SwipeableViews>
 
       </div>
     );
