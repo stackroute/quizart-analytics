@@ -171,6 +171,7 @@ const style_players={
       var request = $.ajax({
       url: restUrl + '/api/v1/topic/'+this.props.id,
       type: 'GET',
+
       });
       request.done(function(data) {
       console.log(JSON.stringify(data));

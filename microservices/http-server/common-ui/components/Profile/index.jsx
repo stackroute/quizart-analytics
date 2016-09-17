@@ -286,6 +286,7 @@ export default class Profile extends React.Component{
       return(
         <div>
           <img src='http://www.melanze.co.in/wp-content/uploads/2016/03/photography-quiz-hd-background-9-hd-wallpapers-1080x300.jpg' width="100%"/>
+
                 <center> 
                  <Avatar size={200} style={{margin: '-120px 0px 10px 0px'}}
                    src="http://icons.iconarchive.com/icons/designbolts/free-male-avatars/128/Male-Avatar-Cool-Sunglasses-icon.png"
@@ -400,6 +401,7 @@ export default class Profile extends React.Component{
           <div className="col-xs-12 col-sm-5 col-md-5 col-lg-5" style={styleCard}>
           
           <Badges/>
+
           </div>
           </div>
           <br/>
@@ -410,7 +412,9 @@ export default class Profile extends React.Component{
         <br/>
           
           <div style={{textAlign:'center'}}>
+
           <FavoriteTopics userid={this.props.username}/>
+
           </div>
         </div>
       );

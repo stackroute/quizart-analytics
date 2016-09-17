@@ -16,10 +16,6 @@ import {red500,blue50,cyan900} from 'material-ui/styles/colors';
 var baseurl='/';
 
 export default class FavoriteTopics extends React.Component {
-    getInitialState() {
-        return 
-        arr:[]      
-    };
     componentDidMount() {
         var request = $.ajax({
           url: restUrl + '/api/favouritetopics/user/'+this.props.userid,
@@ -74,4 +70,5 @@ export default class FavoriteTopics extends React.Component {
          </Card>
          );
     };
+
 };
