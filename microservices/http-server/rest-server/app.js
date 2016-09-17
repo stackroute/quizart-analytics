@@ -193,6 +193,28 @@ app.get('/topics',function(req,res) {
   })
   console.log('send');
 });
+app.get('/api/favouritetopics/user/:userId',function(req,res) {
+  
+  result= [{"paras@gmail.com":[
+                {  y: 4181563, legendText:"Sherlock", indexLabel: "Sherlock" },     
+                {  y: 2175498, legendText:"Movies", indexLabel: "Movies" },
+                {  y: 3125844, legendText:"Logos",exploded: true, indexLabel: "Logos" },
+                {  y: 1176121, legendText:"Sports" , indexLabel: "Sports"},
+                {  y: 1727161, legendText:"Cricket", indexLabel: "Cricket" },
+                {  y: 4303364, legendText:"General Knowledge" , indexLabel: "General Knowledge"},
+                {  y: 1717786, legendText:"Animals" , indexLabel: "Animals"}
+            ]},
+            {"paras@gmial.com":[
+                {  y: 4181564, legendText:"Sherlock", indexLabel: "Sherlock" },
+                {  y: 2175498, legendText:"Movies", indexLabel: "Movies" },
+                {  y: 3125844, legendText:"Logos",exploded: true, indexLabel: "Logos" },
+                {  y: 1176121, legendText:"Sports" , indexLabel: "Sports"},
+                {  y: 1727161, legendText:"Cricket", indexLabel: "Cricket" },
+                {  y: 4303364, legendText:"General Knowledge" , indexLabel: "General Knowledge"},
+                {  y: 1717786, legendText:"Animals" , indexLabel: "Animals"}
+            ]}]
+  res.send(result[0][req.params.userId])
+});
 
 
 app.get('/topics/myfav',function(req,res) {
