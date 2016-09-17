@@ -228,14 +228,14 @@ const style_players={
                         key='d'
                         title='Topic Category'
                         subtitle={this.state.arr[0].topicCategory}
-                        style={{height:140,width:'25%',float:'left',position:'absolute',marginLeft:40}}
+                        style={{height:140,width:'20%',float:'left',position:'absolute',marginLeft:60}}
                       ></GridTile>
 
                       <GridTile
                         key='e'
-                        title='Details'
-                        subtitle={<div>You are about to play a Cartoon Quiz Game!Thfixede most awesome CARTOONS packed into ONE game!</div>}
-                        style={{height:140,width:'25%',float:'right',position:'absolute',marginLeft:820}}
+                        title='Current players playing'
+                        subtitle='3456'
+                        style={{height:140,width:'20%',float:'right',position:'absolute',marginLeft:850}}
                       ></GridTile>
 
                       
