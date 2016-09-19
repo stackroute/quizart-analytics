@@ -1,4 +1,4 @@
-var Asynchrony = require('asynchrony-di');x
+var Asynchrony = require('asynchrony-di');
 var BadgesManager = require('./badgesManager');
 var EventsManager = require('./eventsManager');
 var CounterEval = require('./counterEvalFunction');
