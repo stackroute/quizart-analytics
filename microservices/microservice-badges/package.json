@@ -19,6 +19,7 @@
     "should": "^9.0.2"
   },
   "dependencies": {
+    "async": "^2.0.1",
     "asynchrony-di": "0.1.0-3",
     "bcrypt": "^0.8.7",
     "mongoose": "^4.5.5",
