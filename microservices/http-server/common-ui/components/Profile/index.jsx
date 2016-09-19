@@ -12,7 +12,7 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import LinearProgress from 'material-ui/LinearProgress';
-import Paper from 'material-ui/paper'
+import Paper from 'material-ui/Paper'
 import {Link} from 'react-router';
 
 import restUrl from '../../restUrl';
