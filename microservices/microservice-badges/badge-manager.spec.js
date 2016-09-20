@@ -10,12 +10,24 @@ describe('Test Badge', function() {
       eventData.forEach(function(event) {
         eventMap[event.eventType] = event;
       });
-      callback(null, eventMap[eventType]);
+      callback(null, eventMap[eventType].counters);
     };
+    EventExecutor.prototype.retrieveBadges = function(eventType, callback) {
+      const eventData = require('./data/events');
+      const eventMap = {};
+      eventData.forEach(function(event) {
+        eventMap[event.eventType] = event;
+      });
+      callback(null, eventMap[eventType].badges);
+    }
     EventExecutor.prototype.getCounterEvaluator = function(counter, eventData, callback) {
-      console.log('PING');
       return callback(null, [function() {
         return 5;
+      }]);
+    }
+    EventExecutor.prototype.getBadgeEvaluator = function(badge, awardBadge, callback) {
+      return callback(null, ['consLogin', function(consLogin) {
+        awardBadge(badge);
       }]);
     }
     done();
