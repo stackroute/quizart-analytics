@@ -21,13 +21,27 @@ describe('Test Badge', function() {
       callback(null, eventMap[eventType].badges);
     }
     EventExecutor.prototype.getCounterEvaluator = function(counter, eventData, callback) {
-      return callback(null, [function() {
-        return 5;
+      //console.log('inside getCounterEvaluator');
+      return callback(null, [function(callback) {
+        return callback(null,5);
       }]);
     }
     EventExecutor.prototype.getBadgeEvaluator = function(badge, awardBadge, callback) {
+      //console.log('inside getBadgeEvaluator');
       return callback(null, ['consLogin', function(consLogin) {
+        const badgesData = require('./data/badges');
+        var badgeFunction;
+        badgesData.forEach(function(badgeData){
+          if(badgeData.badgeId===badge)
+            this.badgeFunction=badgeData.badgeFunct;
+        }.bind(this));
+
+        var flag=this.badgeFunction(consLogin);
+
+        if(flag==true)
         awardBadge(badge);
+        else
+        awardBadge('Badge not awarded');
       }]);
     }
     done();
@@ -36,8 +50,9 @@ describe('Test Badge', function() {
     const event = new Event('successLogin','sarahconnor',{loginTime: new Date()});
     const eventExecutor = new EventExecutor(event);
     eventExecutor.execute(function(badgeId) {
-      badgeId.should.have.property('badgeId');
-      badgeId.badgeId.should.be.exactly('goodHabit');
+      console.log(badgeId);
+      //badgeId.should.have.property('badgeId');
+      badgeId.should.be.exactly('goodHabit');
       done();
     });
   });
