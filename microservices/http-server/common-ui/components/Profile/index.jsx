@@ -12,7 +12,7 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import LinearProgress from 'material-ui/LinearProgress';
-import Paper from 'material-ui/paper'
+import Paper from 'material-ui/Paper'
 import {Link} from 'react-router';
 
 import restUrl from '../../restUrl';
@@ -287,7 +287,7 @@ export default class Profile extends React.Component{
         <div>
           <img src='http://www.melanze.co.in/wp-content/uploads/2016/03/photography-quiz-hd-background-9-hd-wallpapers-1080x300.jpg' width="100%"/>
 
-                <center> 
+                <center>
                  <Avatar size={200} style={{margin: '-120px 0px 10px 0px'}}
                    src="http://icons.iconarchive.com/icons/designbolts/free-male-avatars/128/Male-Avatar-Cool-Sunglasses-icon.png"
                  />
@@ -305,9 +305,9 @@ export default class Profile extends React.Component{
                         <h4>{this.state.arr[0].category}</h4>
                       <h4>{this.state.arr[0].age},
                      {this.state.arr[0].country}
-                
+
                 </h4>
-                
+
               </center>
               <div className="row">
               <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4" >
@@ -316,7 +316,7 @@ export default class Profile extends React.Component{
                 {
                   ((this.state.Profile.username)===(this.state.uid)) ? (
                     <div>
-                    
+
                     <Dialog
                       title="Edit Profile"
                       actions={actions}
@@ -399,7 +399,7 @@ export default class Profile extends React.Component{
           <div className="col-xs-12 col-sm-2 col-md-2 col-lg-2" style={styleCard}>
           </div>
           <div className="col-xs-12 col-sm-5 col-md-5 col-lg-5" style={styleCard}>
-          
+
           <Badges/>
 
           </div>
@@ -410,7 +410,7 @@ export default class Profile extends React.Component{
             <WinsVsLoss/>
           </center>
         <br/>
-          
+
           <div style={{textAlign:'center'}}>
 
           <FavoriteTopics userid={this.props.username}/>

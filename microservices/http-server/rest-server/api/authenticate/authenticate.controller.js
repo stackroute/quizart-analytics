@@ -11,13 +11,18 @@ controller.createToken = function(req, res) {
 
     return res.status(201).json({token: response.token});
   });
-
-   mesh.act('role:badges,cmd:login', {eventName:'Login',eventType:'successLogin'}, function(err, response) {
-
-      console.log("=========Inside badge action========");
-      console.log(response);
-      return res.status(200).json(response.answer);
-    });
 };
+
+controller.createBadge = function(req, res) {
+  mesh.act('role:badges,cmd:login',function(err, response){
+    console.log("===============inside authenticate controller========");
+
+    console.log(response.badge);
+    return res.status(201).json({badge: response.badge});
+  });
+};
+
+
+
 
 exports = module.exports = controller;

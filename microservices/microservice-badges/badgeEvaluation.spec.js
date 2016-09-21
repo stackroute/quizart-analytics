@@ -23,14 +23,13 @@ describe("Test Badges",function () {
     }).bind(this));
     //callback(null,badges);
   };
-  it('Good Habbit badge testing',function (done) {
+  it('Good Habit badge testing',function (done) {
     var event = new Event('gameWon','Abhishek');
     var eventExecutor = new EventExecutor(event);
     eventExecutor.execute(function (badgeId) {
       //TODO badge pop implementation;
       badgeId.should.be.exactly('thumbsUp');
       //done();
-      
     });
     done();
   });

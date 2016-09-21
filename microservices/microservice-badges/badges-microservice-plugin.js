@@ -1,33 +1,63 @@
-// var Event = require('./eventCreator');
-// var EventExecutor = require('./eventExecutor');
-var mongoose=require('mongoose');
-var Asynchrony = require('asynchrony-di');
-var asynchrony = new Asynchrony();
-var userLogin=require('./userLogin.schema');
-var userLoginCounter=require('./userLoginCounter');
-var Event = require('./eventCreator');
-var EventExecutor = require('./eventExecutor');
+const EventExecutor = require('./event-executor');
+const Event = require('./event1');
 
-module.exports = function(options) {
-    //mongoose.connect(options.mongoUrl);
-    console.log('===================badges-microservice-plugin=======================');
-    this.add('role:badges,cmd:login',function(msg,respond){
-        console.log("===============Inside add function of microservice badges plugin==================");
-        console.log(msg.eventName+"   "+msg.eventType);
-        
-        var event = new Event(msg.eventName,msg.eventType);
-        var eventExecutor = new EventExecutor(event);
-        
-        console.log('===================================');
-        eventExecutor.execute(function(badgeId) {
-            console.log('\n\nBADGE:::: Badge ' + badgeId + 'awarded\n\n');
-        });
-        
-        respond(null, {answer:'inside badges microservice'});
+EventExecutor.prototype.retrieveCounters = function (eventType, callback) {
+  const eventData = require('./data/events');
+  const eventMap = {};
+  eventData.forEach(function (event) {
+    eventMap[event.eventType] = event;
+  });
+  callback(null, eventMap[eventType].counters);
+};
+EventExecutor.prototype.retrieveBadges = function (eventType, callback) {
+  const eventData = require('./data/events');
+  const eventMap = {};
+  eventData.forEach(function (event) {
+    eventMap[event.eventType] = event;
+  });
+  callback(null, eventMap[eventType].badges);
+}
+EventExecutor.prototype.getCounterEvaluator = function (counter, eventData, callback) {
+  //console.log('inside getCounterEvaluator');
+  return callback(null, [function (callback) {
+    return callback(null, 5);
+  }]);
+}
+EventExecutor.prototype.getBadgeEvaluator = function (badge, awardBadge, callback) {
+  //console.log('inside getBadgeEvaluator');
+  return callback(null, ['consLogin', function (consLogin) {
+    const badgesData = require('./data/badges');
+    var badgeFunction;
+    badgesData.forEach(function (badgeData) {
+      if (badgeData.badgeId === badge)
+        this.badgeFunction = badgeData.badgeFunct;
+    }.bind(this));
+
+    var flag = this.badgeFunction(consLogin);
+
+    if (flag == true)
+      awardBadge(badge);
+    else
+      awardBadge('Badge not awarded');
+  }]);
+}
+
+module.exports = function (options) {
+  console.log('===================badges-microservice-plugin=======================');
+  this.add('role:badges,cmd:login', function (msg, respond) {
+    console.log("===============Inside add function of microservice badges plugin==================");
+
+    const event = new Event('successLogin', 'sarahconnor', { loginTime: new Date() });
+    const eventExecutor = new EventExecutor(event);
+    eventExecutor.execute(function (badgeId) {
+      console.log(badgeId);
+      respond(null, { badge: badgeId });
     });
+
+
+  });
 };
 
-
-var awardBadge=function(){
+var awardBadge = function () {
 
 }

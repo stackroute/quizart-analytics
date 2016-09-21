@@ -3,8 +3,6 @@ var seneca = require('seneca');
 var badgesMicroservicePlugin = require('.');
 var badgesMicroservice = seneca();
 
-console.log('==================badges-microservice========================');
-
 var env = process.env.NODE_ENV || 'dev';
 
 badgesMicroservice.use(badgesMicroservicePlugin, {
