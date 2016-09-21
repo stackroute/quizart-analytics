@@ -54,8 +54,7 @@ return (
     </Tabs>
     <SwipeableViews
       index={this.state.slideIndex}
-      onChangeIndex={this.handleChange}
-    >
+      onChangeIndex={this.handleChange} >
         <div style={styles.slide}>
           {this.props.tournament.description+"\n"} 
           </div>
@@ -63,6 +62,7 @@ return (
       <div style={styles.slide}>
        {this.props.tournament.instructions}
       </div>
+      
       <div style={styles.slide}>
       <center>
        1st Place : {this.props.tournament.prizes[0].position1}<br />

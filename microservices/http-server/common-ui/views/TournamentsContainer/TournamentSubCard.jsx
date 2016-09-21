@@ -87,49 +87,54 @@ const avatarstyle={
 
 class TournamentsSubCard extends React.Component {
 
-  // constructor(props){
-  //   super(props);
-  //   this.state = {
-  //     finished: false, active: false,
-  //     label:'',
-  //     //username: JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub,
-  //   };
-  // }
+  constructor(props){
+    super(props);
+    this.state = {
+      finished: false, active: false,
+      label:'',
+      //username: JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub,
+    };
+  }
 
-  // static get contextTypes(){
-  //   return {
-  //     router: PropTypes.object.isRequired
-  //   }
-  // }
+  static get contextTypes(){
+    return {
+      router: PropTypes.object.isRequired
+    }
+  }
 
   // handleLeaderboard = () => {
   //   this.context.router.push('/tournamentboard/'+this.props.tournament._id);
   // }
 
-  // handleNext = () => {
-  //   if(this.state.label==='Register') {
-  //     var request = $.ajax({
-  //       url: restUrl + '/api/v1/tournaments/registerPlayer',
-  //       type: 'PUT',
-  //       data: JSON.stringify({id: this.props.tournament._id, userId: this.state.username}),
-  //       contentType: 'application/json'
-  //     });
-  //     request.done(function(data) {
-  //       console.log('PUT success' + JSON.stringify(data));
-  //       this.setState({
-  //         finished: true,
-  //         label: 'Registered',
-  //       });
-  //     }.bind(this));
-  //     request.fail(function() {
-  //       this.setState({
-  //         error: true
-  //       });
-  //     }.bind(this));
-  //   } else if(this.state.label==='Play') {
-  //     this.context.router.push('/quiz/true/'+this.props.tournament._id);
-  //   }
-  // };
+  handleNext = () => {
+    if(this.state.label==='Register' || this.state.label==='REGISTER') {
+      var request = $.ajax({
+        url: restUrl + '/api/v1/tournaments/registerPlayer',
+        type: 'PUT',
+        data: JSON.stringify({id: this.props.tournament._id, userId: this.state.username}),
+        contentType: 'application/json'
+      });
+      request.done(function(data) {
+        console.log('PUT success' + JSON.stringify(data));
+        this.setState({
+          finished: true,
+          label: 'Registered',
+        });
+      }.bind(this));
+      request.fail(function() {
+        this.setState({
+          error: true
+        });
+      }.bind(this));
+    }
+    
+    // else if(this.state.label==='Play' || this.state.label==='PLAY') {
+    //   this.context.router.push('/quiz/true/'+this.props.tournament._id);
+    // }
+    else{
+      this.context.router.push('/tournamentpage/'+this.props.tournament._id);
+    }
+  };
 
   // currentLevel(retrievedTournament) {
   //   var levels = retrievedTournament.levels;
@@ -290,7 +295,7 @@ class TournamentsSubCard extends React.Component {
           <SwipeableTabs tournament={this.props.tournament} />
 
           <CardActions style={{padding:0}}>
-            <RaisedButton label={this.props.btname} secondary={true} fullWidth={true}/>
+            <RaisedButton label={this.props.btname} secondary={true} fullWidth={true} onClick={this.handleNext} />
           </CardActions>
           
           </Card>
