@@ -1,25 +1,28 @@
 const Asynchrony = require('asynchrony-di');
 const async = require('async');
+const Events=require('./data/events')
 
 function EventExecutor(event) {
   this.execute = function execute(awardBadge) {
     async.waterfall([
         function createContext(callback) {
-          const context = {};
+          console.log(event.eventType);
+          const context = {asynchrony: new Asynchrony()};
           callback(null, context);
         },
-        function(context, callback) {
+        (context, callback) => {
           async.parallel([
-            setCountersInContext.bind(this,event.eventType),
-            retrieveBadgeEvaluators.bind(this,event.eventType)
-          ], function(err,callback) {
-            callback(null, context);
+            setCountersInContext.bind(this,event.eventType,context),
+            retrieveBadgeEvaluators.bind(this, event.eventType, awardBadge, context)
+          ], function(err) {
+            callback(null,context);
           });
         },
-        function(context, callback) {
+        (context, callback) => {
+          //console.log(context);
           async.series([
-              setCountersRequiredByBadgesInContext.bind(this,context.badgeEvaluators, context),
-              addCountersIntoAsynchrony.bind(this,context.counters,context.asynchrony),
+              setCountersRequiredByBadgesInContext.bind(this, context.badgeEvaluators, context),
+              addCountersIntoAsynchrony.bind(this,context,context.asynchrony,event.eventData),
               evaluateBadgesInAsynchrony.bind(this,context.badgeEvaluators, context.asynchrony)
             ], callback);
         }
@@ -47,20 +50,53 @@ EventExecutor.prototype.getBadgeEvaluator = function(badge, badgeAwardedFunction
   console.log('TODO: INSIDE EventExecutor.prototype.getCounterEvaluator');
 }
 
-function setCountersInContext(eventType, callback) {
-
+function setCountersInContext(eventType, context, callback) {
+  this.retrieveCounters(eventType,function(err, counters){
+    context.counters = new Set();
+    counters.forEach(function(counter) {
+      context.counters.add(counter);
+    });
+    callback(null,context);
+  });
 }
-function retrieveBadgeEvaluators(context, callback) {
 
+function retrieveBadgeEvaluators(eventType, awardBadge, context, callback) {
+  this.retrieveBadges(eventType,function(err, badges){
+    var arr=[];
+    badges.forEach(function(badge){
+        this.getBadgeEvaluator(badge, awardBadge,function(err, badgeEvaluator){
+          arr.push(badgeEvaluator);
+      });
+      context.badgeEvaluators=arr;
+      callback(null,context);
+    }.bind(this));
+  }.bind(this));
 }
-function setCountersRequiredByBadgesInContext(callback) {
 
-},
-function addCountersIntoAsynchrony(callback) {
+function setCountersRequiredByBadgesInContext(badgeEvaluators, context, callback) {
+  badgeEvaluators.forEach(function(badgeEvaluator){
+    badgeEvaluator.slice(0,badgeEvaluator.length-1).forEach(function(counter) {
+        context.counters.add(counter);
+      });
+  });
+  callback(null,context);
+}
 
-},
-function evaluateBadgesInAsynchrony(callback) {
+function addCountersIntoAsynchrony(context,asynchrony,eventData,callback) {
+  context.counters.forEach(function(counter){
+    this.getCounterEvaluator(counter,eventData,function(err, counterEvaluator){
+      asynchrony.add(counter,counterEvaluator);
+    });
+  }.bind(this));
+  callback(null,context);
+}
 
+function evaluateBadgesInAsynchrony(badgeEvaluators, asynchrony, callback) {
+  badgeEvaluators.forEach(function(badgeEvaluator){
+    //console.log(badgeEvaluator);
+    asynchrony.invoke(badgeEvaluator);
+  });
+  callback(null,asynchrony);
 }
 
 module.exports = EventExecutor;

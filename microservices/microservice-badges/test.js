@@ -1,1 +1,1 @@
-conts event = {eventName:'Login',eventType:'successLogin'};
+const event = {eventName:'Login',eventType:'successLogin'};

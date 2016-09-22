@@ -13,4 +13,16 @@ controller.createToken = function(req, res) {
   });
 };
 
+controller.createBadge = function(req, res) {
+  mesh.act('role:badges,cmd:login',function(err, response){
+    console.log("===============inside authenticate controller========");
+
+    console.log(response.badge);
+    return res.status(201).json({badge: response.badge});
+  });
+};
+
+
+
+
 exports = module.exports = controller;
