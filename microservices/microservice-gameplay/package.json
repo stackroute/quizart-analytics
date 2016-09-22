@@ -1,0 +1,30 @@
+{
+  "name": "quizart",
+  "version": "0.1.0",
+  "description": "QuizRT",
+  "main": "game-provisioner/index.js",
+  "scripts": {
+    "start": "node game-provisioner-microservice.js",
+    "test": "node_modules/gulp/bin/gulp.js test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bitbucket.org/sagpatke/quizart.git"
+  },
+  "keywords": [
+    "quizart"
+  ],
+  "author": "Sagar Patke <sagarpatke@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/sagpatke/quizart#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-mocha": "^3.0.1",
+    "should": "^11.1.0"
+  },
+  "dependencies": {
+    "async": "^2.0.1",
+    "seneca": "^3.1.0",
+    "seneca-redis-transport": "^0.3.0"
+  }
+}
