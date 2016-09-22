@@ -16,11 +16,10 @@ module.exports = function(options) {
     if(!queue[topicId]) { queue[topicId] = []; }
 
     const topicQueue = queue[topicId];
-    
     topicQueue.push(msg.playerId);
-    
+
     if(topicQueue.length >= playersPerGame) {
-      console.log("4th player joined!");
+
       createGame(topicId);
     }
 
@@ -43,7 +42,7 @@ module.exports = function(options) {
 
     gameManager.use('../game-manager/index.js',{gameId:gameId,players:players, questions: questions, questionTime: questionTime});
     gameManagers.push(gameManager);
-    
+
     gameManager.ready(function() {
       players.forEach(sendGameIdToPlayer.bind(this,gameId));
       // players.forEach(playersStartPinging.bind(this,gameId));
@@ -58,8 +57,6 @@ module.exports = function(options) {
 
   function sendGameIdToPlayer(gameId,player) {
 
-    //console.log("gameId & player are ",gameId,player );
-
     const microservice = seneca();
     async.series([
       function(callback) {
@@ -67,9 +64,9 @@ module.exports = function(options) {
         microservice.client({type: 'redis', pin: 'role:queue,player:'+player+',cmd:*'});
         microservice.ready(callback);
       }, function(callback) {
-        console.log("$$$$$$$$$$$$$");
+
         microservice.act('role:queue,player:'+player+',cmd:ready',{gameId:gameId},function(err, response){
-          console.log("Got the response " ,response);
+
           callback(err,response);
         });
 
@@ -79,27 +76,6 @@ module.exports = function(options) {
     ]);
   };
 
-  // function playersStartPinging(gameId,player) {
-  //     const microservice = seneca();
-
-  //     microservice.add('role:gameplay,gameId:'+gameId+',cmd:nextQuestion', function(msg, respond) {
-  //         console.log("Question is ", msg.question);   
-  //     });
-  //     microservice.use('redis-transport');
-  //     microservice.listen({type: 'redis',pin:'role:gameplay,gameId:'+gameId+',cmd:*'});
-
-  //     async.series([
-  //     function(callback) {
-  //       microservice.client({type: 'redis', pin: 'role:gameplay,gameId:'+gameId+',player:'+player+',cmd:*'});
-  //       microservice.ready(callback);
-  //     },function(callback) {
-        
-  //       microservice.act('role:gameplay,gameId:' + gameId + ',player:'+player+',cmd:ping',function(err, response){
-  //         console.log("Check the response " ,response);
-  //         callback(err,response);
-  //       });
-  //     }]);
-  // };
 
   function getPlayers(topicQueue, noOfPlayers) {
     const players = [];

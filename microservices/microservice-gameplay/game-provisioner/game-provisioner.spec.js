@@ -26,12 +26,9 @@ describe('Game Provisioner', function() {
               const playerMicroservice = player.microservice;
 
               playerMicroservice.add('role:queue,player:'+playerId+',cmd:ready',function(msg, respond) {
-                console.log("Got the gameId",msg.gameId);
                 playerMicroservice.emit('ready', {gameId:msg.gameId,player:playerId}, function(err, response) {
-                    console.log("##########################");
                 });
                 return respond(null, {response: 'okay'});
-                // Ping Game Manager
               });
 
               playerMicroservice.use('redis-transport');
@@ -54,7 +51,6 @@ describe('Game Provisioner', function() {
         if(err) { return callback(err); }
         response.should.have.property('response');
         response.response.should.be.exactly('queued');
-        console.log("check this for player123 ",response.response);
         callback();
       });
     }, done);
@@ -76,7 +72,6 @@ describe('Game Provisioner', function() {
         if(err) { done(err); }
         response.should.have.property('response');
         response.response.should.be.exactly('queued');
-        console.log("check this for 4th player ",response.response);
       });
 
       //done();

@@ -83,6 +83,14 @@ services:
       - microservice-mesh-base
     environment:
       MONGO_URL: 'mongodb://localhost:27017/Counters'
+  microservice-gameplay:
+    container_name: microservice-gameplay
+    build: microservices/microservice-gameplay
+    image: quizart/gaeplay
+    network_mode: host
+    restart: always
+    depends_on:
+      - microservice-mesh-base
   http-server0:
     container_name: http-server0
     build: microservices/http-server
