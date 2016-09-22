@@ -20,70 +20,59 @@ var baseurl='/';
 
 export default class WinsVsLoss extends React.Component {
 
-  constructor(props){
-    super(props);
-    this.state={   details: [
-    {
-      "wins": 772,
-      "loss": 860
-    },
-    {
-      "wins": 840,
-      "loss": 846
-    },
-    {
-      "wins": 373,
-      "loss": 676
-    },
-    {
-      "wins": 546,
-      "loss": 984
-    },
-    {
-      "wins": 318,
-      "loss": 724
-    },
-    {
-      "wins": 849,
-      "loss": 286
-    },
-    {
-      "wins": 864,
-      "loss": 850
-    },
-    {
-      "wins": 132,
-      "loss": 794
-    },
-    {
-      "wins": 906,
-      "loss": 975
-    },
-    {
-      "wins": 911,
-      "loss": 765
-    }
-  ]}};
+  
+  // constructor(props)
+  // {
+  //   super(props);
+  //   this.state={data: []};
+  // };
+
+  // componentDidMount() 
+  // {
+  //   this.loadDataFromServer();
+  //   //setInterval(this.loadDataFromServer, 10000);
+       
+  // };
+
+// loadDataFromServer()
+// {
+//    $.ajax(
+//       {
+//       url: restUrl + '/api/v1/analytics/user/ericksonbooth@recritube.com/winloss',
+//       type: 'GET',
+//       dataType:'JSON',
+//       success:function(dataArr)
+//       {
+//         console.log(dataArr);
+//         this.setState({data: dataArr});
+//         console.log(this.state.data[0].count);
+//         console.log(this.state.data[1].count);
+//       }.bind(this),
+//       error:function(err)
+//       {
+//         console.error('err');
+//       }.bind(this)
+//       });
+
+// }
+
+
 
 add(x,y){
   x=((x/(x+y))*100);
   return x;
+
 };
 
   render() {
-
+    //console.log("data coming as", this.state.data[0].count);
   return (
                <Card zDepth={3}>
-                    <CardTitle title="Badges" titleColor={cyan900}/>
+                    <CardTitle title="WinsVsLoss" titleColor={cyan900} style={{textAlign:"center"}}/>
                    <CardText>
                    <center>
-                    <div className="row">            
-                        <div className="col-lg-6 col-sm-12 col-xs-12 col-lg-6 col-md-offset-4" style={{margin:'30px 0 30px 0',marginBottom:'30px', textAlign:'right'}}>
-                          <LinearProgress mode="determinate" value={this.add(this.state.details[3].wins,this.state.details[5].loss)} style={{height:'30px',width:'300px'}}/>
-                          </div>    
-                          <div className="col-lg-6 col-sm-12 col-xs-12 col-md-6" style={{margin:'30px 0 30px 0',textAlign:'left'}}>
-                          <span style={{height:'10%',width:'100%',float:'right'}}>Win vs Loss Progress</span>
-                      </div>
+                    <div style={{marginBottom:'30px',padding:"0px"}}>            
+                    <LinearProgress mode="determinate" value={this.add(this.props.allData[0].count,this.props.allData[1].count)} style={{margin:"10px",height:'30px',textAlign:'right'}}/>  
                     </div>
                     </center>
                     </CardText>

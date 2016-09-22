@@ -1,5 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import Divider from 'material-ui/Divider';
@@ -172,22 +171,6 @@ const style_players={
       var request = $.ajax({
       url: restUrl + '/api/v1/topic/'+this.props.id,
       type: 'GET',
-=======
-
-import SubTopicCard from './SubTopicCard';
-
-var SubTopicContainer = React.createClass({
-
-  render: function(){
-      var allTheTopics = [];
-      var that = this;
-      this.props.topics.forEach(function(topic){
-        allTheTopics.push(
-            <div className="col-lg-3 col-xs-12 col-md-4 col-sm-4" style={{paddingTop:0,marginTop:0}}>
-              <SubTopicCard {...that.props}  topic={topic} key={topic.topicName}  />
-            </div>
-        );
->>>>>>> 87f7b4028798a410c1d54ab553b179b6c3d47a53
       });
       request.done(function(data) {
       console.log(JSON.stringify(data));

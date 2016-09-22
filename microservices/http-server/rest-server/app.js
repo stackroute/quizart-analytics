@@ -204,6 +204,23 @@ res.send(result);
  console.log('agrt dfglca;lkg');
  })
 
+app.get('/api/v1/analytics/user/favTopics',function(req,res) {
+  mesh.act('role:analytics,cmd:favouritetopics',function(err,result){
+   if (err) return console.error(err)
+    console.log('------------testing the result-----'+result+'------------------------')
+    res.send(result);
+     })
+     console.log('agrt dfglca;lkg');
+ })
+
+app.get('/api/v1/analytics/user/filter',function(req,res) {
+  mesh.act('role:analytics,cmd:favouritetopics',function(err,result){
+   if (err) return console.error(err)
+    console.log('------------testing the result-----'+result+'------------------------')
+    res.send(result);
+     })
+     console.log('agrt dfglca;lkg');
+ })
  app.get('/tournamentSection',function(req,res) {
    console.log('form express-tournamentSection');
    res.header("Access-Control-Allow-Origin", "*");

@@ -22,7 +22,6 @@ import Badge from 'material-ui/Badge';
 import {List, ListItem} from 'material-ui/List';
 import RaisedButton from 'material-ui/RaisedButton';
 import base64 from 'base-64';
-
 import ActionAccountbox from 'material-ui/svg-icons/action/account-box';
 import ActionTurnedin from 'material-ui/svg-icons/action/turned-in';
 import ActionViewmodule from 'material-ui/svg-icons/action/view-module';

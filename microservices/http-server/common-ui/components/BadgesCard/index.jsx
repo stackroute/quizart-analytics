@@ -12,7 +12,6 @@ import restUrl from '../../restUrl';
 import TabsMobile from '../../components/Tabs';
 import {red500,blue50,cyan900} from 'material-ui/styles/colors';
 
-
 var baseurl='/';
 
 export default class Badges extends React.Component {
@@ -42,14 +41,16 @@ export default class Badges extends React.Component {
 render() {
   var badges = this.state.details.map(function (d) {
             return (
-              
+                <div className="col-lg-2 col-md-4 col-sm-4 col-xs-6">
                 <Avatar src={d.img} size={50}/>
+                <label>Thumbs-Up</label>
+                </div>
             );
         });
   return (
-               <Card  style={{height:'450px'}} zDepth={3}>
+               <Card zDepth={3}>
                     <CardTitle title="Badges" titleColor={cyan900}/>
-                   <CardText>{badges}</CardText>
+                   <div className="row" style={{margin:"10px",padding:"10px"}}>{badges}</div>
                    </Card>
             );
   }

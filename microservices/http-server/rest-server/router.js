@@ -15,5 +15,4 @@ router.use('/timeline', require('./api/timeline/timeline.router'));
 router.use('/auth', require('./api/auth/twitter.router'));
 router.use('/analytics', require('./api/analytics/analytics.router'));
 
-
 exports = module.exports = router;

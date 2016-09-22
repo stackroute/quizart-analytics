@@ -38,4 +38,19 @@ exports = module.exports = function(options) {
       return respond(null, {response: 'success'});
     });
   });
+
+  this.add('role:analytics,cmd:favouritetopics',function(msg,respond){
+    var result=[
+                {  y: 4181563, legendText:"Sherlock", indexLabel: "Sherlock" },
+                {  y: 2175498, legendText:"Movies", indexLabel: "Movies" },
+                {  y: 3125844, legendText:"Logos",exploded: true, indexLabel: "Logos" },
+                {  y: 1176121, legendText:"Sports" , indexLabel: "Sports"},
+                {  y: 1727161, legendText:"Cricket", indexLabel: "Cricket" },
+                {  y: 4303364, legendText:"General Knowledge" , indexLabel: "General Knowledge"},
+                {  y: 1717786, legendText:"Animals" , indexLabel: "Animals"}
+            ]
+            console.log("analytics add");
+    return respond(null,{response: result});
+  });
+  
 };

@@ -42,8 +42,6 @@ var style1= {
 
 var cardDivStyle={
    margin:0,
-   paddingLeft:30,
-   paddingRight:30
 }
 
 var title1={

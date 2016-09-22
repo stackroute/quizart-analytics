@@ -12,8 +12,9 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import LinearProgress from 'material-ui/LinearProgress';
-import Paper from 'material-ui/paper'
+import Paper from 'material-ui/Paper'
 import {Link} from 'react-router';
+import MediaQuery from 'react-responsive';
 
 import restUrl from '../../restUrl';
 
@@ -61,10 +62,10 @@ const styles = {
 
 const styleCard = {
   borderRadius : 5,
-  padding : 3,
   textAlign:'center',
-  marginTop:-230,
-  float:'right'
+  marginTop:-280,
+  float:'right',
+  marginBottom:-20
 
 };
 
@@ -73,7 +74,7 @@ export default class Profile extends React.Component{
   constructor(props){
     super(props);
     console.log("Inside Constructor of Profile Page===",this.props.username);
-    this.state = {
+    this.state = { data:[],
       name: "",
       useravatar: "http://lorempixel.com/100/100/nature/",
       age: "",
@@ -91,6 +92,29 @@ export default class Profile extends React.Component{
       addFriend: "Add Friend"
     }
   };
+
+  loadDataFromServer()
+{
+  console.log(this.props.username+"Bharath");
+   $.ajax(
+      {
+      url: restUrl + '/api/v1/analytics/user/'+this.props.username+'/winloss',
+      type: 'GET',
+      dataType:'JSON',
+      success:function(dataArr)
+      {
+        console.log(dataArr);
+        this.setState({data: dataArr});
+        console.log(this.state.data[0].count);
+        console.log(this.state.data[1].count);
+      }.bind(this),
+      error:function(err)
+      {
+        console.error('err');
+      }.bind(this)
+      });
+
+};
 
   static get contextTypes() {
     return {
@@ -225,6 +249,7 @@ export default class Profile extends React.Component{
           }
 
   componentDidMount(){
+    this.loadDataFromServer();
     console.log("uid",this.state.uid);
     var request = $.ajax({
     url: restUrl + '/api/v1/profile/'+this.state.uid,
@@ -285,15 +310,31 @@ export default class Profile extends React.Component{
     else{
       return(
         <div>
-          <Card><img src='http://www.melanze.co.in/wp-content/uploads/2016/03/photography-quiz-hd-background-9-hd-wallpapers-1080x300.jpg' width="100%"/>
-                <center> 
-                 <Avatar size={200} style={{margin: '-120px 0px 10px 0px'}}
-                   src="http://icons.iconarchive.com/icons/designbolts/free-male-avatars/128/Male-Avatar-Cool-Sunglasses-icon.png"
-                 />
-                </center>
+          <img src='http://www.melanze.co.in/wp-content/uploads/2016/03/photography-quiz-hd-background-9-hd-wallpapers-1080x300.jpg' width="100%"/>
+                
+                <MediaQuery query='(min-device-width: 600px)'>
+                  <MediaQuery query='(min-width: 600px)'>
+                   <center>
+                   <Avatar size={100} style={{margin: '-120px 0px 10px 0px'}}
+                             src="http://icons.iconarchive.com/icons/designbolts/free-male-avatars/128/Male-Avatar-Cool-Sunglasses-icon.png"
+                           />
+                           </center>
+                   </MediaQuery>
+                </MediaQuery> 
+                <MediaQuery query='(min-device-width: 800px)'>
+                  <MediaQuery query='(min-width: 800px)'>
+                     <center>
+                      <Avatar size={200} style={{margin: '-120px 0px 10px 0px'}}
+                             src="http://icons.iconarchive.com/icons/designbolts/free-male-avatars/128/Male-Avatar-Cool-Sunglasses-icon.png"
+                           />
+                           </center>
+                  </MediaQuery>
+                </MediaQuery> 
+                
+
                  <RaisedButton
                     primary={true}
-                   style={{margin: '-115px 0px 10px 0px',float:'right'}}
+                   style={{margin: '-135px 0px 10px 0px',float:'right'}}
                     icon={<FontIcon style={{cursor:'pointer'}} className="muidocs-icon-image-edit"/>}
                     onTouchTap={this.handleOpen}
                     />
@@ -308,7 +349,6 @@ export default class Profile extends React.Component{
                 </h4>
                 
               </center>
-              </Card>
               <div className="row">
               <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4" >
                </div>
@@ -393,26 +433,35 @@ export default class Profile extends React.Component{
             </div>
             <br/>
           <div className="row">
-          <div className="col-xs-12 col-sm-5 col-md-5 col-lg-5" style={styleCard}>
+          <MediaQuery query='(max-device-width: 600px)'>
+            <MediaQuery query='(max-width: 600px)'>
+                   
+          <div className="col-xs-12 col-sm-5 col-md-5 col-lg-5">
               <ProfileAnalytics userid={this.props.username}/>
           </div>
+          </MediaQuery>
+                </MediaQuery> 
+
+                <MediaQuery query='(min-device-width: 800px)'>
+                  <MediaQuery query='(min-width: 800px)'>
+                  <div className="col-xs-12 col-sm-5 col-md-5 col-lg-5" style={styleCard}>
+                      <ProfileAnalytics userid={this.props.username}/>
+                  </div>
+                  </MediaQuery>
+                </MediaQuery> 
           <div className="col-xs-12 col-sm-2 col-md-2 col-lg-2" style={styleCard}>
           </div>
           <div className="col-xs-12 col-sm-5 col-md-5 col-lg-5" style={styleCard}>
-          <div className="row">
+          
           <Badges/>
           </div>
           </div>
-          </div>
           <br/>
           <br/>
-          <center>
-            <WinsVsLoss/>
-          </center>
+            <WinsVsLoss allData={this.state.data}/>
         <br/>
-          
           <div style={{textAlign:'center'}}>
-          <FavoriteTopics/>
+          <FavoriteTopics userid={this.props.username}/>
           </div>
         </div>
       );

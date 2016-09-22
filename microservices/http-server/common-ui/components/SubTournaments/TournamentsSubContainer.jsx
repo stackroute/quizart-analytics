@@ -4,17 +4,16 @@ import TournamentsSubCard from './TournamentsSubCard';
 const container={
   paddingLeft:15,
   paddingRight:15,
-  paddingBottom: 0,
-  marginBottom: 0
 }
 
 
 var TournamentsSubContainer = React.createClass({
 
   render: function(){
-    var allTheSubTopics = this.props.tournaments.map(function(tournament){
-      return (
-        <div className="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+    var allTheSubTopics = [];
+    this.props.tournament.forEach(function(tournament){
+      allTheSubTopics.push(
+        <div className="col-xs-12 col-lg-6 col-md-4 col-sm-4" style={{paddingLeft:10, paddingRight:10}}>
         <TournamentsSubCard tournament={tournament} key={tournament.title}/>
         </div>
       );

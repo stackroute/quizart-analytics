@@ -15,11 +15,14 @@ import CreateStepper from '../../views/CreateTournament';
 import Board from '../../views/TournamentLeaderBoard';
 import Inline from '../../views/LeaderBoard';
 import Tournaments from '../../views/TournamentsContainer';
+
 var bodyContainer = {
   // padding: "16px",
   paddingTop: "64px",
   marginTop:"0px"
 }
+
+
 const styles = {
   headline: {
     fontSize: 24,
@@ -32,8 +35,10 @@ const styles = {
     overflow:'hidden',
   }
 };
+
 var socket = io();
 export default class TabsMobile extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -48,19 +53,23 @@ export default class TabsMobile extends React.Component {
       this.setState({focusmsg : focusm});
     }.bind(this));
   }
+
   handleChat(e){
     this.setState({msg: e.target.value});
   }
+
   submitForm(e){
     e.preventDefault();
     socket.emit('chat message', this.state.msg);
     this.setState({msg : ''});
   }
+
   handleChange(value){
     this.setState({
       slideIndex: value,
     });
   };
+
   handleCheck(_id,topic){
     var username = Cookie.load("username");
     var newtopics;
@@ -98,20 +107,15 @@ export default class TabsMobile extends React.Component {
         }
       })
  }
+
+
   render() {
     return (
-<<<<<<< HEAD
       <div className="container-fluid">
         <Tabs style={bodyContainer}>
         <Tab label="Profile" >
           <div style={{height:'80vh'}}>
 
-=======
-      <div>
-        <Tabs style={bodyContainer}>
-        <Tab label="Profile" >
-          <div className="container-fluid" style={{height:'80vh' , overflow:'auto'}}>
->>>>>>> 87f7b4028798a410c1d54ab553b179b6c3d47a53
             {this.props.page.toString()=="Profile"?
             <div>
               <ProfilePage username = {this.props.username}/>
@@ -134,16 +138,12 @@ export default class TabsMobile extends React.Component {
              this.props.page.toString()=="TopicPage"?
              <div>
              <EachTopic id={this.props.id}/>
-             
+             <Timeline/>
              </div>
              :null}
           </div>
           </Tab>
-<<<<<<< HEAD
           <Tab label="Feeds" >
-=======
-          <Tab label="Twitter" >
->>>>>>> 87f7b4028798a410c1d54ab553b179b6c3d47a53
           <div style={styles.slide}>
                 <div style={{height:'70vh' , overflow:'auto'}}>
                   { /* <ChatComponent />*/}
@@ -152,10 +152,7 @@ export default class TabsMobile extends React.Component {
           </div>
           </Tab>
           </Tabs>
-<<<<<<< HEAD
 
-=======
->>>>>>> 87f7b4028798a410c1d54ab553b179b6c3d47a53
       </div>
     );
   }

@@ -17,34 +17,20 @@ var baseurl='/';
 
 export default class FavoriteTopics extends React.Component {
 
-  constructor(props){
-    super(props);
-    this.state={
-      details: [{"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"}
-                ]
-    }
-  };
-
-  componentDidMount() {
- var chart = new CanvasJS.Chart("chartContainer",
+      componentDidMount(){
+      var request = $.ajax({
+      url: restUrl + '/api/v1/analytics/user/'+this.props.userid+'/favtopics',
+      type: 'GET',
+      });
+      request.done(function(data) {
+        var a=data.map(function(data){
+          return (
+            // JSON.stringify(data.topicId)
+            {y:data.gamesPlayed,legendText:JSON.stringify(data.topicId),indexLabel:JSON.stringify(data.topicId)})
+        })
+        console.log(a);
+      var chart = new CanvasJS.Chart("chartContainer",
     {
-        title:{
-            text: "Topics"
-        },
                animationEnabled: true,
         legend:{
             verticalAlign: "bottom",
@@ -60,21 +46,18 @@ export default class FavoriteTopics extends React.Component {
             type: "pie",       
             showInLegend: true,
             toolTipContent: "{y} - <strong>#percent%</strong>",
-            dataPoints: [
-                {  y: 4181563, legendText:"Sherlock", indexLabel: "Sherlock" },
-                {  y: 2175498, legendText:"Movies", indexLabel: "Movies" },
-                {  y: 3125844, legendText:"Logos",exploded: true, indexLabel: "Logos" },
-                {  y: 1176121, legendText:"Sports" , indexLabel: "Sports"},
-                {  y: 1727161, legendText:"Cricket", indexLabel: "Cricket" },
-                {  y: 4303364, legendText:"General Knowledge" , indexLabel: "General Knowledge"},
-                {  y: 1717786, legendText:"Animals" , indexLabel: "Animals"}
-            ]
-        }
-        ]
+            dataPoints: a
+                       }
+                       ]
     });
     chart.render();
-  };
-    
+      console.log(JSON.stringify(data));
+      this.setState({arr: data});
+      }.bind(this));
+      request.fail(function() {
+      console.error('err');
+      }.bind(this));
+    };
 
 render() {
   return (
