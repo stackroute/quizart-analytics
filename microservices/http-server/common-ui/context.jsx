@@ -1,9 +1,11 @@
-var React = require('react');
+import React from 'react';
+import restUrl from './restUrl';
+
 
 export default class ContextComponent extends React.Component {
   getChildContext() {
     return {
-      socket: io()
+      socket: io(restUrl)
     }
   }
 

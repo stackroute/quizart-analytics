@@ -31,9 +31,11 @@ const PlayerMiddleware = function(playerId, socket) {
     receiveGameIdServer.use('redis-transport');
     receiveGameIdServer.listen({type: 'redis', pin:'role:queue,player:' + playerId + ',cmd:*'});
     receiveGameIdServer.ready(function() {
-      provisionerClient.act('role:provisioner,cmd:queue',{topicId: topicId, playerId: playerId}, function(err, response) {
-        if(err) { /* Handle Error */ }
-        socket.emit('queued',response);
+      receiveGameIdServer.close(function() {
+        provisionerClient.act('role:provisioner,cmd:queue',{topicId: topicId, playerId: playerId}, function(err, response) {
+          if(err) { /* Handle Error */ }
+          socket.emit('queued',response);
+        });
       });
     });
   }
@@ -51,6 +53,11 @@ const PlayerMiddleware = function(playerId, socket) {
       if(err) { /* Handle Error */ }
       socket.emit('response',response);
     });
+  }
+
+  this.close = function() {
+    if(provisionerClient) { provisionerClient.close(); }
+    if(gameplayMicroservice) { gameplayMicroservice.close(); }
   }
 
   function startGame(startGameId) {
