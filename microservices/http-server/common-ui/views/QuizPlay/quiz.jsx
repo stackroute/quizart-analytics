@@ -60,21 +60,6 @@ const style = {
 
 
 var user1,user2,user3,user4,username1,username2,username3,username4;
-// class SampleNextArrow extends React.Component{
-//   render(){
-//     return(
-//       <div {...this.props} style={{display: 'circle', background: 'blue'}}></div>
-//     );
-//   }
-// }
-// class SamplePrevArrow extends React.Component{
-//   render(){
-//     return(
-//       <div {...this.props} style={{display: 'circle', background: 'blue'}}></div>
-//     );
-//   }
-// }
-
 export default class QuizPlay extends React.Component{
   constructor(props){
     super(props);
@@ -110,7 +95,7 @@ export default class QuizPlay extends React.Component{
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     }
 
-  componentDidMount(){
+  /*componentDidMount(){
     console.log('QuizPlay props: ' + JSON.stringify(this.props));
       var username = JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub;
       // console.log('\n\n===========Cookie says username as: '+username+" "+this.context.socket+":socket");
@@ -265,6 +250,10 @@ export default class QuizPlay extends React.Component{
         this.context.socket.on('serverId',function(msg){
           that.setState({serverId:msg});
         })
+  }*/
+  componentDidMount() {
+    console.log('=====JWT Token:',localStorage.token)
+    this.context.socket.emit('authenticate',localStorage.token);
   }
   changeOptionColor(value,color){
     switch(value){

@@ -11,7 +11,19 @@ import restUrl from '../../restUrl'
 import FontIcon from 'material-ui/FontIcon';
 import Checkbox from 'material-ui/Checkbox';
 import Cookie from 'react-cookie';
-
+import LinearProgress from 'material-ui/LinearProgress';
+import FlatButton from 'material-ui/FlatButton';
+import People from 'material-ui/svg-icons/social/people';
+import PeopleOutline from 'material-ui/svg-icons/social/people-outline';
+import ActionFavorite from 'material-ui/svg-icons/action/favorite';
+import ActionFavoriteBorder from 'material-ui/svg-icons/action/favorite-border';
+import {GridList, GridTile} from 'material-ui/GridList';
+import IconButton from 'material-ui/IconButton';
+import Subheader from 'material-ui/Subheader';
+import StarBorder from 'material-ui/svg-icons/toggle/star-border';
+import {teal900,blue200,brown800,grey800,grey50,blue100} from 'material-ui/styles/colors';
+import LeaderBoardRecord from './../LeaderBoardRecord/index.jsx';
+import ConfidenceLevel from './../ConfidenceLevel/index.jsx';
 
 const TitleStyle={
   fontSize:"1em",
@@ -32,8 +44,11 @@ var imgStyle={
   margin:"auto"
 }
 
-const BtnStyle ={
-  marginLeft:'40%'
+const BtnStylePlay ={
+  marginLeft:350
+}
+const BtnStyleInvite ={
+  marginLeft:20
 }
 
 var style1= {
@@ -101,11 +116,68 @@ const style_players={
   color:'white',
   }
 
+  const card={
+  height:1770,
+  overflow:'auto'
+  }
+
+  const cover={
+    width:'100%'
+  }
+  const pro={
+  marginTop: -120,
+  zIndex : 1
+  }
+
+  var heading={
+    textAlign:'center'    
+  }
+
+  const divstyle = {
+    
+    textAlign : 'center',
+    color : 'grey',
+    marginLeft:60
+    
+    }
+
+  const imgsize={
+    height:400
+  }
+
+  const card2={
+    marginTop:20,
+    marginBottom:20
+  }
+
+  const card3={
+    textAlign:'center',
+    padding:20
+  }
+  const div1={
+  }
+  const progress={
+    height:15,
+    width:'96%',
+    textAlign:'center',
+    
+    borderRadius:20,
+    marginRight:30,
+    marginTop:10
+  }
+  
+  const tableLeft={
+    
+  }
+  const tableLeft2={
+    
+  }
+
   export default class AbtTopic extends React.Component {
     constructor(){
       super();
       this.state = {
-            arr:[],
+            arr:[{"_id":"Cartoons","topicName":"Cartoons","topicIcon":"https://quizup-questions.imgix.net/topic-icons/retro-cartoons-2014-10-31T11:32:46.062Z?fm=png\u0026q=50\u0026h=128\u0026w=128","topicDescription":"What's up, Mickey?","topicFollowers":9550,"playersPerMatch":3,"topicCategory":"TV","__v":0}],
       }
     };
 
@@ -127,56 +199,132 @@ const style_players={
       });
       request.done(function(data) {
       console.log(JSON.stringify(data));
-      this.setState({arr: data});
+      //this.setState({arr: data});
       }.bind(this));
       request.fail(function() {
       console.error('err');
       }.bind(this));
-    };
+    }
+
+    handleOnCheck(topicId) {
+    console.log(">>>>>>>>...handleOnCheck");
+    this.state.incre=-this.state.incre;
+    var sum = this.state.no+this.state.incre;
+    this.setState({no:sum})
+    var topic = this.props.topic;
+    topic.topicFollowers = sum;
+    this.props.fun(topicId,topic);
+    }
 
     render(){
       if(this.state.arr === [] || this.state.arr == null || this.state.arr[0] == undefined)
       { return (<div><p>Loading...........</p></div>) }
       else{
       return(
-        <div>
-        <Card>
+      <div>
+            <Card zDepth={3} style={{padding:10}}>
+              <img src="http://covermyfb.com/media/covers/thumb/7117-cartoon-joker.jpg" style={cover}/>
+                      <GridTile
+                        key='d'
+                        title='Topic Category'
+                        subtitle={this.state.arr[0].topicCategory}
+                        style={{height:140,width:'20%',float:'left',position:'absolute',marginLeft:60}}
+                      ></GridTile>
 
-          <p style={style_followers}>{this.state.arr[0].topicFollowers} </p>
+                      <GridTile
+                        key='e'
+                        title='Current players playing'
+                        subtitle='3456'
+                        style={{height:140,width:'20%',float:'right',position:'absolute',marginLeft:850}}
+                      ></GridTile>
 
-          <Checkbox
-            checkedIcon={<FontIcon className="muidocs-icon-social-people" style={{color:'black'}}/>}
-            uncheckedIcon={<FontIcon className="muidocs-icon-social-people_outline" style={{color:'black'}}/>}
-            style={style_followers}
-            iconStyle={{fill: '#009688'}}
-            />
+                      
+                      
+            <center>
+                    
+              <RaisedButton primary={true} style={{backgroundColor:'#00BFA5'}} label="Invite" onClick={this.handleClike.bind(this,this.props.id)} />
+              <Avatar size={200} zDepth={4} style={pro} elevation='10dp' src="https://s-media-cache-ak0.pinimg.com/736x/e4/23/10/e423109129291207253f96582942f4a9.jpg"/>
+              <RaisedButton zDepth={1} primary={true} style={{backgroundColor:'#00BFA5'}} label="Play" onClick={this.handleClike.bind(this,this.props.id)} />
+            
 
-            <Checkbox
-              checkedIcon={<FontIcon className="muidocs-icon-action-favorite" style={{color:'black'}}/>}
-              uncheckedIcon={<FontIcon className="muidocs-icon-action-favorite_border" style={{color:'black'}}/>}
-              style={style_favorite}
-              iconStyle={{fill: '#B71C1C'}}
-            />
+            <h1 style={heading}>{this.state.arr[0].topicName}</h1>
+            <h3 style={heading}>{this.state.arr[0].topicDescription}</h3>
 
-            <CardHeader
-                title={this.state.arr[0].topicName}
-                subtitle={this.state.arr[0].topicDescription}
-              />
+            <p style={{}}>
+            <table style={{width:20}}>
+            <tr style={{textAlign:'center'}}>
+              <td><Checkbox
+                checkedIcon={<People />}
+                uncheckedIcon={<PeopleOutline />}
+                iconStyle={{fill: '#009688'}}
+                /></td>
+              <td><small>21653</small></td>
+              <td><Checkbox
+                  checkedIcon={<ActionFavorite />}
+                  uncheckedIcon={<ActionFavoriteBorder />}
+                  iconStyle={{fill: '#B71C1C'}}
+                  
+                /></td>
+              <td><small>{this.state.arr[0].topicFollowers}</small></td>
+                </tr>
+                </table>
+            </p>
+            </center>
 
-              <CardMedia
-              overlay={
-                <div>
-                <p style={style_players}>{this.state.arr[0].playersPerMatch} players Per Match</p>
-                <CardTitle subtitle={this.state.arr[0].topicCategory} subtitleColor="white" />
-                </div>
-               }
-              >
-                <img src={this.state.arr[0].topicIcon} />
-              </CardMedia>
-              <CardActions className="row">
-                  <RaisedButton label="Play" secondary={true} style={BtnStyle} onClick={this.handleClike.bind(this,this.props.id)} />
-               </CardActions>
-        </Card>
+            </Card>
+
+            <div className="row"> 
+              <div style={div1} className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                <ConfidenceLevel/>
+              </div>
+              
+              <div style={div1} className="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+
+                <Card style={{zIndex:-1,marginTop:20,padding:10,height:349}} zDepth={3}>
+                  <CardHeader
+                    title="Details"
+                    subtitle="Showing details of current topic"
+                    avatar={this.state.arr[0].topicIcon}
+                  />
+                      <GridTile
+                        key='d'
+                        title='Details'
+                        subtitle={<div>You are about to play a Cartoon Quiz Game!The most awesome CARTOONS packed into ONE game!</div>}
+                        style={{height:70,width:'100%',marginBottom:3,marginTop:10}}
+                      ></GridTile>
+                  
+                      <GridTile
+                        key='a'
+                        title='Total match'
+                        subtitle='800'
+                        style={{height:70,width:'49%',float:'left',marginRight:5}}
+                      ></GridTile>
+
+                      <GridTile
+                        key='b'
+                        title='Experience'
+                        subtitle='1200'
+                        style={{height:70,width:'50%',float:'left',marginBottom:3}}
+                      ></GridTile>
+
+                      <GridTile
+                        key='c'
+                        title='Win vs Loss Progress'
+                        subtitle={<LinearProgress mode="determinate" value='70' style={progress}/>}
+                        style={{height:70,width:'100%'}}
+                      ></GridTile>
+                   
+                  
+                    
+                  
+
+                </Card>
+
+              </div>
+            </div>
+            
+            <LeaderBoardRecord/>
+
         </div>
       );
     }

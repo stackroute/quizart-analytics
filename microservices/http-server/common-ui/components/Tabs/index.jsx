@@ -143,7 +143,9 @@ export default class TabsMobile extends React.Component {
              :null}
           </div>
           </Tab>
+
           <Tab label="Feeds" >
+
           <div style={styles.slide}>
                 <div style={{height:'70vh' , overflow:'auto'}}>
                   { /* <ChatComponent />*/}

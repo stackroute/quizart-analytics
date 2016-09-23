@@ -34,6 +34,7 @@ describe('Setup', function() {
 });
 
 describe('Before', function() {
+  this.timeout(100000);
   it('Clear accounts table', function(done) {
     consumerMicroservice.act('role:authentication,cmd:dangerouslyDeleteAllAccounts', function(err, response) {
       if(err) { return done(err); }

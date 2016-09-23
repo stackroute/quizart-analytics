@@ -39,6 +39,7 @@ exports = module.exports = function(options) {
     });
   });
 
+<<<<<<< HEAD
   this.add('role:analytics,cmd:favouritetopics',function(msg,respond){
     var result=[
                 {  y: 4181563, legendText:"Sherlock", indexLabel: "Sherlock" },
@@ -53,4 +54,16 @@ exports = module.exports = function(options) {
     return respond(null,{response: result});
   });
   
+=======
+   this.add('role:analytics,cmd:favouritetopics', function(msg, respond) {
+        //  console.log("msg===="+msg+"=====");
+       return  userAnalytics.create(msg,function(err,newpost){
+            if(err){
+                     return respond(err);
+                }
+             else return respond(null,{response:'success',entity:newpost});
+    });
+  });
+>>>>>>> f44f7fedd1a1e737461ee71716bccde7cc19691d
 };
+

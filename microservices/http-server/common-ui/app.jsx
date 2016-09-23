@@ -58,7 +58,7 @@ ReactDOM.render(
       <Route path="/tournaments" component={Tournaments} onEnter={verifyLogin} />
       <Route path="/authsuccess/:token" component={AuthSuccess} />
       <Route path="/twitterauthsuccess/:token" component={TwitterAuthSuccess} />
-      <Route name="quiz" path="/quiz/:isTournament/:knockoutId" component={Quiz} />
+      <Route name="quiz" path="/quiz" component={Quiz} />
       <Route path="/ProfilePage/:username" component={ProfilePage}/>
       <Route path="/eachTopic/:id" component={EachTopicsPage} onEnter={verifyLogin} />
       <Route name="leaderboard" path="/board/:id/:isTournament" component={LeaderBoard} />
