@@ -69,12 +69,15 @@ export default class LoginForm extends React.Component {
         //console.log(data);
         this.context.router.push('/');
           var badge=$.ajax({
-          url: restUrl + '/api/v1/authenticate/badge',
+          url: restUrl + '/api/v1/authenticate/'+this.state.loginForm.username.value+'/badge',
           type: 'POST',
           data: JSON.stringify(data),
           contentType: 'application/json'
         });
         badge.done(function(data){
+          var badgeStatus=JSON.stringify(data.badge);
+
+          if(badgeStatus==="goodHabit")
           alert(JSON.stringify(data.badge));
         });
       }.bind(this));
@@ -148,7 +151,7 @@ export default class LoginForm extends React.Component {
           onRequestClose={this.closeFailDialog.bind(this)}>
           The Username and Password entered do not match with any of our records. Please try again.
         </Dialog>
-        </div>
+      </div>
     );
   }
 }
