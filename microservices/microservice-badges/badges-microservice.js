@@ -1,10 +1,12 @@
 var seneca = require('seneca');
 
+var badgesPlugin = require('.');
+
 var badgesMicroservice = seneca();
 
 var env = process.env.NODE_ENV || 'dev';
 
-badgesMicroservice.use('.', {
+badgesMicroservice.use(badgesPlugin, {
   mongoUrl: process.env.MONGO_URL || 'mongodb://localhost:27017/boilerplate-'+env
 });
 
