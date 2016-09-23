@@ -16,10 +16,10 @@ module.exports = function(options) {
     if(!queue[topicId]) { queue[topicId] = []; }
 
     const topicQueue = queue[topicId];
-
     topicQueue.push(msg.playerId);
 
     if(topicQueue.length >= playersPerGame) {
+
       createGame(topicId);
     }
 
@@ -56,6 +56,7 @@ module.exports = function(options) {
   });
 
   function sendGameIdToPlayer(gameId,player) {
+
     const microservice = seneca();
     async.series([
       function(callback) {
@@ -63,7 +64,9 @@ module.exports = function(options) {
         microservice.client({type: 'redis', pin: 'role:queue,player:'+player+',cmd:*'});
         microservice.ready(callback);
       }, function(callback) {
+
         microservice.act('role:queue,player:'+player+',cmd:ready',{gameId:gameId},function(err, response){
+
           callback(err,response);
         });
 
@@ -72,6 +75,7 @@ module.exports = function(options) {
       }
     ]);
   };
+
 
   function getPlayers(topicQueue, noOfPlayers) {
     const players = [];

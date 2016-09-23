@@ -22,10 +22,7 @@ var title1={
       marginBottom: "0px",
       float: 'left',
 }
-const styleImg={
-  height:"200px",
-  width:"100%"
-}
+
 const tabHeight={
   height:"200px"
 }
@@ -36,7 +33,8 @@ const btnFontColor ={
 }
 
 const styleCard={
-  margin:5,
+  width: "75%",
+  margin:65,
 }
 
 const style_followers={
@@ -51,6 +49,7 @@ const style_favorite={
     width:'5%',
     marginTop:15,
     marginBottom:10,
+    marginRight:10,
     float:'right',
     fontWeight:'bold',
     fontSize:'small'
@@ -59,6 +58,7 @@ const style_fav={
     width:'5%',
     marginTop:10,
     marginBottom:10,
+    marginLeft:10,
     float:'right',
 }
 const style_sd={
@@ -74,98 +74,137 @@ const avatarstyle={
   float:'left',
 }
 
+const styleImg={
+  height: "250px",
+  width: "100%"
+}
+
 
 class TournamentsSubCard extends React.Component {
 
-  state = {
-    finished: false,
-    stepIndex: 0,
-  };
-
-  handleNext = () => {
+  handleNext() {
     const {stepIndex} = this.state;
     this.setState({
       stepIndex: stepIndex + 1,
       finished: true,
     });
-  };
+  }
 
-  handlePrev = () => {
-  const {stepIndex} = this.state;
-  this.setState({
-    stepIndex: stepIndex - 1,
-    finished: false,
-  });
+  handlePrev() {
+    const {stepIndex} = this.state;
+    this.setState({
+      stepIndex: stepIndex - 1,
+      finished: false,
+    });
   };
 
    render (){
-       const {finished, stepIndex} = this.state;
-     return(
-  <Card style={styleCard} >
 
-    <div>
+    //  const {finished, stepIndex} = this.state;
+     return (
+        <Card style={styleCard}>
+          <CardHeader
+            title={this.props.tournament.title}
+            avatar="http://lorempixel.com/600/337/nature/"
+          />
 
-    <Avatar style={avatarstyle} src={this.props.tournament.AvatarURL} />
+          <p style={style_favorite}>45</p>
 
-    <h2 style={title1}>{this.props.tournament.title}</h2>
-    <p style={style_favorite}>45</p>
+          <Checkbox
+            checkedIcon={<ActionFavorite />}
+            uncheckedIcon={<ActionFavoriteBorder />}
+            style={style_fav}
+            iconStyle={{fill: '#B71C1C'}}
+          />
 
-    <Checkbox
-      checkedIcon={<ActionFavorite />}
-      uncheckedIcon={<ActionFavoriteBorder />}
-      style={style_fav}
-      iconStyle={{fill: '#B71C1C'}}
-    />
-    <p style={style_followers}>12 </p>
+          <p style={style_followers}>12 </p>
 
-    <Checkbox
-      checkedIcon={<People />}
-      uncheckedIcon={<PeopleOutline />}
-      style={style_fav}
-      iconStyle={{fill: '#009688'}}
-      />
-
-    <CardMedia
-      overlay={<CardTitle title={this.props.tournament.OverlayTitle} subtitle={this.props.tournament.OverlaySubtitle} />}
-    >
-      <img src={this.props.tournament.URL} style={styleImg}  />
-    </CardMedia>
-    </div>
-    <SwipeableTabs TabContent={this.props.tournament.TabContent} />
-
-
-
-    <CardActions>
-      <div className="col-xs col-md col-lg col-sm">
-      <div>
-        {finished ? (
-          <div>
-            <RaisedButton
-              style={btnFontColor}
-              label={"You were Registered"}
-              primary={true}
-              disabled={true}
+          <Checkbox
+            checkedIcon={<People />}
+            uncheckedIcon={<PeopleOutline />}
+            style={style_fav}
+            iconStyle={{fill: '#009688'}}
             />
-          </div>
-        ) : (
-          <div>
-            <div>
-              <RaisedButton
-                style={btnFontColor}
-                label={'Register'}
-                secondary={true}
-                onClick={this.handleNext}
-              />
-            </div>
-          </div>
-        )}
-      </div>
-      </div>
-    </CardActions>
 
-  </Card>
+          <CardMedia overlay={<CardTitle style={{textAlign: "center"}} subtitle="Average Rating   1800" />}>
+            <img src={this.props.tournament.imageUrl} style={styleImg}/>
+          </CardMedia>
 
-);
+          <SwipeableTabs tournament={this.props.tournament} />
+
+          <CardActions>
+            <RaisedButton label="REGISTER" secondary={true} fullWidth={true}/>
+          </CardActions>
+
+          </Card>
+     );
+
+          
+
+//        const {finished, stepIndex} = this.state;
+//      return(
+//   <Card style={styleCard} >
+
+//     <div>
+
+//     <Avatar style={avatarstyle} src={this.props.tournament.AvatarURL} />
+
+//     <h2 style={title1}>{this.props.tournament.title}</h2>
+//     <p style={style_favorite}>45</p>
+
+    // <Checkbox
+    //   checkedIcon={<ActionFavorite />}
+    //   uncheckedIcon={<ActionFavoriteBorder />}
+    //   style={style_fav}
+    //   iconStyle={{fill: '#B71C1C'}}
+    // />
+    // <p style={style_followers}>12 </p>
+
+    // <Checkbox
+    //   checkedIcon={<People />}
+    //   uncheckedIcon={<PeopleOutline />}
+    //   style={style_fav}
+    //   iconStyle={{fill: '#009688'}}
+    //   />
+
+//     <CardMedia
+//       overlay={<CardTitle title={this.props.tournament.OverlayTitle} subtitle={this.props.tournament.OverlaySubtitle} />}
+//     >
+//       <img src={this.props.tournament.URL} style={styleImg}  />
+//     </CardMedia>
+//     </div>
+//     <SwipeableTabs TabContent={this.props.tournament.TabContent} />
+// <CardActions>
+          //   <div className="col-xs col-md col-lg col-sm">
+          //   <div>
+          //     {finished ? (
+          //       <div>
+          //         <RaisedButton
+          //           style={btnFontColor}
+          //           label={"You were Registered"}
+          //           primary={true}
+          //           disabled={true}
+          //         />
+          //       </div>
+          //     ) : (
+          //       <div>
+          //         <div>
+          //           <RaisedButton
+          //             style={btnFontColor}
+          //             label={'Register'}
+          //             secondary={true}
+          //             onClick={this.handleNext}
+          //           />
+          //         </div>
+          //       </div>
+          //     )}
+          //   </div>
+          //   </div>
+          // </CardActions>
+//   </Card>
+
+// );
+  }
 }
-}
+
 export default TournamentsSubCard;
