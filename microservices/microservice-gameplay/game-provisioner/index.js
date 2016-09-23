@@ -1,9 +1,13 @@
 const seneca = require('seneca');
 const async = require('async');
 
+const gameManagerPlugin = require('../game-manager');
+
 module.exports = function(options) {
   const playersPerGame = options.playersPerGame;
   const generateQuestions = options.generateQuestions;
+
+  const questionTime = options.questionTime || 10;
 
   const queue = {};
   const gameManagers = [];
@@ -30,20 +34,27 @@ module.exports = function(options) {
   this.listen({type: 'redis', pin: 'role:provisioner,cmd:*'});
 
   function createGame(topicId) {
+    console.log('Creating Game');
     const topicQueue = queue[topicId];
     const players = getPlayers(topicQueue,playersPerGame);
-    const gameId = Math.random() * 1823138313274;
+    const gameId = 'game-'+Math.random() * 1823138313274;
 
     const questions = generateQuestions(topicId);
-    const questionTime = 200;
+
+    console.log('CREATING GAME WITH QUESTION_TIME: ' + questionTime);
 
     // Create Game Manager
     const gameManager = seneca({log:'test'});
 
-    gameManager.use('../game-manager/index.js',{gameId:gameId,players:players, questions: questions, questionTime: questionTime});
+    gameManager.use(gameManagerPlugin,{gameId:gameId,players:players, questions: questions, questionTime: questionTime});
     gameManagers.push(gameManager);
 
+    gameManager.on('gameComplete', function(leaderboard) {
+      updateUserGameCompleteData(gameId, topicId, leaderboard);
+    });
+
     gameManager.ready(function() {
+      console.log('Game ID Sent to players');
       players.forEach(sendGameIdToPlayer.bind(this,gameId));
       // players.forEach(playersStartPinging.bind(this,gameId));
     });
@@ -79,5 +90,11 @@ module.exports = function(options) {
       players.push(topicQueue.shift());
     }
     return players;
+  };
+
+  function updateUserGameCompleteData(gameId, topicId, leaderboard) {
+    console.log('PROVISIONER_GAME_COMPLETED: gameId: ' + gameId);
+    console.log('PROVISIONER_GAME_COMPLETED: topicId: ' + topicId);
+    console.log('PROVISIONER_GAME_COMPLETED: leaderboard:', leaderboard);
   };
 };

@@ -42,6 +42,11 @@ const styles = {
 }
 
 export default class QuizPlay extends React.Component{
+  constructor() {
+    super();
+    this.state = { waiting: true }
+  }
+
   static get contextTypes(){
     return {
       router: PropTypes.object.isRequired,
@@ -50,21 +55,35 @@ export default class QuizPlay extends React.Component{
   }
 
   componentDidMount() {
-    this.context.socket.on('playGame', function(msg) {
-      alert('Queued:',msg);
-    });
     this.context.socket.on('authentication',(msg) => {
-      this.context.socket.emit('queue','sports');
+      this.context.socket.emit('playGame',{topicId: 'sports'});
+    });
+    this.context.socket.on('queued', (msg) => {
+      this.setState({waiting: true});
+    });
+    this.context.socket.on('gameId', function(gameId) {
+      localStorage.gameId = gameId;
+      this.setState({waiting: false});
+    });
+    this.context.socket.on('nextQuestion', (msg) => {
+      this.setState({question: msg.question});
+    });
+    this.context.socket.on('gameComplete', function(leaderboard) {
+      alert('Game Completed');
     });
     this.context.socket.emit('authenticate',localStorage.token);
   }
 
   render() {
-    var username = JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub;
+    const username = JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub;
+
+    const question = <small>{this.state.question}</small>
+
     return (
       <div style={styles.waiting}>
         <h2>Waiting for opponents</h2>
         <CircularProgress />
+        <p>{question}</p>
       </div>
     );
   }
