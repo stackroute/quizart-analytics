@@ -299,67 +299,6 @@ class TournamentsSubCard extends React.Component {
           </CardActions>
           
           </Card>
-  // <Card style={styleCard} >
-
-  //   <div>
-
-  //   <Avatar style={avatarstyle} src={this.props.tournament.avatarURL} />
-
-  //   <h2 style={title1}>{this.props.tournament.title}</h2>
-  //   <p style={style_favorite}>45</p>
-
-  //   <Checkbox
-  //     checkedIcon={<ActionFavorite />}
-  //     uncheckedIcon={<ActionFavoriteBorder />}
-  //     style={style_fav}
-  //     iconStyle={{fill: '#B71C1C'}}
-  //   />
-  //   <p style={style_followers}>12 </p>
-
-  //   <Checkbox
-  //     checkedIcon={<People />}
-  //     uncheckedIcon={<PeopleOutline />}
-  //     style={style_fav}
-  //     iconStyle={{fill: '#009688'}}
-  //     />
-
-  //   <CardMedia
-  //     overlay={<CardTitle title={this.props.tournament.overlayTitle} subtitle={this.props.tournament.overlaySubtitle} />}
-  //   >
-  //     <img src={this.props.tournament.imageURL} style={styleImg}  />
-  //   </CardMedia>
-  //   </div>
-  //   <SwipeableTabs tournament={this.props.tournament} />
-
-  //   <CardActions>
-  //     <div className="col-xs col-md col-lg col-sm">
-  //     <div>
-  //       {finished ? (
-  //         <div>
-  //           <RaisedButton
-  //             style={btnFontColor}
-  //             label={this.state.label}
-  //             primary={true}
-  //             disabled={true}
-  //           />
-  //         </div>
-  //       ) : (
-  //         <div>
-  //           <div>
-  //             <RaisedButton
-  //               style={btnFontColor}
-  //               label={this.state.label}
-  //               secondary={true}
-  //               onClick={this.handleNext}
-  //             />
-  //           </div>
-  //         </div>
-  //       )}
-  //     </div>
-  //     </div>
-  //   </CardActions>
-
-  // </Card>
 
 );
 }
