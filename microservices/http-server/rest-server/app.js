@@ -340,19 +340,9 @@ io.on('connection',function(socket){
       if(err) { return res.status(500).json(err); }
       if(response.response !== 'success') { return socket.emit('authentication','failed'); }
       console.log('Subject: ',response.claims.sub);
-      response.claims.sub;
+      playerId = response.claims.sub;
       createPlayerMiddlewareIfNotAlreadyCreated();
     });
-  });
-
-  socket.on('playGame', function(msg) {
-    console.log('User ' + playerId + ' wants to play a game in topic ' + topic)
-    playerMiddleware.queue(msg.topicId);
-  });
-
-  socket.on('disconnect', function() {
-    console.log('DISCONNECTING SOCKET!');
-    playerMiddleware.close();
   });
 
   function createPlayerMiddlewareIfNotAlreadyCreated() {
@@ -361,6 +351,16 @@ io.on('connection',function(socket){
       playerMiddleware = new PlayerMiddleware(playerId, socket);
       playerMiddleware.ready(function() {
         socket.emit('authentication','success');
+      });
+
+      socket.on('playGame', function(msg) {
+        console.log('User ' + playerId + ' wants to play a game in topic ' + msg.topicId);
+        playerMiddleware.queue(msg.topicId);
+      });
+
+      socket.on('disconnect', function() {
+        console.log('DISCONNECTING SOCKET!');
+        playerMiddleware.close();
       });
     }
   }

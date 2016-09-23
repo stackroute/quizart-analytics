@@ -19,8 +19,10 @@ const PlayerMiddleware = function(playerId, socket) {
 
   this.queue = function(topicId) {
     const receiveGameIdServer = seneca({log: 'test'});
+    console.log('Queueing Player');
     receiveGameIdServer.add('role:queue,player:'+playerId+',cmd:ready', function(msg, respond) {
       const gameId = msg.gameId;
+      console.log('4. MIDDLEWARE RECEIVED GAMEID: ' + gameId);
       respond(null, {response: 'okay'});
       socket.emit('gameId',{gameId: gameId,topicId: topicId});
       receiveGameIdServer.close();
@@ -31,11 +33,10 @@ const PlayerMiddleware = function(playerId, socket) {
     receiveGameIdServer.use('redis-transport');
     receiveGameIdServer.listen({type: 'redis', pin:'role:queue,player:' + playerId + ',cmd:*'});
     receiveGameIdServer.ready(function() {
-      receiveGameIdServer.close(function() {
-        provisionerClient.act('role:provisioner,cmd:queue',{topicId: topicId, playerId: playerId}, function(err, response) {
-          if(err) { /* Handle Error */ }
-          socket.emit('queued',response);
-        });
+      provisionerClient.act('role:provisioner,cmd:queue',{topicId: topicId, playerId: playerId}, function(err, response) {
+        if(err) { /* Handle Error */ }
+        console.log('Player Queued');
+        socket.emit('queued',response);
       });
     });
   }
@@ -64,15 +65,23 @@ const PlayerMiddleware = function(playerId, socket) {
     gameId = startGameId;
     gameplayMicroservice = seneca();
     gameplayMicroservice.add('role:gameplay,gameId:'+startGameId+',cmd:nextQuestion',function(msg, respond) {
+      console.log('9. NEXT QUESTION RECEIVED',msg);
       socket.emit('nextQuestion', msg);
       respond(null, {msg: 'ping'});
+    });
+    gameplayMicroservice.add('role:gameplay,gameId:'+startGameId+',cmd:gameComplete',function(msg, respond) {
+      console.log('10. GAME COMPLETED with LEADERBOARD: ', msg.leaderboard);
+      socket.emit('gameComplete',msg.leaderboard);
     });
     gameplayMicroservice.use('redis-transport');
     gameplayMicroservice.listen({type: 'redis', pin: 'role:gameplay,gameId:'+startGameId+',cmd:*'});
     gameplayMicroservice.client({type:'redis',pin:'role:gameplay,gameId:'+startGameId+',player:'+playerId+',cmd:*'});
     gameplayMicroservice.ready(function() {
+      console.log('5. MIDDLEWARE IS ABOUT TO PING');
       gameplayMicroservice.act('role:gameplay,gameId:'+startGameId+',player:'+playerId+',cmd:ping', function(err, response) {
         if(err) { /* Handle Error */ }
+        console.log('PONG RECEIVED');
+        socket.emit('gameId',startGameId);
       });
     });
   }
