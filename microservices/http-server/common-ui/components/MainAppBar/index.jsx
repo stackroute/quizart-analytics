@@ -22,7 +22,6 @@ import Badge from 'material-ui/Badge';
 import {List, ListItem} from 'material-ui/List';
 import RaisedButton from 'material-ui/RaisedButton';
 import base64 from 'base-64';
-
 import ActionAccountbox from 'material-ui/svg-icons/action/account-box';
 import ActionTurnedin from 'material-ui/svg-icons/action/turned-in';
 import ActionViewmodule from 'material-ui/svg-icons/action/view-module';
@@ -132,7 +131,7 @@ export default class MainAppBar extends React.Component {
     return (
       <div className="row">
         <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <AppBar title="QuizRT-Social" style={this.state.appbarContainer} onLeftIconButtonTouchTap={this.handleDrawerOpen.bind(this)}  >
+        <AppBar title='QuizRT-Social' style={this.state.appbarContainer} onLeftIconButtonTouchTap={this.handleDrawerOpen.bind(this)}  >
               <span style={{cursor:'pointer'}}>
               <FontIcon className="muidocs-icon-action-exit_to_app" style={{color:'white',margin:19}} onTouchTap={this.clearLogin.bind(this)}/>
               </span>

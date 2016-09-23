@@ -23,5 +23,4 @@ var SubTopicContainer = React.createClass({
  }
  });
 
-
 module.exports = SubTopicContainer;

@@ -20,17 +20,20 @@ export default class TournamentsContainer extends React.Component {
       padding: "16px",
       paddingTop: "80px",
     }
+
+    var title="QuizRT-Social-Tournaments"
+
     return (
       <div>
-        <MainAppBar/>
+        <MainAppBar />
         <MediaQuery query='(max-device-width: 800px)'>
           <MediaQuery query='(max-width: 800px)'>
           <TabsMobile page="CreateTournament"/>
           </MediaQuery>
         </MediaQuery>
 
-        <MediaQuery query='(min-device-width: 800px)'>
-          <MediaQuery query='(min-width: 800px)'>
+        <MediaQuery query='(min-device-width: 320px)'>
+          <MediaQuery query='(min-width: 320px)'>
             <div className="container-fluid" >
               <div className="row" >
                 <div style={{width: "100%"}} >

@@ -9,6 +9,8 @@ controller.signup = function(req, res) {
     name : req.body.name,
     password : req.body.password
   };
+  console.log('Data Received: ', data);
+
   mesh.act('role:authentication,cmd:create', data, function(err, response) {
     if(err) { return res.status(500).json(err); }
     if(response.response==='success'){

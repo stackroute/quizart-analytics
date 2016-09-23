@@ -30,6 +30,7 @@ exports = module.exports = function(options) {
   const Account = connection.model('Account', require('./account.schema'));
 
   this.add('role:authentication,cmd:create', function(msg, respond) {
+    console.log('Data Received: ', msg);
     return Account.find({username: msg.username}, function(err, retrievedAccounts) {
       if(err) { return respond(err); }
       if(retrievedAccounts.length > 0) { return respond(null, {response: 'fail'}); }

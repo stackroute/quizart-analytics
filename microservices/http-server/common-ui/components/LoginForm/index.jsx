@@ -116,7 +116,7 @@ export default class LoginForm extends React.Component {
     return (
 
       <div>
-        <h1>Log-in</h1>
+        <h1>Login</h1>
         <form onSubmit={this.handleLogin.bind(this)}>
           <TextField
             floatingLabelText="Username"

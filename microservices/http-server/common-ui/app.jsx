@@ -24,6 +24,7 @@ import ContextComponent from './context';
 import CreateTournament from './views/CreateTournament';
 import TournamentsContainer from './views/TournamentsContainer';
 import ProfilePage from './views/ProfilePage';
+import TournamentPage from './views/TournamentPage';
 
 const verifyLogin = function(nextState, replace) {
   if(!localStorage.token) {
@@ -58,7 +59,7 @@ ReactDOM.render(
       <Route path="/tournaments" component={Tournaments} onEnter={verifyLogin} />
       <Route path="/authsuccess/:token" component={AuthSuccess} />
       <Route path="/twitterauthsuccess/:token" component={TwitterAuthSuccess} />
-      <Route name="quiz" path="/quiz/:isTournament/:knockoutId" component={Quiz} />
+      <Route name="quiz" path="/quiz" component={Quiz} />
       <Route path="/ProfilePage/:username" component={ProfilePage}/>
       <Route path="/eachTopic/:id" component={EachTopicsPage} onEnter={verifyLogin} />
       <Route name="leaderboard" path="/board/:id/:isTournament" component={LeaderBoard} />
@@ -66,6 +67,7 @@ ReactDOM.render(
       <Route path="my-account/change-password" component={ChangePasswordView} onEnter={verifyLogin} />
       <Route path="/create" component={CreateTournament} onEnter={verifyLogin}/>
       <Route path="/tournament" component={TournamentsContainer} onEnter={verifyLogin}/>
+      <Route name="tournamentpage" path="/tournamentpage/:id" component={TournamentPage} />
     </Router>
   </MuiThemeProvider>
   </ContextComponent>

@@ -73,6 +73,16 @@ services:
           MONGO_HOST: localhost
           MONGO_PORT: 27017
           MONGO_DB_NAME: quizRT4
+  microservice-analytics:
+    build: microservices/microservice-analytics1
+    image: boilerplate/microservice-analytics
+    network_mode: host
+    restart: always
+    depends_on:
+      - microservice-mesh-base
+      - mongo
+    environment:
+      MONGO_URL: 'mongodb://localhost:27017/analytics'
   microservice-badges:
     container_name: microservice-badges
     build: microservices/microservice-badges
@@ -83,6 +93,14 @@ services:
       - microservice-mesh-base
     environment:
       MONGO_URL: 'mongodb://localhost:27017/Counters'
+  microservice-gameplay:
+    container_name: microservice-gameplay
+    build: microservices/microservice-gameplay
+    image: quizart/gameplay
+    network_mode: host
+    restart: always
+    depends_on:
+      - microservice-mesh-base
   http-server0:
     container_name: http-server0
     build: microservices/http-server

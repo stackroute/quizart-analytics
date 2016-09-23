@@ -11,7 +11,6 @@ const style = {
   marginTop:20,
   marginBottom:20,
   marginRight:0,
-  padding:20
 };
 
 const tour_header={
@@ -44,10 +43,6 @@ const card={
   marginLeft:20,
   width:'80%',
 };
-
-const pop={
-  padding:50
-}
 
 var topicsData =[
   {
@@ -89,13 +84,13 @@ handleTopics : function(){
     return (
       <div>
         <Paper style={style} zDepth={2} >
-          
+          <Card>
           <h1 style={tour_header}>Most Popular topics</h1>
 
-          <SubTopicContainer0 {...this.props} topics ={topicsData}/>
+          <SubTopicContainer0 {...this.props} topics ={topicsData}   />
             <FlatButton label="See More" style={stylebtn}
               onTouchTap={this.handleTopics.bind(this)}/>
-          
+          </Card>
         </Paper>
       </div>
     );

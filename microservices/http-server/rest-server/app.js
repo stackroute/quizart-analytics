@@ -7,6 +7,8 @@ var google = require('googleapis');
 var OAuth2 = google.auth.OAuth2;
 var request = require('request');
 
+const PlayerMiddleware = require('./player-middleware/index');
+
 var cloudinary = require('cloudinary');
 var formidable = require('express-formidable');
 var secret = process.env.AUTH_SECRET || "the matrix";
@@ -18,7 +20,7 @@ var redirectPort = process.env.REDIRECT_PORT || port;
 // var redirectPort = 8001;
 // var redirectHost = "192.168.99.101";
 var name = process.env.NAME || "default";
-var mesh = seneca();
+var mesh = seneca({log: 'test'});
 mesh.use('mesh',{auto:true});
 var context = require('./context');
 
@@ -194,9 +196,9 @@ app.get('/topics',function(req,res) {
   console.log('send');
 });
 app.get('/api/favouritetopics/user/:userId',function(req,res) {
-  
+
   result= [{"paras@gmail.com":[
-                {  y: 4181563, legendText:"Sherlock", indexLabel: "Sherlock" },     
+                {  y: 4181563, legendText:"Sherlock", indexLabel: "Sherlock" },
                 {  y: 2175498, legendText:"Movies", indexLabel: "Movies" },
                 {  y: 3125844, legendText:"Logos",exploded: true, indexLabel: "Logos" },
                 {  y: 1176121, legendText:"Sports" , indexLabel: "Sports"},
@@ -226,6 +228,23 @@ res.send(result);
  console.log('agrt dfglca;lkg');
  })
 
+app.get('/api/v1/analytics/user/favTopics',function(req,res) {
+  mesh.act('role:analytics,cmd:favouritetopics',function(err,result){
+   if (err) return console.error(err)
+    console.log('------------testing the result-----'+result+'------------------------')
+    res.send(result);
+     })
+     console.log('agrt dfglca;lkg');
+ })
+
+app.get('/api/v1/analytics/user/filter',function(req,res) {
+  mesh.act('role:analytics,cmd:favouritetopics',function(err,result){
+   if (err) return console.error(err)
+    console.log('------------testing the result-----'+result+'------------------------')
+    res.send(result);
+     })
+     console.log('agrt dfglca;lkg');
+ })
  app.get('/tournamentSection',function(req,res) {
    console.log('form express-tournamentSection');
    res.header("Access-Control-Allow-Origin", "*");
@@ -311,38 +330,40 @@ var middleWareCount =0;
 
 
 io.on('connection',function(socket){
-  middleWareCount++;
-  console.log('\n =====Middleware count is: '+middleWareCount+'\n');
-  var playerMiddleWareService =  require('seneca')();
-   socket.on('playGame',function(msg){
-     console.log(' \n\n Received play game message  \n\n');
-     playerMiddleWareService.use('redis-transport');
-    console.log('\n======Initializing plugin for  : '+(msg.username)+'\n');
-    console.log('\n\n'+JSON.stringify(msg)+'\n\n');
-    playerMiddleWareService.use('./gameplayMiddlewarePlugin', {
-      username:msg.username,
-      tournamentId:msg.tournamentId,
-      isTournament:msg.isTournament,
-      knockoutId:msg.knockoutId,
-      socket:socket
+  // TODO: Create Middleware Plugin for user.
+  var playerMiddleware;
+  var playerId;
+
+  socket.on('authenticate', function(jwt) {
+    console.log('Retrieved JWT: ', jwt);
+    mesh.act('role:jwt,cmd:verify', {token: jwt}, function(err, response) {
+      if(err) { return res.status(500).json(err); }
+      if(response.response !== 'success') { return socket.emit('authentication','failed'); }
+      console.log('Subject: ',response.claims.sub);
+      playerId = response.claims.sub;
+      createPlayerMiddlewareIfNotAlreadyCreated();
     });
   });
 
-  socket.on('disconnect',function(){
-    console.log('\n======Closing service=====\n');
-    playerMiddleWareService.close();
-  })
+  function createPlayerMiddlewareIfNotAlreadyCreated() {
+    if(!playerMiddleware) {
+      console.log('Creating Player Middleware')
+      playerMiddleware = new PlayerMiddleware(playerId, socket);
+      playerMiddleware.ready(function() {
+        socket.emit('authentication','success');
+      });
 
+      socket.on('playGame', function(msg) {
+        console.log('User ' + playerId + ' wants to play a game in topic ' + msg.topicId);
+        playerMiddleware.queue(msg.topicId);
+      });
 
-
-  socket.emit('serverId',"This question is coming from "+name);
-
-  socket.on('myAnswer',function(socketObj){
-    console.log('\n==========Answer received by server is: '+socketObj.answer+'\n');
-     playerMiddleWareService.act('role:user,action:answer',{answer:socketObj.answer},function(err,response){
-
-     })
-  });
+      socket.on('disconnect', function() {
+        console.log('DISCONNECTING SOCKET!');
+        playerMiddleware.close();
+      });
+    }
+  }
 })
 
 exports = module.exports = server;
