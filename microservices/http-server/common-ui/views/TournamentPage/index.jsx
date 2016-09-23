@@ -1,12 +1,12 @@
 import React from 'react';
-import Tournaments from './Tournaments';
+import Page from './Page';
 import MainAppBar from '../../components/MainAppBar';
 import ChatDrawer from '../../components/Chat/ChatDrawer';
 import AbtTopic from '../../components/AbtTopic';
 import MediaQuery from 'react-responsive';
 import TabsMobile from '../../components/Tabs';
 
-export default class TournamentsContainer extends React.Component {
+export default class TournamentPage extends React.Component {
   constructor() {
     super();
   }
@@ -20,12 +20,9 @@ export default class TournamentsContainer extends React.Component {
       padding: "16px",
       paddingTop: "80px",
     }
-
-    var title="QuizRT-Social-Tournaments"
-
     return (
       <div>
-        <MainAppBar />
+        <MainAppBar/>
         <MediaQuery query='(max-device-width: 800px)'>
           <MediaQuery query='(max-width: 800px)'>
           <TabsMobile page="CreateTournament"/>
@@ -41,7 +38,7 @@ export default class TournamentsContainer extends React.Component {
                     <div className="col-md-12 col-sm-12 col-xs-12 col-lg-12" style={bodyContainer}>
                       <div className="row">
                           <div className="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-lg-offset-1" >
-                            <Tournaments/>
+                            <Page params={this.props.params}/>
                           </div>
                           <div className="col-xs-1 col-sm-1 col-md-1 col-lg-1"  style={{paddingTop:20}}>
                             <ChatDrawer/>

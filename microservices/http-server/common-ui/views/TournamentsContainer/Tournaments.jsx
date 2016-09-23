@@ -330,7 +330,7 @@ export default class Tournaments extends React.Component {
     for (var i = 0; i < this.state.activeTournament.length; i++) {
       activeTournaments.push(
         <div className="col-xs-12 col-sm-12 col-md-6 col-lg-6" style={{paddingTop: '16px', paddingBottom: '16px'}}>
-          <TournamentSubCard tournament={this.state.activeTournament[i]} btname="Play"/>
+          <TournamentSubCard tournament={this.state.activeTournament[i]} btname="Enter Tournament"/>
         </div>
       );
     }
@@ -357,8 +357,8 @@ export default class Tournaments extends React.Component {
         <Paper style={style} zDepth={2} >
           <Tabs
             value={this.state.value}
-            onChange={this.handleChange}
-          >
+            onChange={this.handleChange} >
+            
             <Tab label="Active Tournaments" value="a" >
                 
                   <div className='row' >
