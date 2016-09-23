@@ -346,7 +346,13 @@ io.on('connection',function(socket){
   });
 
   socket.on('playGame', function(msg) {
+    console.log('User ' + playerId + ' wants to play a game in topic ' + topic)
     playerMiddleware.queue(msg.topicId);
+  });
+
+  socket.on('disconnect', function() {
+    console.log('DISCONNECTING SOCKET!');
+    playerMiddleware.close();
   });
 
   function createPlayerMiddlewareIfNotAlreadyCreated() {

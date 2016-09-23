@@ -3,7 +3,7 @@ const seneca = require('../test/seneca');
 const async = require('async');
 const EventEmitter = require('events');
 
-const gameProvisionerPlugin = require('../../microservice-gameplay/game-provisioner');
+const gameProvisionerPlugin = require('gameplay-microservice');
 
 describe('Player Middleware', function() {
   const gameProvisioner = seneca();
@@ -68,7 +68,10 @@ describe('Player Middleware', function() {
   });
 
   after(function(done) {
-    gameProvisioner.close(done);
+    async.parallel([
+        function(callback) { gameProvisioner.close(callback); },
+        function(callback) { playerMiddleware.close(callback); }
+      ], done);
   });
 });
 

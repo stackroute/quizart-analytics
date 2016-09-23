@@ -1,5 +1,5 @@
 {
-  "name": "quizart",
+  "name": "gameplay-microservice",
   "version": "0.1.0",
   "description": "QuizRT",
   "main": "game-provisioner/index.js",
