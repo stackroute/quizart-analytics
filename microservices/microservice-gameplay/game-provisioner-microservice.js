@@ -2,7 +2,7 @@ const seneca = require('seneca');
 const gameProvisionerPlugin = require('./game-provisioner/index.js');
 
 const gameProvisioner = seneca();
-gameProvisioner.use(gameProvisionerPlugin, {playersPerGame: 1, generateQuestions: generateQuestions, questionTime: 2000});
+gameProvisioner.use(gameProvisionerPlugin, {playersPerGame: 1, generateQuestions: generateQuestions, questionTime: 5000});
 
 function generateQuestions() {
   var questions = [];

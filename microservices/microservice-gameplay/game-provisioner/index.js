@@ -23,7 +23,6 @@ module.exports = function(options) {
     topicQueue.push(msg.playerId);
 
     if(topicQueue.length >= playersPerGame) {
-
       createGame(topicId);
     }
 
@@ -55,8 +54,8 @@ module.exports = function(options) {
 
     gameManager.ready(function() {
       console.log('Game ID Sent to players');
+
       players.forEach(sendGameIdToPlayer.bind(this,gameId));
-      // players.forEach(playersStartPinging.bind(this,gameId));
     });
   };
 
@@ -67,6 +66,7 @@ module.exports = function(options) {
   });
 
   function sendGameIdToPlayer(gameId,player) {
+    console.log('Sending GameId:'+gameId+' to player: ' + player);
 
     const microservice = seneca();
     async.series([
@@ -89,11 +89,7 @@ module.exports = function(options) {
 
 
   function getPlayers(topicQueue, noOfPlayers) {
-    const players = [];
-    for(let i=0; i<noOfPlayers; i++) {
-      players.push(topicQueue.shift());
-    }
-    return players;
+    return topicQueue.splice(0,noOfPlayers);
   };
 
   function updateUserGameCompleteData(gameId, topicId, leaderboard) {

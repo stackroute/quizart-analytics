@@ -24,8 +24,15 @@ module.exports = function(options) {
         return startGame.bind(this)();
       }
     });
-    this.add('role:gameplay,gameId:'+gameId+',player:'+playerId+',cmd:respond', function(msg, respond) {
-      return respond(null, {correctResponse: correctResponseIndex});
+    this.add('role:gameplay,gameId:'+gameId+',player:'+playerId+',cmd:respond', (msg, respond) => {
+      console.log('response: ', msg);
+      if(msg.response === correctResponseIndex) {
+        console.log('Answered Correctly');
+        leaderboard[playerId] += 10;
+      }
+      console.log('updated leaderboard: ', leaderboard);
+      respond(null, {correctResponse: correctResponseIndex});
+      sendLeaderboard.bind(this)();
     });
     this.listen({type: 'redis', pin: 'role:gameplay,gameId:'+gameId+',player:'+playerId+',cmd:*'});
   });
@@ -37,6 +44,10 @@ module.exports = function(options) {
   var correctResponseIndex;
 
   var questionInterval;
+
+  function sendLeaderboard() {
+    this.act('role:gameplay,gameId:'+gameId+',cmd:leaderboard', {leaderboard});
+  }
 
   function startGame() {
     console.log('8. GAME_MANAGER IS STARTING GAME');

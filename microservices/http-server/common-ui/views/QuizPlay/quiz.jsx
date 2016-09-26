@@ -66,6 +66,7 @@ export default class QuizPlay extends React.Component{
       this.context.socket.emit('playGame',{topicId: 'sports'});
     });
     this.context.socket.on('queued', (msg) => {
+      console.log('Queued');
       this.setState({waiting: true});
     });
     this.context.socket.on('gameId', (gameId) => {
@@ -81,14 +82,18 @@ export default class QuizPlay extends React.Component{
     });
     this.context.socket.on('response',(response) => {
       this.setState({correctResponse: response.correctResponse});
-    })
+    });
+    this.context.socket.on('leaderboard',(response) => {
+      console.log('Leaderboard received');
+      this.setState({leaderboard: response.leaderboard});
+    });
     this.context.socket.emit('authenticate',localStorage.token);
   }
 
   render() {
     const username = JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub;
-    console.log('response: ' + this.state.response);
-    console.log('correctResponse: ', this.state.correctResponse);
+
+    console.log('Leaderboard: ', this.state.leaderboard);
 
     const waitingComponent = (
       <div style={styles.waiting}>

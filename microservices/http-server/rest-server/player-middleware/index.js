@@ -69,6 +69,10 @@ const PlayerMiddleware = function(playerId, socket) {
       socket.emit('nextQuestion', msg);
       respond(null, {msg: 'ping'});
     });
+    gameplayMicroservice.add('role:gameplay,gameId:'+startGameId+',cmd:leaderboard',function(msg, respond) {
+      socket.emit('leaderboard',msg);
+      respond(null, {msg: 'ok'});
+    });
     gameplayMicroservice.add('role:gameplay,gameId:'+startGameId+',cmd:gameComplete',function(msg, respond) {
       console.log('10. GAME COMPLETED with LEADERBOARD: ', msg.leaderboard);
       socket.emit('gameComplete',msg.leaderboard);
