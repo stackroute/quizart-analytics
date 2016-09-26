@@ -11,6 +11,7 @@ module.exports = function(options) {
   console.log('1. CREATING GAME MANAGER FOR ' + JSON.stringify(playerIds) + ' with GAME_ID: ' + gameId);
 
   var playersJoined = 0;
+  var questionSent = null;
   this.use('redis-transport');
   playerIds.forEach((playerId, index) => {
     console.log('2. (' + (index+1) + '/' + playerIds.length + ')' + 'CREATING PLAYER_RESPONSE_CHANNEL FOR PLAYER ' + playerId);
@@ -25,6 +26,7 @@ module.exports = function(options) {
       }
     });
     this.add('role:gameplay,gameId:'+gameId+',player:'+playerId+',cmd:respond', (msg, respond) => {
+      // TODO: Calculate Response Time Here, and save it in the database
       console.log('response: ', msg);
       if(msg.response === correctResponseIndex) {
         console.log('Answered Correctly');
@@ -64,7 +66,10 @@ module.exports = function(options) {
     console.log('Next Question Being Sent');
     var question = questions[++currQuestionIndex];
     correctResponseIndex = question.correctIndex;
-    this.act('role:gameplay,gameId:'+gameId+',cmd:nextQuestion',question);
+    this.act('role:gameplay,gameId:'+gameId+',cmd:nextQuestion',question, (err, response) {
+      if(err) { return; /* Handle Error */ }
+      questionSent = new Date();
+    });
     if(canStopGame()) {
       clearInterval(questionInterval);
       setTimeout(() => {
