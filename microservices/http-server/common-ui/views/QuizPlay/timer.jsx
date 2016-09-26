@@ -1,5 +1,7 @@
 import React from 'react';
 
+import {deepOrange500} from 'material-ui/styles/colors';
+
 export default class Timer extends React.Component{
   constructor(props){
     super(props);
@@ -22,7 +24,7 @@ export default class Timer extends React.Component{
  render(){
    if(this.props.seconds==1) return null;
   return (
-    <h1>{this.state.seconds}</h1>
+    <h1 style={{color: deepOrange500}}>{this.state.seconds}</h1>
   );
  }
 };

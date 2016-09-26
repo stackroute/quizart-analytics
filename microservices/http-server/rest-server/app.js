@@ -347,10 +347,12 @@ io.on('connection',function(socket){
 
   function createPlayerMiddlewareIfNotAlreadyCreated() {
     if(!playerMiddleware) {
-      console.log('Creating Player Middleware')
+      console.log('Creating Player Middleware');
       playerMiddleware = new PlayerMiddleware(playerId, socket);
-      playerMiddleware.ready(function() {
-        socket.emit('authentication','success');
+
+      socket.on('disconnect', function() {
+        console.log('DISCONNECTING SOCKET!');
+        playerMiddleware.close();
       });
 
       socket.on('playGame', function(msg) {
@@ -358,9 +360,12 @@ io.on('connection',function(socket){
         playerMiddleware.queue(msg.topicId);
       });
 
-      socket.on('disconnect', function() {
-        console.log('DISCONNECTING SOCKET!');
-        playerMiddleware.close();
+      socket.on('respond', function(optionIndex) {
+        playerMiddleware.respond(optionIndex);
+      });
+
+      playerMiddleware.ready(function() {
+        socket.emit('authentication','success');
       });
     }
   }
