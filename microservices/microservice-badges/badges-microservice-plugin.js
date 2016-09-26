@@ -32,6 +32,7 @@ EventExecutor.prototype.getCounterEvaluator = function (counter, event, callback
         userLogin.find({userId:userId},function(err,users){
             if(err) throw err;
 
+            console.log(users);
             if(users.length==1){
               count= count+1;
             }
