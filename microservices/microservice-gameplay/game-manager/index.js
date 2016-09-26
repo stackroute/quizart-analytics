@@ -63,7 +63,7 @@ module.exports = function(options) {
   function nextQuestion() {
     console.log('Next Question Being Sent');
     var question = questions[++currQuestionIndex];
-    correctResponseIndex = question.correctResponseIndex;
+    correctResponseIndex = question.correctIndex;
     this.act('role:gameplay,gameId:'+gameId+',cmd:nextQuestion',question);
     if(canStopGame()) {
       clearInterval(questionInterval);

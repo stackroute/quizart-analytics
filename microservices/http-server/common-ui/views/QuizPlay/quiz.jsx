@@ -63,7 +63,7 @@ export default class QuizPlay extends React.Component{
 
   componentDidMount() {
     this.context.socket.on('authentication',(msg) => {
-      this.context.socket.emit('playGame',{topicId: 'sports'});
+      this.context.socket.emit('playGame',{topicId: 'T1'});
     });
     this.context.socket.on('queued', (msg) => {
       console.log('Queued');

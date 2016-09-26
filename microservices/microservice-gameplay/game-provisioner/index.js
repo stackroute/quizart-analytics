@@ -6,6 +6,7 @@ const gameManagerPlugin = require('../game-manager');
 module.exports = function(options) {
   const playersPerGame = options.playersPerGame;
   const generateQuestions = options.generateQuestions;
+  const questionsPerGame = options.questionsPerGame;
 
   const questionTime = options.questionTime || 10;
 
@@ -38,24 +39,26 @@ module.exports = function(options) {
     const players = getPlayers(topicQueue,playersPerGame);
     const gameId = 'game-'+Math.random() * 1823138313274;
 
-    const questions = generateQuestions(topicId);
+    generateQuestions(topicId,questionsPerGame,function(err, questions) {
+      if(err) { return; /* Handle Error! */ }
 
-    console.log('CREATING GAME WITH QUESTION_TIME: ' + questionTime);
+      console.log('CREATING GAME WITH QUESTION_TIME: ' + questionTime);
 
-    // Create Game Manager
-    const gameManager = seneca({log:'test'});
+      // Create Game Manager
+      const gameManager = seneca({log:'test'});
 
-    gameManager.use(gameManagerPlugin,{gameId:gameId,players:players, questions: questions, questionTime: questionTime});
-    gameManagers.push(gameManager);
+      gameManager.use(gameManagerPlugin,{gameId:gameId,players:players, questions: questions, questionTime: questionTime});
+      gameManagers.push(gameManager);
 
-    gameManager.on('gameComplete', function(leaderboard) {
-      updateUserGameCompleteData(gameId, topicId, leaderboard);
-    });
+      gameManager.on('gameComplete', function(leaderboard) {
+        updateUserGameCompleteData(gameId, topicId, leaderboard);
+      });
 
-    gameManager.ready(function() {
-      console.log('Game ID Sent to players');
+      gameManager.ready(function() {
+        console.log('Game ID Sent to players');
 
-      players.forEach(sendGameIdToPlayer.bind(this,gameId));
+        players.forEach(sendGameIdToPlayer.bind(this,gameId));
+      });
     });
   };
 
