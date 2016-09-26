@@ -12,6 +12,7 @@ import Timer from './timer';
 import CircularProgress from 'material-ui/CircularProgress';
 import cookie from 'react-cookie';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {GridList, GridTile} from 'material-ui/GridList';
 import base64 from 'base-64';
 import restUrl from '../../restUrl'
 
@@ -44,7 +45,7 @@ const styles = {
 export default class QuizPlay extends React.Component{
   constructor() {
     super();
-    this.state = { waiting: true }
+    this.state = { waiting: true, response: -1 }
   }
 
   static get contextTypes(){
@@ -54,6 +55,12 @@ export default class QuizPlay extends React.Component{
     }
   }
 
+  handleResponse(optionIndex) {
+    if(this.state.response >= 0) { return; }
+    this.context.socket.emit('respond',optionIndex);
+    this.setState({response: optionIndex});
+  }
+
   componentDidMount() {
     this.context.socket.on('authentication',(msg) => {
       this.context.socket.emit('playGame',{topicId: 'sports'});
@@ -61,29 +68,64 @@ export default class QuizPlay extends React.Component{
     this.context.socket.on('queued', (msg) => {
       this.setState({waiting: true});
     });
-    this.context.socket.on('gameId', function(gameId) {
+    this.context.socket.on('gameId', (gameId) => {
       localStorage.gameId = gameId;
       this.setState({waiting: false});
     });
     this.context.socket.on('nextQuestion', (msg) => {
-      this.setState({question: msg.question});
+      console.log(msg);
+      this.setState({question: msg.question, imageUrl: msg.imageUrl, options: msg.options, response: -1, correctResponse: -1});
     });
     this.context.socket.on('gameComplete', function(leaderboard) {
       alert('Game Completed');
     });
+    this.context.socket.on('response',(response) => {
+      this.setState({correctResponse: response.correctResponse});
+    })
     this.context.socket.emit('authenticate',localStorage.token);
   }
 
   render() {
     const username = JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub;
+    console.log('response: ' + this.state.response);
+    console.log('correctResponse: ', this.state.correctResponse);
 
-    const question = <small>{this.state.question}</small>
-
-    return (
+    const waitingComponent = (
       <div style={styles.waiting}>
         <h2>Waiting for opponents</h2>
         <CircularProgress />
-        <p>{question}</p>
+      </div>
+    );
+
+    const questionComponent = this.state.question ? (
+      <div style={{textAlign: 'center'}}>
+        <Timer seconds={2} style={{color: indigo900}}/>
+        <h3>{this.state.question}</h3>
+        <div><img imageUrl={this.state.imageUrl}/></div>
+        <GridList cellHeight={100} cols={2} style={{position: 'absolute',bottom: 0, width: '100%'}}>
+          {this.state.options.map((option, index) => {
+            var backgroundColor = '#FFF';
+            if(index === this.state.response) { backgroundColor = orange600 }
+            if(index === this.state.correctResponse) { backgroundColor = green600 }
+            const style = {
+              height: '100%',
+              padding: '30px 0',
+              cursor: 'pointer',
+              backgroundColor: backgroundColor
+            }
+            return (
+              <GridTile>
+                <Paper style={style} onTouchTap={this.handleResponse.bind(this,index)}>{option}</Paper>
+              </GridTile>
+            );
+          })}
+        </GridList>
+      </div>
+    ) : null;
+
+    return (
+      <div>
+        {this.state.waiting ? waitingComponent : questionComponent}
       </div>
     );
   }
