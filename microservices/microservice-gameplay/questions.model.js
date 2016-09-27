@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const random = require('mongoose-random');
 
 const QuestionSchema = new mongoose.Schema({
   "question": {type: String},
@@ -17,18 +18,11 @@ const QuestionSchema = new mongoose.Schema({
   "wikiPageView" : {type: Number}
 },{collection: 'questionBank'});
 
+QuestionSchema.plugin(random, { path: 'r' });
+
 QuestionSchema.statics.retrieveQuestions = function(topicId, numberOfQuestions, callback) {
-  const o = {};
-  o.map = function() {
-    emit(this.topicId,this);
-  };
-  o.reduce = function(key, values) {
-    return {value: values};
-  };
-  o.limit = numberOfQuestions;
-  this.mapReduce(o,(err, result) => {
-    if(err) { return callback(err); }
-    return callback(err, result[0].value.value);
+  this.findRandom({}).limit(10).exec(function(err, questions) {
+    return callback(err, questions);
   });
 }
 

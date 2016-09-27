@@ -7,8 +7,9 @@ mongoose.connect(MONGO_URL, function(err) {
 });
 
 const Question = require('./questions.model');
-
-Question.retrieveQuestions('T1',10,function(err, response) {
-  if(err) { return console.error('Error occured while retrieving questions: ',err); }
-  console.log(response);
-});
+// Question.syncRandom((err, result) => {
+  Question.retrieveQuestions('T1',10,function(err, response) {
+    if(err) { return console.error('Error occured while retrieving questions: ',err); }
+    console.log(response);
+  });
+// });

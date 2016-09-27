@@ -1,1 +1,1 @@
-exports = module.exports = ''
+exports=module.exports = 'http://localhost'

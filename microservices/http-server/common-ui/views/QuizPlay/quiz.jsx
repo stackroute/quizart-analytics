@@ -14,7 +14,8 @@ import cookie from 'react-cookie';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import {GridList, GridTile} from 'material-ui/GridList';
 import base64 from 'base-64';
-import restUrl from '../../restUrl'
+import restUrl from '../../restUrl';
+import Leaderboard from './Leaderboard';
 
 const optionStyle = {
   margin:12,
@@ -57,6 +58,7 @@ export default class QuizPlay extends React.Component{
 
   handleResponse(optionIndex) {
     if(this.state.response >= 0) { return; }
+    console.log('Responding with option: ' + optionIndex);
     this.context.socket.emit('respond',optionIndex);
     this.setState({response: optionIndex});
   }
@@ -71,11 +73,10 @@ export default class QuizPlay extends React.Component{
     });
     this.context.socket.on('gameId', (gameId) => {
       localStorage.gameId = gameId;
-      this.setState({waiting: false});
     });
     this.context.socket.on('nextQuestion', (msg) => {
-      console.log(msg);
-      this.setState({question: msg.question, imageUrl: msg.imageUrl, options: msg.options, response: -1, correctResponse: -1});
+      console.log('Question Received: ', msg);
+      this.setState({waiting: false, question: msg.question, imageUrl: msg.image, options: msg.options, response: -1, correctResponse: -1});
     });
     this.context.socket.on('gameComplete', function(leaderboard) {
       alert('Game Completed');
@@ -106,7 +107,10 @@ export default class QuizPlay extends React.Component{
       <div style={{textAlign: 'center'}}>
         <Timer seconds={2} style={{color: indigo900}}/>
         <h3>{this.state.question}</h3>
-        <div><img imageUrl={this.state.imageUrl}/></div>
+        <div><img src={this.state.imageUrl}/></div>
+
+        <h1>game</h1>
+        <Leaderboard leaderboard={this.state.leaderboard}/>
         <GridList cellHeight={100} cols={2} style={{position: 'absolute',bottom: 0, width: '100%'}}>
           {this.state.options.map((option, index) => {
             var backgroundColor = '#FFF';

@@ -2,6 +2,7 @@ const seneca = require('seneca');
 const async = require('async');
 
 const gameManagerPlugin = require('../game-manager');
+const botPlugin = require('../player-bot');
 
 module.exports = function(options) {
   const playersPerGame = options.playersPerGame;
@@ -14,6 +15,8 @@ module.exports = function(options) {
   const gameManagers = [];
   const count = 0;
 
+  var botTimeout;
+
   this.add('role:provisioner,cmd:queue', function(msg, respond) {
     const topicId = msg.topicId;
     const playerId = msg.playerId;
@@ -23,7 +26,14 @@ module.exports = function(options) {
     const topicQueue = queue[topicId];
     topicQueue.push(msg.playerId);
 
+    if(topicQueue.length == playersPerGame-1) {
+      botTimeout = setTimeout(() => {
+        createGame(topicId, 1);
+      }, 10000);
+    }
+
     if(topicQueue.length >= playersPerGame) {
+      if(botTimeout) { clearTimeout(botTimeout); }
       createGame(topicId);
     }
 
@@ -33,11 +43,18 @@ module.exports = function(options) {
   this.use('redis-transport');
   this.listen({type: 'redis', pin: 'role:provisioner,cmd:*'});
 
-  function createGame(topicId) {
+  function createGame(topicId,numberOfBots) {
+    if(!numberOfBots) { numberOfBots = 0; }
     console.log('Creating Game');
     const topicQueue = queue[topicId];
     const players = getPlayers(topicQueue,playersPerGame);
     const gameId = 'game-'+Math.random() * 1823138313274;
+
+    // Create BotID
+    const botIds = [];
+    for(let i=0; i<numberOfBots; i++) {
+      botIds.push('Bot:Michael' + (Math.random() * 12));
+    }
 
     generateQuestions(topicId,questionsPerGame,function(err, questions) {
       if(err) { return; /* Handle Error! */ }
@@ -47,7 +64,7 @@ module.exports = function(options) {
       // Create Game Manager
       const gameManager = seneca({log:'test'});
 
-      gameManager.use(gameManagerPlugin,{gameId:gameId,players:players, questions: questions, questionTime: questionTime});
+      gameManager.use(gameManagerPlugin,{gameId:gameId,players:players.concat(botIds), questions: questions, questionTime: questionTime});
       gameManagers.push(gameManager);
 
       gameManager.on('gameComplete', function(leaderboard) {
@@ -58,6 +75,10 @@ module.exports = function(options) {
         console.log('Game ID Sent to players');
 
         players.forEach(sendGameIdToPlayer.bind(this,gameId));
+        botIds.forEach((botId) => {
+          const bot = seneca();
+          bot.use(botPlugin, { gameId: gameId, playerId: botId });
+        });
       });
     });
   };

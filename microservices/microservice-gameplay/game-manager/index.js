@@ -11,7 +11,6 @@ module.exports = function(options) {
   console.log('1. CREATING GAME MANAGER FOR ' + JSON.stringify(playerIds) + ' with GAME_ID: ' + gameId);
 
   var playersJoined = 0;
-  var questionSent = null;
   this.use('redis-transport');
   playerIds.forEach((playerId, index) => {
     console.log('2. (' + (index+1) + '/' + playerIds.length + ')' + 'CREATING PLAYER_RESPONSE_CHANNEL FOR PLAYER ' + playerId);
@@ -66,10 +65,8 @@ module.exports = function(options) {
     console.log('Next Question Being Sent');
     var question = questions[++currQuestionIndex];
     correctResponseIndex = question.correctIndex;
-    this.act('role:gameplay,gameId:'+gameId+',cmd:nextQuestion',question, (err, response) {
-      if(err) { return; /* Handle Error */ }
-      questionSent = new Date();
-    });
+    console.log('QUESTION: ', question);
+    this.act('role:gameplay,gameId:'+gameId+',cmd:nextQuestion',{question: question.question, image: question.image, options: question.options});
     if(canStopGame()) {
       clearInterval(questionInterval);
       setTimeout(() => {

@@ -50,6 +50,7 @@ const PlayerMiddleware = function(playerId, socket) {
   }
 
   this.respond = function(response) {
+    console.log('MIDDLEWARE RESPONSE RECEIVED: ', response);
     gameplayMicroservice.act('role:gameplay,gameId:'+gameId+',player:'+playerId+',cmd:respond',{response: response}, function(err, response) {
       if(err) { /* Handle Error */ }
       socket.emit('response',response);
