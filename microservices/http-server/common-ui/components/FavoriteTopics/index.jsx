@@ -23,10 +23,11 @@ export default class FavoriteTopics extends React.Component {
       type: 'GET',
       });
       request.done(function(data) {
+        console.log(JSON.stringify(data));
         var a=data.map(function(data){
           return (
             // JSON.stringify(data.topicId)
-            {y:data.gamesPlayed,legendText:JSON.stringify(data.topicId),indexLabel:JSON.stringify(data.topicId)})
+            {y:data["favTopics"][0]["gamesPlayed"],legendText:JSON.stringify(data.topicId),indexLabel:JSON.stringify(data["favTopics"][0]["topicId"])})
         })
         console.log(a);
       var chart = new CanvasJS.Chart("chartContainer",
@@ -46,7 +47,7 @@ export default class FavoriteTopics extends React.Component {
             type: "pie",       
             showInLegend: true,
             toolTipContent: "{y} - <strong>#percent%</strong>",
-            dataPoints: a
+            dataPoints: [a[0],a[1],a[2],a[3],a[4]]
                        }
                        ]
     });

@@ -24,6 +24,8 @@ import StarBorder from 'material-ui/svg-icons/toggle/star-border';
 import {teal900,blue200,brown800,grey800,grey50,blue100} from 'material-ui/styles/colors';
 import LeaderBoardRecord from './../LeaderBoardRecord/index.jsx';
 import ConfidenceLevel from './../ConfidenceLevel/index.jsx';
+import {Link,Router} from 'react-router';
+
 
 const TitleStyle={
   fontSize:"1em",
@@ -205,6 +207,7 @@ const style_players={
       console.error('err');
       }.bind(this));
     }
+    
 
     handleOnCheck(topicId) {
     console.log(">>>>>>>>...handleOnCheck");
@@ -215,6 +218,23 @@ const style_players={
     topic.topicFollowers = sum;
     this.props.fun(topicId,topic);
     }
+
+    contextTypes: {
+    router : React.PropTypes.object;
+    }
+
+    handleQuizwarTouch(event) {
+    event.preventDefault();
+    var condition = false;
+    var id = 'dummyId';
+    var data = {isTournament:true, id:'dummy'};
+    this.context.router.push('/quiz/false/dummy');
+    /* this.context.router.push({
+      pathname: '/quiz',
+      query: data,
+      state: data
+    }); */
+  }
 
     render(){
       if(this.state.arr === [] || this.state.arr == null || this.state.arr[0] == undefined)
@@ -244,10 +264,10 @@ const style_players={
                     
               <RaisedButton primary={true} style={{backgroundColor:'#00BFA5'}} label="Invite" onClick={this.handleClike.bind(this,this.props.id)} />
               <Avatar size={200} zDepth={4} style={pro} elevation='10dp' src="https://s-media-cache-ak0.pinimg.com/736x/e4/23/10/e423109129291207253f96582942f4a9.jpg"/>
-              <RaisedButton zDepth={1} primary={true} style={{backgroundColor:'#00BFA5'}} label="Play" onClick={this.handleClike.bind(this,this.props.id)} />
+              <Link to="/quiz"><RaisedButton zDepth={1} primary={true} style={{backgroundColor:'#00BFA5'}} label="Play" /></Link>
             
 
-            <h1 style={heading}>{this.state.arr[0].topicName}</h1>
+            <h1 style={heading}>{this.props.id}</h1>
             <h3 style={heading}>{this.state.arr[0].topicDescription}</h3>
 
             <p style={{}}>
@@ -323,7 +343,7 @@ const style_players={
               </div>
             </div>
             
-            <LeaderBoardRecord/>
+            <LeaderBoardRecord topicid={this.props.id}/>
 
         </div>
       );

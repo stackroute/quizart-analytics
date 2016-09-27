@@ -19,21 +19,8 @@ export default class Badges extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      details: [{"img":"https://cohortarrivals.com/assets/feature-icons/thumbs-up-aea4eb708ceddc3473a167418e2c6194.png"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
-                {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"}
+      details: [{"img":"https://cohortarrivals.com/assets/feature-icons/thumbs-up-aea4eb708ceddc3473a167418e2c6194.png"}
+               
                 ]
     }
   };
@@ -50,7 +37,7 @@ render() {
   return (
                <Card zDepth={3}>
                     <CardTitle title="Badges" titleColor={cyan900}/>
-                   <div className="row" style={{margin:"10px",padding:"10px"}}>{badges}</div>
+                   <div className="row" style={{margin:"10px",padding:"10px",height:388}}>{badges}</div>
                    </Card>
             );
   }

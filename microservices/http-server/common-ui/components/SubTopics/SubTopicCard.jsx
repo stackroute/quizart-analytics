@@ -11,6 +11,8 @@ import MapsPersonPin from 'material-ui/svg-icons/maps/person-pin';
 import People from 'material-ui/svg-icons/social/people';
 import PeopleOutline from 'material-ui/svg-icons/social/people-outline';
 import Cookie from 'react-cookie';
+import {Link,Router} from 'react-router';
+
 const TitleStyle={
   fontSize:"1em",
     width:"100%",
@@ -95,6 +97,22 @@ var SubtopicCard = React.createClass({
   contextTypes : {
   router: React.PropTypes.object
 } ,
+contextTypes :{
+    router : React.PropTypes.object
+  },
+
+  handleQuizwarTouch : function(){
+    event.preventDefault();
+    var condition = false;
+    var id = 'dummyId';
+    var data = {isTournament:true, id:'dummy'};
+    this.context.router.push('/quiz/false/dummy');
+    /* this.context.router.push({
+      pathname: '/quiz',
+      query: data,
+      state: data
+    }); */
+  },
 componentDidMount:function(){
   console.log("topic Id in SubtopicCard",this.props.topic._id);
 },
@@ -160,7 +178,7 @@ componentDidMount:function(){
     <CardActions className="row">
       
       <div className="col-md-5 col-xs-5 col-lg-5 col-sm-5">
-        <RaisedButton label="Play" primary={true} style={BtnStyle} onClick={this.handleClike.bind(this,this.props.topic._id)} />
+        <Link to="/quiz"><RaisedButton zDepth={1} primary={true} style={{backgroundColor:'#00BFA5'}} label="Play" /></Link>
       </div>
       
       <div className="col-md-5 col-xs-5 col-lg-5 col-sm-5">

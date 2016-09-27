@@ -63,7 +63,7 @@ const styles = {
 const styleCard = {
   borderRadius : 5,
   textAlign:'center',
-  marginTop:-280,
+  marginTop:-270,
   float:'right',
   marginBottom:-20
 
@@ -324,7 +324,7 @@ export default class Profile extends React.Component{
                 <MediaQuery query='(min-device-width: 800px)'>
                   <MediaQuery query='(min-width: 800px)'>
                      <center>
-                      <Avatar size={200} style={{margin: '-120px 0px 10px 0px'}}
+                      <Avatar size={180} style={{margin: '-120px 0px 10px 0px'}}
                              src="http://icons.iconarchive.com/icons/designbolts/free-male-avatars/128/Male-Avatar-Cool-Sunglasses-icon.png"
                            />
                            </center>

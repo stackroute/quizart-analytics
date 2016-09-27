@@ -21,7 +21,7 @@ export default class ProfileAnalytics extends React.Component {
 
   constructor(props){
     super(props);
-    this.state={   details: [
+    this.state={ data:null,  details: [
     {
       "userId": 0,
       "gamesplayed": 868,
@@ -120,6 +120,24 @@ export default class ProfileAnalytics extends React.Component {
                 {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"},
                 {"img":"https://thesocietypages.org/cyborgology/files/2012/05/FSQ-Mayor-Badge2.jpeg"}
                 ]}};
+      componentDidMount() {
+      $.ajax(
+      {
+      url: restUrl + '/api/v1/analytics/user/'+this.props.userid+'/gamesplayed',
+      type: 'GET',
+      dataType:'JSON',
+      success:function(dataArr)
+      {
+        console.log(dataArr);
+        this.setState({data: dataArr});
+        console.log(this.state.data);
+      }.bind(this),
+      error:function(err)
+      {
+        console.error('err');
+      }.bind(this)
+      })
+      };
 
   render() {
         // var Analytics = this.state.details.map(function (details) {
@@ -137,7 +155,7 @@ export default class ProfileAnalytics extends React.Component {
                              <h4>
                                 <tr><td style={tdstyle}>Games Played</td>
                                     <td style={tdstyle}>:</td>
-                                    <td style={tdstyle}>{this.state.details[5].gamesplayed}</td>
+                                    <td style={tdstyle}>{this.state.data}</td>
                                 </tr>
                                 <tr><td style={tdstyle}>Quizart Rating</td>
                                     <td style={tdstyle}>:</td>
