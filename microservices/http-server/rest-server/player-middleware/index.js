@@ -50,6 +50,7 @@ const PlayerMiddleware = function(playerId, socket) {
   }
 
   this.respond = function(response) {
+    console.log('MIDDLEWARE RESPONSE RECEIVED: ', response);
     gameplayMicroservice.act('role:gameplay,gameId:'+gameId+',player:'+playerId+',cmd:respond',{response: response}, function(err, response) {
       if(err) { /* Handle Error */ }
       socket.emit('response',response);
@@ -68,6 +69,10 @@ const PlayerMiddleware = function(playerId, socket) {
       console.log('9. NEXT QUESTION RECEIVED',msg);
       socket.emit('nextQuestion', msg);
       respond(null, {msg: 'ping'});
+    });
+    gameplayMicroservice.add('role:gameplay,gameId:'+startGameId+',cmd:leaderboard',function(msg, respond) {
+      socket.emit('leaderboard',msg);
+      respond(null, {msg: 'ok'});
     });
     gameplayMicroservice.add('role:gameplay,gameId:'+startGameId+',cmd:gameComplete',function(msg, respond) {
       console.log('10. GAME COMPLETED with LEADERBOARD: ', msg.leaderboard);

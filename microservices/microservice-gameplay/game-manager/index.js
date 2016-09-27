@@ -24,8 +24,16 @@ module.exports = function(options) {
         return startGame.bind(this)();
       }
     });
-    this.add('role:gameplay,gameId:'+gameId+',player:'+playerId+',cmd:respond', function(msg, respond) {
-      return respond(null, {correctResponse: correctResponseIndex});
+    this.add('role:gameplay,gameId:'+gameId+',player:'+playerId+',cmd:respond', (msg, respond) => {
+      // TODO: Calculate Response Time Here, and save it in the database
+      console.log('response: ', msg);
+      if(msg.response === correctResponseIndex) {
+        console.log('Answered Correctly');
+        leaderboard[playerId] += 10;
+      }
+      console.log('updated leaderboard: ', leaderboard);
+      respond(null, {correctResponse: correctResponseIndex});
+      sendLeaderboard.bind(this)();
     });
     this.listen({type: 'redis', pin: 'role:gameplay,gameId:'+gameId+',player:'+playerId+',cmd:*'});
   });
@@ -37,6 +45,10 @@ module.exports = function(options) {
   var correctResponseIndex;
 
   var questionInterval;
+
+  function sendLeaderboard() {
+    this.act('role:gameplay,gameId:'+gameId+',cmd:leaderboard', {leaderboard});
+  }
 
   function startGame() {
     console.log('8. GAME_MANAGER IS STARTING GAME');
@@ -52,8 +64,9 @@ module.exports = function(options) {
   function nextQuestion() {
     console.log('Next Question Being Sent');
     var question = questions[++currQuestionIndex];
-    correctResponseIndex = question.correctResponseIndex;
-    this.act('role:gameplay,gameId:'+gameId+',cmd:nextQuestion',question);
+    correctResponseIndex = question.correctIndex;
+    console.log('QUESTION: ', question);
+    this.act('role:gameplay,gameId:'+gameId+',cmd:nextQuestion',{question: question.question, image: question.image, options: question.options});
     if(canStopGame()) {
       clearInterval(questionInterval);
       setTimeout(() => {

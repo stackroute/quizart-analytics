@@ -20,8 +20,6 @@ export default class Quiz extends React.Component{
    check:true
  };
   render(){
-
-
     return(
       <div>
         <QuizPlay params={this.props.params}/>

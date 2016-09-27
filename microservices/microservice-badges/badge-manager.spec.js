@@ -1,6 +1,7 @@
 const should = require('should');
 const EventExecutor = require('./event-executor');
 const Event = require('./event1');
+var mongoose = require('mongoose');
 
 describe('Test Badge', function() {
   before(function(done) {
@@ -20,14 +21,14 @@ describe('Test Badge', function() {
       });
       callback(null, eventMap[eventType].badges);
     }
-    EventExecutor.prototype.getCounterEvaluator = function(counter, eventData, callback) {
-      //console.log('inside getCounterEvaluator');
+    EventExecutor.prototype.getCounterEvaluator = function(counter, event, callback) {
+      //console.log(counter);
       return callback(null, [function(callback) {
         return callback(null,5);
+        
       }]);
     }
     EventExecutor.prototype.getBadgeEvaluator = function(badge, awardBadge, callback) {
-      //console.log('inside getBadgeEvaluator');
       return callback(null, ['consLogin', function(consLogin) {
         const badgesData = require('./data/badges');
         var badgeFunction;
@@ -37,7 +38,6 @@ describe('Test Badge', function() {
         }.bind(this));
 
         var flag=this.badgeFunction(consLogin);
-
         if(flag==true)
         awardBadge(badge);
         else
@@ -50,9 +50,8 @@ describe('Test Badge', function() {
     const event = new Event('successLogin','sarahconnor',{loginTime: new Date()});
     const eventExecutor = new EventExecutor(event);
     eventExecutor.execute(function(badgeId) {
-      console.log(badgeId);
-      //badgeId.should.have.property('badgeId');
       badgeId.should.be.exactly('goodHabit');
+      //console.log(badgeId);
       done();
     });
   });

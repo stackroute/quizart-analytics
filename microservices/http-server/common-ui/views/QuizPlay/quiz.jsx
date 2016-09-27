@@ -12,8 +12,10 @@ import Timer from './timer';
 import CircularProgress from 'material-ui/CircularProgress';
 import cookie from 'react-cookie';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {GridList, GridTile} from 'material-ui/GridList';
 import base64 from 'base-64';
-import restUrl from '../../restUrl'
+import restUrl from '../../restUrl';
+import Leaderboard from './Leaderboard';
 
 const optionStyle = {
   margin:12,
@@ -44,7 +46,7 @@ const styles = {
 export default class QuizPlay extends React.Component{
   constructor() {
     super();
-    this.state = { waiting: true }
+    this.state = { waiting: true, response: -1 }
   }
 
   static get contextTypes(){
@@ -54,22 +56,37 @@ export default class QuizPlay extends React.Component{
     }
   }
 
+  handleResponse(optionIndex) {
+    if(this.state.response >= 0) { return; }
+    console.log('Responding with option: ' + optionIndex);
+    this.context.socket.emit('respond',optionIndex);
+    this.setState({response: optionIndex});
+  }
+
   componentDidMount() {
     this.context.socket.on('authentication',(msg) => {
-      this.context.socket.emit('playGame',{topicId: 'sports'});
+      this.context.socket.emit('playGame',{topicId: 'T1'});
     });
     this.context.socket.on('queued', (msg) => {
+      console.log('Queued');
       this.setState({waiting: true});
     });
-    this.context.socket.on('gameId', function(gameId) {
+    this.context.socket.on('gameId', (gameId) => {
       localStorage.gameId = gameId;
-      this.setState({waiting: false});
     });
     this.context.socket.on('nextQuestion', (msg) => {
-      this.setState({question: msg.question});
+      console.log('Question Received: ', msg);
+      this.setState({waiting: false, question: msg.question, imageUrl: msg.image, options: msg.options, response: -1, correctResponse: -1});
     });
     this.context.socket.on('gameComplete', function(leaderboard) {
       alert('Game Completed');
+    });
+    this.context.socket.on('response',(response) => {
+      this.setState({correctResponse: response.correctResponse});
+    });
+    this.context.socket.on('leaderboard',(response) => {
+      console.log('Leaderboard received');
+      this.setState({leaderboard: response.leaderboard});
     });
     this.context.socket.emit('authenticate',localStorage.token);
   }
@@ -77,13 +94,47 @@ export default class QuizPlay extends React.Component{
   render() {
     const username = JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub;
 
-    const question = <small>{this.state.question}</small>
+    console.log('Leaderboard: ', this.state.leaderboard);
 
-    return (
+    const waitingComponent = (
       <div style={styles.waiting}>
         <h2>Waiting for opponents</h2>
         <CircularProgress />
-        <p>{question}</p>
+      </div>
+    );
+
+    const questionComponent = this.state.question ? (
+      <div style={{textAlign: 'center'}}>
+        <Timer seconds={2} style={{color: indigo900}}/>
+        <h3>{this.state.question}</h3>
+        <div><img src={this.state.imageUrl}/></div>
+
+        <h1>game</h1>
+        <Leaderboard leaderboard={this.state.leaderboard}/>
+        <GridList cellHeight={100} cols={2} style={{position: 'absolute',bottom: 0, width: '100%'}}>
+          {this.state.options.map((option, index) => {
+            var backgroundColor = '#FFF';
+            if(index === this.state.response) { backgroundColor = orange600 }
+            if(index === this.state.correctResponse) { backgroundColor = green600 }
+            const style = {
+              height: '100%',
+              padding: '30px 0',
+              cursor: 'pointer',
+              backgroundColor: backgroundColor
+            }
+            return (
+              <GridTile>
+                <Paper style={style} onTouchTap={this.handleResponse.bind(this,index)}>{option}</Paper>
+              </GridTile>
+            );
+          })}
+        </GridList>
+      </div>
+    ) : null;
+
+    return (
+      <div>
+        {this.state.waiting ? waitingComponent : questionComponent}
       </div>
     );
   }

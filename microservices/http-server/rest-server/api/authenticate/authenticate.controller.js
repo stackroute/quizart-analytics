@@ -14,7 +14,8 @@ controller.createToken = function(req, res) {
 };
 
 controller.createBadge = function(req, res) {
-  mesh.act('role:badges,cmd:login',function(err, response){
+  var userId=req.params.userid;
+  mesh.act('role:badges,cmd:login',{userId:userId},function(err, response){
     console.log("===============inside authenticate controller========");
 
     console.log(response.badge);

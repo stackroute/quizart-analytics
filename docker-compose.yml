@@ -101,6 +101,8 @@ services:
     restart: always
     depends_on:
       - microservice-mesh-base
+    environment:
+      MONGO_URL: mongodb://localhost:27017/quizRT4
   http-server0:
     container_name: http-server0
     build: microservices/http-server

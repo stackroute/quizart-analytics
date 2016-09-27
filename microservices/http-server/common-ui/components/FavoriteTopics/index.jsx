@@ -19,7 +19,7 @@ export default class FavoriteTopics extends React.Component {
 
       componentDidMount(){
       var request = $.ajax({
-      url: restUrl + '/api/v1/analytics/user/'+this.props.userid+'/favtopics',
+      url: restUrl + '/api/v1/analytics/user/'+this.props.userid.replace("@","%40")+'/favtopics',
       type: 'GET',
       });
       request.done(function(data) {
@@ -28,6 +28,8 @@ export default class FavoriteTopics extends React.Component {
           return (
             // JSON.stringify(data.topicId)
             {y:data["favTopics"][0]["gamesPlayed"],legendText:JSON.stringify(data.topicId),indexLabel:JSON.stringify(data["favTopics"][0]["topicId"])})
+        }, function(data, status) {
+          console.log('ERR: ', data);
         })
         console.log(a);
       var chart = new CanvasJS.Chart("chartContainer",

@@ -242,8 +242,8 @@ const style_players={
       else{
       return(
       <div>
-            <Card zDepth={3} style={{padding:10}}>
-              <img src="http://covermyfb.com/media/covers/thumb/7117-cartoon-joker.jpg" style={cover}/>
+            <Card zDepth={3} style={{padding:3}}>
+              <img src="http://www.hdwlp.com/wp-content/uploads/2016/08/Pixars-up-Cartoon-wide-851x315.jpg" style={cover}/>
                       <GridTile
                         key='d'
                         title='Topic Category'
@@ -263,8 +263,8 @@ const style_players={
             <center>
                     
               <RaisedButton primary={true} style={{backgroundColor:'#00BFA5'}} label="Invite" onClick={this.handleClike.bind(this,this.props.id)} />
-              <Avatar size={200} zDepth={4} style={pro} elevation='10dp' src="https://s-media-cache-ak0.pinimg.com/736x/e4/23/10/e423109129291207253f96582942f4a9.jpg"/>
-              <Link to="/quiz"><RaisedButton zDepth={1} primary={true} style={{backgroundColor:'#00BFA5'}} label="Play" /></Link>
+              <Avatar size={200} zDepth={4} style={pro} elevation='10dp' src="http://hdfreewallpaper.net/wp-content/uploads/2015/12/hd-cartoons-free-wallappers-for-desktop.jpg"/>
+              <RaisedButton zDepth={1} primary={true} style={{backgroundColor:'#00BFA5'}} label="Play" onClick={this.handleClike.bind(this,this.props.id)} />
             
 
             <h1 style={heading}>{this.props.id}</h1>
