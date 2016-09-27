@@ -16,6 +16,8 @@ import {GridList, GridTile} from 'material-ui/GridList';
 import base64 from 'base-64';
 import restUrl from '../../restUrl';
 import Leaderboard from './Leaderboard';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
 
 const optionStyle = {
   margin:12,
@@ -43,10 +45,15 @@ const styles = {
   }
 }
 
+const lead= {
+  float: 'right',
+  position: 'fixed'
+}
+
 export default class QuizPlay extends React.Component{
   constructor() {
     super();
-    this.state = { waiting: true, response: -1 }
+    this.state = { open: false,waiting: true, response: -1, no: 0 , gameComplete: false}
   }
 
   static get contextTypes(){
@@ -63,6 +70,10 @@ export default class QuizPlay extends React.Component{
     this.setState({response: optionIndex});
   }
 
+  handleClose = () => {
+    this.setState({open: false});
+  };
+
   componentDidMount() {
     this.context.socket.on('authentication',(msg) => {
       this.context.socket.emit('playGame',{topicId: 'T1'});
@@ -76,10 +87,14 @@ export default class QuizPlay extends React.Component{
     });
     this.context.socket.on('nextQuestion', (msg) => {
       console.log('Question Received: ', msg);
-      this.setState({waiting: false, question: msg.question, imageUrl: msg.image, options: msg.options, response: -1, correctResponse: -1});
+      this.setState({waiting: false, question: msg.question, imageUrl: msg.image, options: msg.options, response: -1, correctResponse: -1, no: this.state.no+1});
     });
-    this.context.socket.on('gameComplete', function(leaderboard) {
-      alert('Game Completed');
+    this.context.socket.on('gameComplete', (leaderboard) => {
+
+      this.setState({gameComplete: true});
+
+      //this.context.router.push('/endgame');
+      //alert('Game Completed');
     });
     this.context.socket.on('response',(response) => {
       this.setState({correctResponse: response.correctResponse});
@@ -91,10 +106,29 @@ export default class QuizPlay extends React.Component{
     this.context.socket.emit('authenticate',localStorage.token);
   }
 
+
+
   render() {
     const username = JSON.parse(base64.decode(localStorage.token.split('.')[1])).sub;
 
     console.log('Leaderboard: ', this.state.leaderboard);
+
+    var obj=this.state.leaderboard;
+    var str="";
+    var max=-100,temp;
+    for (var prop in obj)
+    {
+        //str=str+"     "+prop+" : "+obj[prop]+"";
+
+        temp=obj[prop];
+
+        if(max<temp)
+        {
+          max=temp;
+          str=prop;
+        }
+
+    }
 
     const waitingComponent = (
       <div style={styles.waiting}>
@@ -105,12 +139,14 @@ export default class QuizPlay extends React.Component{
 
     const questionComponent = this.state.question ? (
       <div style={{textAlign: 'center'}}>
-        <Timer seconds={2} style={{color: indigo900}}/>
-        <h3>{this.state.question}</h3>
+        <Timer seconds={5} style={{color: indigo900}}/>
+        <h3>Question : {this.state.no}</h3>
+        <h2>{this.state.question}</h2>
         <div><img src={this.state.imageUrl}/></div>
 
-        <h1>game</h1>
-        <Leaderboard leaderboard={this.state.leaderboard}/>
+        <div style={lead}>
+          <Leaderboard leaderboard={this.state.leaderboard}/>
+        </div>
         <GridList cellHeight={100} cols={2} style={{position: 'absolute',bottom: 0, width: '100%'}}>
           {this.state.options.map((option, index) => {
             var backgroundColor = '#FFF';
@@ -132,9 +168,25 @@ export default class QuizPlay extends React.Component{
       </div>
     ) : null;
 
+    const leaderboardComponent= (
+        <div>
+          {str}
+        </div>
+      );
+
     return (
       <div>
+      {this.state.gameComplete ? leaderboardComponent : null}
         {this.state.waiting ? waitingComponent : questionComponent}
+
+        <Dialog
+          modal={false}
+          open={this.state.gameComplete}
+          onRequestClose={this.handleClose}
+        >
+          <center><h1>{str}</h1><br/><h3> is the winner</h3></center>
+        </Dialog>
+
       </div>
     );
   }

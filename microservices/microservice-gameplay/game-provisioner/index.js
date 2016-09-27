@@ -29,7 +29,7 @@ module.exports = function(options) {
     if(topicQueue.length == playersPerGame-1) {
       botTimeout = setTimeout(() => {
         createGame(topicId, 1);
-      }, 10000);
+      }, 4000);
     }
 
     if(topicQueue.length >= playersPerGame) {

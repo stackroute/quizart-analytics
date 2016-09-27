@@ -31,6 +31,9 @@ module.exports = function(options) {
         console.log('Answered Correctly');
         leaderboard[playerId] += 10;
       }
+      else{
+        leaderboard[playerId] -= 5;
+      }
       console.log('updated leaderboard: ', leaderboard);
       respond(null, {correctResponse: correctResponseIndex});
       sendLeaderboard.bind(this)();

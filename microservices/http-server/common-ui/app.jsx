@@ -25,6 +25,7 @@ import CreateTournament from './views/CreateTournament';
 import TournamentsContainer from './views/TournamentsContainer';
 import ProfilePage from './views/ProfilePage';
 import TournamentPage from './views/TournamentPage';
+import EndGameLeaderboard from './views/EndGameLeaderBoard';
 
 const verifyLogin = function(nextState, replace) {
   if(!localStorage.token) {
@@ -68,6 +69,7 @@ ReactDOM.render(
       <Route path="/create" component={CreateTournament} onEnter={verifyLogin}/>
       <Route path="/tournament" component={TournamentsContainer} onEnter={verifyLogin}/>
       <Route name="tournamentpage" path="/tournamentpage/:id" component={TournamentPage} />
+      <Route name="endgame" path="/endgame" component={EndGameLeaderboard} />
     </Router>
   </MuiThemeProvider>
   </ContextComponent>
