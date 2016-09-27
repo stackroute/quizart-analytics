@@ -139,7 +139,7 @@ export default class QuizPlay extends React.Component{
 
     const questionComponent = this.state.question ? (
       <div style={{textAlign: 'center'}}>
-        <Timer seconds={5} style={{color: indigo900}}/>
+        <Timer seconds={10} style={{color: indigo900}}/>
         <h3>Question : {this.state.no}</h3>
         <h2>{this.state.question}</h2>
         <div><img src={this.state.imageUrl}/></div>

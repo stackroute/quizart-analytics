@@ -11,4 +11,4 @@ mongoose.connect(MONGO_URL, function(err) {
 const Questions = require('./questions.model');
 
 const gameProvisioner = seneca();
-gameProvisioner.use(gameProvisionerPlugin, {playersPerGame: 2, generateQuestions: Questions.retrieveQuestions.bind(Questions), questionTime: 5000, questionsPerGame: 10});
+gameProvisioner.use(gameProvisionerPlugin, {playersPerGame: 4, generateQuestions: Questions.retrieveQuestions.bind(Questions), questionTime: 10000, questionsPerGame: 10});
