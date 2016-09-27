@@ -27,33 +27,44 @@ const chip = {
   };
 
   export default class LeaderBoardRecord extends React.Component 
+    
   {
     constructor()
     {
       super();
       this.state = {
-            arr:[{"_id":"1","ranking":"1","name":"Sudhanshu","experience":336,"country":"http://www.thebadgecentre.co.uk/images/detailed/0/india-round-flag.png","score":1200,"avatar":"https://cdn4.iconfinder.com/data/icons/user-avatar-flat-icons/512/User_Avatar-04-512.png"},
-                {"_id":"2","ranking":"2","name":"Bharath","experience":330,"country":"http://www.thebadgecentre.co.uk/images/detailed/0/india-round-flag.png","score":1280,"avatar":"https://cdn4.iconfinder.com/data/icons/user-avatar-flat-icons/512/User_Avatar-04-512.png"},
-                {"_id":"3","ranking":"3","name":"Paras","experience":316,"country":"http://www.thebadgecentre.co.uk/images/detailed/0/india-round-flag.png","score":1100,"avatar":"https://cdn4.iconfinder.com/data/icons/user-avatar-flat-icons/512/User_Avatar-04-512.png"},
-                {"_id":"4","ranking":"4","name":"Biswajit","experience":310,"country":"http://www.thebadgecentre.co.uk/images/detailed/0/india-round-flag.png","score":1100,"avatar":"https://cdn4.iconfinder.com/data/icons/user-avatar-flat-icons/512/User_Avatar-04-512.png"},
-                {"_id":"5","ranking":"5","name":"Afreen","experience":308,"country":"http://www.thebadgecentre.co.uk/images/detailed/0/india-round-flag.png","score":1100,"avatar":"https://cdn4.iconfinder.com/data/icons/user-avatar-flat-icons/512/User_Avatar-04-512.png"},
-                {"_id":"6","ranking":"6","name":"Kavita","experience":300,"country":"http://www.thebadgecentre.co.uk/images/detailed/0/india-round-flag.png","score":1100,"avatar":"https://cdn4.iconfinder.com/data/icons/user-avatar-flat-icons/512/User_Avatar-04-512.png"},
-                {"_id":"7","ranking":"7","name":"Sagar","experience":296,"country":"http://www.thebadgecentre.co.uk/images/detailed/0/india-round-flag.png","score":1100,"avatar":"https://cdn4.iconfinder.com/data/icons/user-avatar-flat-icons/512/User_Avatar-04-512.png"}
-            ],showCheckboxes: false
+            arr:[],showCheckboxes: false
       }
-    }
+    };
+    componentDidMount() {
+        $.ajax(
+      {
+      url: restUrl + '/api/v1/analytics/user/'+this.props.topicid+'/leaderboard',
+      type: 'GET',
+      dataType:'JSON',
+      success:function(dataArr)
+      {
+        console.log(dataArr);
+        this.setState({arr: dataArr});
+        
+      }.bind(this),
+      error:function(err)
+      {
+        console.error('err');
+      }.bind(this)
+      });
+    };
 
     render()
     {
-        var chips=this.state.arr.map(function(d){
+        var chips=this.state.arr.map(function(d,index){
             return(
                 <TableRow displayRowCheckbox={false}>
-                    <TableRowColumn style={{textAlign:'center'}}><Avatar>{d.name.toString().charAt(0)}</Avatar></TableRowColumn>
-                    <TableRowColumn style={{textAlign:'center'}}><lead style={{fontSize:16}}>{d.ranking}</lead></TableRowColumn>
-                    <TableRowColumn style={{textAlign:'center'}}><lead style={{fontSize:16}}>{d.name}</lead></TableRowColumn>
-                    <TableRowColumn style={{textAlign:'center'}}><lead style={{fontSize:16}}>{d.experience}</lead></TableRowColumn>
-                    <TableRowColumn style={{textAlign:'center'}}><Avatar src={d.country} /></TableRowColumn>
-                    <TableRowColumn style={{textAlign:'center'}}><lead style={{fontSize:16}}>{d.score}</lead></TableRowColumn>
+                    <TableRowColumn style={{textAlign:'center'}}><Avatar>{d["favTopics"][0]["userId"].toString().charAt(0)}</Avatar></TableRowColumn>
+                    <TableRowColumn style={{textAlign:'center'}}><lead style={{fontSize:16}}>{index+1}</lead></TableRowColumn>
+                    <TableRowColumn style={{textAlign:'center'}}><lead style={{fontSize:16}}>{d["favTopics"][0]["userId"]}</lead></TableRowColumn>
+                    <TableRowColumn style={{textAlign:'center'}}><lead style={{fontSize:16}}>{d["favTopics"][0]["experience"]}xp</lead></TableRowColumn>
+                    <TableRowColumn style={{textAlign:'center'}}><Avatar src="http://www.thebadgecentre.co.uk/images/detailed/0/india-round-flag.png" /></TableRowColumn>
                 </TableRow>
                 );
         });
@@ -78,7 +89,6 @@ const chip = {
                         <TableHeaderColumn style={{textAlign:'center',color:brown800,fontSize:20}}>Name</TableHeaderColumn>
                         <TableHeaderColumn style={{textAlign:'center',color:brown800,fontSize:20}}>Experience</TableHeaderColumn>
                         <TableHeaderColumn style={{textAlign:'center',color:brown800,fontSize:20}}>Country</TableHeaderColumn>
-                        <TableHeaderColumn style={{textAlign:'center',color:brown800,fontSize:20}}>Score</TableHeaderColumn>
                     </TableRow>
                 </TableHeader>
                 <TableBody displayRowCheckbox={false} showRowHover={true}>

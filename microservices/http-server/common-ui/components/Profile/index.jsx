@@ -63,7 +63,7 @@ const styles = {
 const styleCard = {
   borderRadius : 5,
   textAlign:'center',
-  marginTop:-280,
+  marginTop:-270,
   float:'right',
   marginBottom:-20
 
@@ -93,28 +93,28 @@ export default class Profile extends React.Component{
     }
   };
 
-  loadDataFromServer()
-{
-  console.log(this.props.username+"Bharath");
-   $.ajax(
-      {
-      url: restUrl + '/api/v1/analytics/user/'+this.props.username+'/winloss',
-      type: 'GET',
-      dataType:'JSON',
-      success:function(dataArr)
-      {
-        console.log(dataArr);
-        this.setState({data: dataArr});
-        console.log(this.state.data[0].count);
-        console.log(this.state.data[1].count);
-      }.bind(this),
-      error:function(err)
-      {
-        console.error('err');
-      }.bind(this)
-      });
+//   loadDataFromServer()
+// {
+//   console.log(this.props.username+"Bharath");
+//    $.ajax(
+//       {
+//       url: restUrl + '/api/v1/analytics/user/'+this.props.username+'/winloss',
+//       type: 'GET',
+//       dataType:'JSON',
+//       success:function(dataArr)
+//       {
+//         console.log(dataArr);
+//         this.setState({data: dataArr});
+//         console.log(this.state.data[0].count);
+//         console.log(this.state.data[1].count);
+//       }.bind(this),
+//       error:function(err)
+//       {
+//         console.error('err');
+//       }.bind(this)
+//       });
 
-};
+// };
 
   static get contextTypes() {
     return {
@@ -249,7 +249,7 @@ export default class Profile extends React.Component{
           }
 
   componentDidMount(){
-    this.loadDataFromServer();
+    // this.loadDataFromServer();
     console.log("uid",this.state.uid);
     var request = $.ajax({
     url: restUrl + '/api/v1/profile/'+this.state.uid,
@@ -324,7 +324,7 @@ export default class Profile extends React.Component{
                 <MediaQuery query='(min-device-width: 800px)'>
                   <MediaQuery query='(min-width: 800px)'>
                      <center>
-                      <Avatar size={200} style={{margin: '-120px 0px 10px 0px'}}
+                      <Avatar size={180} style={{margin: '-120px 0px 10px 0px'}}
                              src="http://icons.iconarchive.com/icons/designbolts/free-male-avatars/128/Male-Avatar-Cool-Sunglasses-icon.png"
                            />
                            </center>

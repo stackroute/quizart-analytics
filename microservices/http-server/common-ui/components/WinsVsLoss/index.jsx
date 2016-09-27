@@ -72,7 +72,7 @@ add(x,y){
                    <CardText>
                    <center>
                     <div style={{marginBottom:'30px',padding:"0px"}}>            
-                    <LinearProgress mode="determinate" value={this.add(this.props.allData[0].count,this.props.allData[1].count)} style={{margin:"10px",height:'30px',textAlign:'right'}}/>  
+                    <LinearProgress mode="determinate" value={this.add(1,2)} style={{margin:"10px",height:'30px',textAlign:'right'}}/>  
                     </div>
                     </center>
                     </CardText>
