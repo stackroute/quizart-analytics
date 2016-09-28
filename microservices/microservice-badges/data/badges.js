@@ -41,7 +41,7 @@ module.exports = [{ badgeId: "thumbsUp",
     badgeRule:"Login five consecutive days to get this badge",
     badgeDep:["consLogin"],
     badgeFunct:function(consLogin) {
-      if(consLogin>=5) {return true}
+      if(consLogin>=1) {return true}
         else return false
       }
   },

@@ -25,7 +25,7 @@ EventExecutor.prototype.getCounterEvaluator = function (counter, event, callback
     var userId=event.user;
     userCounters.find({userId:userId},function(err,counters){
         if(err) throw err;
-        
+
         var count=counters[0][counter];
         var date1,date2;
         //getting the last two dates
@@ -46,7 +46,7 @@ EventExecutor.prototype.getCounterEvaluator = function (counter, event, callback
               date2day=date2.getDate();
               date2month=date2.getMonth()+1;
               date2year=date2.getFullYear();
-              
+
               if(date1year==date2year){
                   if(date1month==date2month){
                       if(date1day==date2day){
@@ -58,14 +58,14 @@ EventExecutor.prototype.getCounterEvaluator = function (counter, event, callback
               else if(date1day-date2day==1){
                 count=count+1;
               }
-            } 
+            }
 
             userCounters.findOneAndUpdate({userId:userId}, {$set:{consLogin:count}},function(err, doc){
                 if(err){console.log("Something wrong when updating data!");}
 
                 console.log(count);
-                return callback(null, count);
-            });                       
+                return callback(null, 1);
+            });
         });
        });
   }]);
@@ -98,16 +98,16 @@ module.exports = function (options) {
     const eventExecutor = new EventExecutor(event);
 
     setUserLoginStatus(event.eventData.loginTime, msg.userId);
-    
+
     eventExecutor.execute(function (badgeId) {
-      console.log(badgeId);      
+      console.log(badgeId);
       respond(null, { badge: badgeId });
     });
   });
 };
 
 var setUserLoginStatus=function(loginTime, userId){
-    
+
     userLogin.find({userId:userId},function(err,users){
         if(err) throw err;
 
@@ -118,5 +118,5 @@ var setUserLoginStatus=function(loginTime, userId){
 }
 
 var setCounter=function(count,userId){
-  
+
 }

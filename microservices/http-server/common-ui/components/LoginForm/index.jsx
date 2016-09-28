@@ -77,8 +77,8 @@ export default class LoginForm extends React.Component {
         badge.done(function(data){
           var badgeStatus=JSON.stringify(data.badge);
 
-          if(badgeStatus==="goodHabit")
-          alert(JSON.stringify(data.badge));
+
+          alert(JSON.stringify(data.badge+" awarded"));
         });
       }.bind(this));
       request.fail(function() {
